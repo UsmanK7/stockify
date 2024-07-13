@@ -77,3 +77,18 @@ class DailyExpenseTypeDropdownChangeEvent extends SaleOrderListEvent {
       this.selectedItem,
       required this.FilterState});
 }
+
+class DailyExpenseListSyncEvent extends SaleOrderListEvent {
+  List<int> iDailyExpenseID;
+  String firstDate;
+  List<ExpenseTypeModel> expenseTypes;
+  String lastDate;
+  final selectedItem;
+
+  DailyExpenseListSyncEvent(
+      {required this.iDailyExpenseID,
+      required this.firstDate,
+      required this.selectedItem,
+      required this.expenseTypes,
+      required this.lastDate});
+}

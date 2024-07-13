@@ -124,38 +124,42 @@ class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
     };
 
     final headers = {'Content-Type': 'application/json'};
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
 
-    print(response.statusCode);
-    final jsonResponse = jsonDecode(response.body);
-    print(jsonResponse);
-
-    if (response.statusCode == 200) {
+      print(response.statusCode);
       final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse.containsKey('error')) {
-        print(jsonResponse['faced error']);
+      print(jsonResponse);
 
-        // emit(InitialAuthState());
-      } else if (jsonResponse.containsKey('success')) {
-        final transaction_id = await jsonResponse['transaction_id'];
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse.containsKey('error')) {
+          print(jsonResponse['faced error']);
 
-        await db.update(
-          'daily_expense',
-          {
-            'sSyncStatus': 1,
-            'transaction_id': transaction_id.toString(),
-          },
-          where: 'iDailyExpenseID = ?',
-          whereArgs: [lastid],
-        );
+          // emit(InitialAuthState());
+        } else if (jsonResponse.containsKey('success')) {
+          final transaction_id = await jsonResponse['transaction_id'];
+
+          await db.update(
+            'daily_expense',
+            {
+              'sSyncStatus': 1,
+              'transaction_id': transaction_id.toString(),
+            },
+            where: 'iDailyExpenseID = ?',
+            whereArgs: [lastid],
+          );
+        }
+      } else {
+        print("Erorr: ${response.statusCode}");
+        print("Error body: ${response.body}");
       }
-    } else {
-      print("Erorr: ${response.statusCode}");
-      print("Error body: ${response.body}");
+    } catch (e) {
+      print(e);
     }
 
     emit(DailyExpenseAddedState());

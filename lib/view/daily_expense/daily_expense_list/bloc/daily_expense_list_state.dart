@@ -6,6 +6,8 @@ abstract class DailyExpenseListActionState {}
 
 class SaleInitialState extends SaleOrderListState {}
 
+class LoadingState extends SaleOrderListState {}
+
 class SuccessState extends SaleOrderListState {
   String firstDate;
   String lastDate;

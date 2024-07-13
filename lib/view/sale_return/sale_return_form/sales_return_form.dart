@@ -324,23 +324,9 @@ class _SaleReturnFormState extends State<SaleReturnForm> {
                               );
                             } else {
                               saleReturnBloc.add(SaleAdddingLoadingEvent());
-
-                              // Print statements for all variables
-                              // SaleOrderbilledItems.forEach((item) {
-                              //   print(item);
-                              // });
-                              // print(selectedCustomerId);
-
                               dcGrandTotal = dcTotalBill! - dctotaldiscount!;
 
-                              // String returning_value =
-                              //     await _handleSaveLocation();
-                              // if (returning_value == "error") {
-                              //   saleOrderBloc.add(FormErrorEvent());
-                              //   return;
-                              // }
-
-                              // DBHelper().printSalesmanLocations();
+                           
 
                               saleReturnBloc.add(AddSaleInvoice(
                                   selectedCustomerId: selectedCustomerId!,

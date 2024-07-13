@@ -1,14 +1,16 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:okra_distributer/components/expense_list_card.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/UI/daily_expense_list_details.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_bloc.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_event.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_state.dart';
+import 'package:okra_distributer/view/daily_expense/model/daily_expense_model.dart';
 
 class DailyExpenseList extends StatefulWidget {
   const DailyExpenseList({super.key});
@@ -26,6 +28,11 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
   }
 
   SaleOrderListBloc saleOrderListBloc = SaleOrderListBloc();
+  List<int> syncIndex = [];
+  String firstDateForAppBar = '';
+  String lastDateForAppBar = '';
+  String? selectedItem;
+  List<ExpenseTypeModel> expenseTypes = [];
 
   final List<String> items = [
     'This week',
@@ -35,8 +42,10 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
     'This year',
     'Custom',
   ];
-  String? selectedValue;
+  var selectedValue = null;
+
   DateTime _selectedDate = DateTime.now();
+
   TextEditingController _firstdateController = TextEditingController();
   TextEditingController _lastdateController = TextEditingController();
 
@@ -84,10 +93,45 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Syncing all")),
-              );
+            onTap: () async {
+              var connectivityResult = await Connectivity().checkConnectivity();
+              if (syncIndex.isNotEmpty) {
+                if (connectivityResult == ConnectivityResult.none) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No internet connection')),
+                  );
+                  return;
+                } else {
+                  // Perform a simple internet connection check
+                  try {
+                    final result =
+                        await http.get(Uri.parse('https://www.google.com'));
+                    if (result.statusCode == 200) {
+                      print("Internet is available");
+                      // Proceed with your event handling here
+                      saleOrderListBloc.add(DailyExpenseListSyncEvent(
+                        iDailyExpenseID: syncIndex,
+                        expenseTypes: expenseTypes,
+                        selectedItem: selectedItem,
+                        firstDate: firstDateForAppBar,
+                        lastDate: lastDateForAppBar,
+                      ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('No internet connection')),
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('No internet connection')),
+                    );
+                  }
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('No items to sink')),
+                );
+              }
             },
             child: Container(
               decoration: BoxDecoration(
@@ -133,6 +177,11 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
             });
             String firstDay = state.firstDate;
             String lastDay = state.lastDate;
+            expenseTypes = state.expenseTypes;
+            firstDateForAppBar = firstDay;
+            lastDateForAppBar = lastDay;
+            selectedItem = state.selectedItem;
+
             List<String> typeNames = state.expenseTypes!
                 .map((expenseType) => expenseType.sTypeName)
                 .toList();
@@ -366,8 +415,11 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         child: ListView.builder(
                           itemCount: state.saleList.length,
                           itemBuilder: (context, index) {
-                            // print(state.saleList[index]['iDailyExpenseID']);
-                            // print(state.saleList[index]['sSyncStatus']);
+                            if (state.saleList[index]['sSyncStatus'] == "0") {
+                              syncIndex.add(
+                                  state.saleList[index]['iDailyExpenseID']);
+                            }
+
                             print(state.saleList[index]['dcAmount']);
                             if (state.saleList.isNotEmpty) {
                               if (state.saleList[index]['sSyncStatus'] != "0") {
@@ -390,6 +442,55 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                                       padding:
                                           EdgeInsets.symmetric(vertical: 2),
                                       child: ExpenseListCard(
+                                        // onSync: () async {
+                                        //   print("sync");
+                                        //   // var connectivityResult =
+                                        //   //     await Connectivity()
+                                        //   //         .checkConnectivity();
+                                        //   // if (connectivityResult ==
+                                        //   //     ConnectivityResult.none) {
+                                        //   //   ScaffoldMessenger.of(context)
+                                        //   //       .showSnackBar(
+                                        //   //     SnackBar(
+                                        //   //         content: Text(
+                                        //   //             'No internet connection')),
+                                        //   //   );
+                                        //   //   return;
+                                        //   // } else {
+                                        //   //   try {
+                                        //   //     final result = await http.get(
+                                        //   //         Uri.parse(
+                                        //   //             'https://www.google.com'));
+                                        //   //     if (result.statusCode == 200) {
+                                        //   //       print("Internet is available");
+
+                                        //   //       saleOrderListBloc.add(
+                                        //   //           DailyExpenseListSyncEvent(
+                                        //   //         iDailyExpenseID: syncIndex,
+                                        //   //         expenseTypes: expenseTypes,
+                                        //   //         selectedItem:
+                                        //   //             state.selectedItem,
+                                        //   //         firstDate: firstDateForAppBar,
+                                        //   //         lastDate: lastDateForAppBar,
+                                        //   //       ));
+                                        //   //     } else {
+                                        //   //       ScaffoldMessenger.of(context)
+                                        //   //           .showSnackBar(
+                                        //   //         SnackBar(
+                                        //   //             content: Text(
+                                        //   //                 'No internet connection')),
+                                        //   //       );
+                                        //   //     }
+                                        //   //   } catch (e) {
+                                        //   //     ScaffoldMessenger.of(context)
+                                        //   //         .showSnackBar(
+                                        //   //       SnackBar(
+                                        //   //           content: Text(
+                                        //   //               'No internet connection')),
+                                        //   //     );
+                                        //   //   }
+                                        //   // }
+                                        // },
                                         ExpenseType: state.saleList[index]
                                             ['expenseTypeName'],
                                         date: state.saleList[index]['dDate'],
@@ -455,6 +556,64 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                                           padding:
                                               EdgeInsets.symmetric(vertical: 2),
                                           child: ExpenseListCard(
+                                            onSync: () async {
+                                              print("sync");
+                                              var connectivityResult =
+                                                  await Connectivity()
+                                                      .checkConnectivity();
+                                              if (connectivityResult ==
+                                                  ConnectivityResult.none) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                          'No internet connection')),
+                                                );
+                                                return;
+                                              } else {
+                                                try {
+                                                  final result = await http.get(
+                                                      Uri.parse(
+                                                          'https://www.google.com'));
+                                                  if (result.statusCode ==
+                                                      200) {
+                                                    print(
+                                                        "Internet is available");
+                                                    List<int> current = [];
+                                                    current
+                                                        .add(syncIndex[index]);
+
+                                                    saleOrderListBloc.add(
+                                                        DailyExpenseListSyncEvent(
+                                                      iDailyExpenseID: current,
+                                                      expenseTypes:
+                                                          expenseTypes,
+                                                      selectedItem:
+                                                          state.selectedItem,
+                                                      firstDate:
+                                                          firstDateForAppBar,
+                                                      lastDate:
+                                                          lastDateForAppBar,
+                                                    ));
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                              'No internet connection')),
+                                                    );
+                                                  }
+                                                } catch (e) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            'No internet connection')),
+                                                  );
+                                                }
+                                              }
+                                            },
                                             ExpenseType: state.saleList[index]
                                                 ['expenseTypeName'],
                                             date: state.saleList[index]
@@ -473,10 +632,33 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                                   ),
                                 );
                               }
+                            } else if (state is LoadingState) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          CircularProgressIndicator(),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                          AppText(
+                                              title: "Syncing",
+                                              color: Colors.black,
+                                              font_size: 18,
+                                              fontWeight: FontWeight.w500)
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                ],
+                              );
                             } else {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              ); // handle the case where the sale list is empty
+                              return Center(child: CircularProgressIndicator());
                             }
                           },
                         ),

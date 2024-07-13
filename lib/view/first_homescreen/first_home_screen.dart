@@ -16,12 +16,9 @@ import 'package:okra_distributer/view/auth/login_screen.dart';
 import 'package:okra_distributer/view/daily_expense/UI/daily_expense.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/UI/daily_expense_list.dart';
 import 'package:okra_distributer/view/dashboard/dashboard_screen.dart';
-
-import 'package:okra_distributer/view/first_homescreen/bar_chart.dart';
 import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_bloc.dart';
 import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_event.dart';
 import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_state.dart';
-
 import 'package:okra_distributer/view/sale/sale%20form/sales_form.dart';
 import 'package:okra_distributer/view/sale/sale_list/UI/sale_list.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/sales_order_form.dart';

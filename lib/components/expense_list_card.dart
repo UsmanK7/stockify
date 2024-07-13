@@ -8,6 +8,7 @@ class ExpenseListCard extends StatelessWidget {
   final transaction_id;
   final description;
   final amount;
+  final VoidCallback? onSync;
   final syncStatus;
   const ExpenseListCard(
       {super.key,
@@ -15,6 +16,7 @@ class ExpenseListCard extends StatelessWidget {
       this.date,
       this.transaction_id,
       this.description,
+      this.onSync,
       this.amount,
       this.syncStatus});
 
@@ -101,9 +103,7 @@ class ExpenseListCard extends StatelessWidget {
                   syncStatus == "0"
                       ? GestureDetector(
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Sync!!!")),
-                            );
+                            onSync!();
                           },
                           child: Container(
                               height: 35,

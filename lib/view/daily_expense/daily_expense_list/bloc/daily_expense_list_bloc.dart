@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_event.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_state.dart';
 import 'package:okra_distributer/view/daily_expense/model/daily_expense_model.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_model.dart';
 
 class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
@@ -22,6 +26,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     on<SaleOrderListCustomDate>(saleListCustomDate);
     // on<SaleOrderListDismissEvent>(saleListDismissEvent);
     on<SaleOrderListDetailsEvent>(saleListDetailsEvent);
+    on<DailyExpenseListSyncEvent>(dailyExpenseListSyncEvent);
   }
   FutureOr<void> dailyExpenseTypeDropdownChangeEvent(
       DailyExpenseTypeDropdownChangeEvent event,
@@ -874,5 +879,161 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     emit(SaleListDetailsState(
       daily_expense_list: daily_expense_list,
     ));
+  }
+
+  FutureOr<void> dailyExpenseListSyncEvent(
+      DailyExpenseListSyncEvent event, Emitter<SaleOrderListState> emit) async {
+    emit(LoadingState());
+
+    Future<Map<String, dynamic>?> getDailyExpenseById(int id) async {
+      DBHelper dbHelper = DBHelper();
+      final db = await dbHelper.database;
+      List<Map<String, dynamic>> result = await db.query(
+        'daily_expense',
+        where: 'iDailyExpenseID = ?',
+        whereArgs: [id],
+      );
+      if (result.isNotEmpty) {
+        return result.first;
+      }
+      return null;
+    }
+
+    final Uri url = Uri.parse(SyncDataUrl);
+    final _box = GetStorage();
+    final authorization_token = _box.read('token');
+
+    DBHelper dbHelper = DBHelper();
+    // final db = dbHelper.database;
+    int? appId = await dbHelper.getAppId();
+
+    final headers = {'Content-Type': 'application/json'};
+
+    Map<String, dynamic> dailyExpenseData = {};
+
+    for (int id in event.iDailyExpenseID) {
+      final expense = await getDailyExpenseById(id);
+      if (expense != null) {
+        Map<String, dynamic> mutableExpense =
+            Map<String, dynamic>.from(expense);
+        mutableExpense.remove('iDailyExpenseID');
+
+        // Format the date fields if necessary
+        if (mutableExpense['dDate'] != null) {
+          mutableExpense['dDate'] = mutableExpense['dDate'].toString();
+        }
+
+        dailyExpenseData['iDailyExpenseID__$id'] = mutableExpense;
+      } else {
+        print('No expense found for ID: $id');
+      }
+    }
+
+    final body = {
+      "authorization_token": authorization_token,
+      "app_id": "${appId}",
+      "data": {
+        "daily_expense": dailyExpenseData,
+      },
+    };
+    print(body);
+
+    // final body = {
+    //   "authorization_token": authorization_token,
+    //   "app_id": appId.toString(),
+    //   "data": {
+    //     "permanent_customer_payments": data,
+    //   },
+    // };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse.containsKey('error')) {
+          print('Faced error: ${jsonResponse['error']}');
+          // emit(InitialAuthState());
+        } else if (jsonResponse.containsKey('success')) {
+          print(jsonResponse);
+
+          DBHelper dbHelper = DBHelper();
+          final db = await dbHelper.database;
+          print(event.iDailyExpenseID.length);
+          for (int i = 0; i < event.iDailyExpenseID.length; i++) {
+          
+            // Extract the first transaction_id
+            String firstTransactionId = "";
+            Map<String, dynamic> dailyExpenseData =
+                jsonResponse['$i']['data']['daily_expense'];
+
+            // Get the first key (iDailyExpenseID__1051) dynamically
+            if (dailyExpenseData.isNotEmpty) {
+              String firstKey = dailyExpenseData.keys.first;
+              if (dailyExpenseData[firstKey] != null) {
+                firstTransactionId =
+                    dailyExpenseData[firstKey]['transaction_id'];
+              }
+            }
+
+            // Print the extracted transaction_id
+            print('First transaction_id: $firstTransactionId');
+
+            // await db.update(
+            //   'daily_expense',
+            //   {
+            //     'transaction_id': transaction_id,
+            //     'sSyncStatus': 1,
+            //   },
+            //   where: 'iSaleOrderID = ?',
+            //   whereArgs: [event.iDailyExpenseID[i]],
+            // );
+          }
+
+          List<Map<String, dynamic>> salesList = await db.rawQuery('''
+          SELECT de.*, et.sTypeName as expenseTypeName
+          FROM daily_expense de
+          LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+          WHERE de.dDate BETWEEN ? AND ?
+            ''', [event.firstDate, event.lastDate]);
+
+          // List to hold SaleListModel instances
+          // List<SaleOrderListModel> salesList = [];
+          // // Iterate over fetched rows and populate SaleListModel instances
+          // saleRows.forEach((row) {
+          //   salesList.add(SaleOrderListModel(
+          //     saleId: row['iSaleID'],
+          //     sSyncStatus: row['sSyncStatus'],
+          //     invoice_price: row['dcTotalBill'],
+
+          //     customer_Name: row['customerName'],
+          //     total_discount: row['dcTotalDiscount'],
+          //     sale_date: row['dSaleOrderDate'], // Add the sale date
+          //   ));
+          // });
+          emit(SuccessState(
+              saleList: salesList,
+              firstDate: event.firstDate,
+              lastDate: event.lastDate,
+              expenseTypes: event.expenseTypes,
+              selectedItem: event.selectedItem));
+
+          // emit(SuccessState(
+          //     expenseTypes: event.expenseTypes,
+          //     saleList: salesList,
+          //     firstDate: event.firstDate,
+          //     lastDate: event.lastDate));
+        }
+      } else {
+        print("Error: ${response.statusCode}");
+        print("Error body: ${response.body}");
+      }
+    } catch (e) {
+      print('Request failed: $e');
+    }
   }
 }

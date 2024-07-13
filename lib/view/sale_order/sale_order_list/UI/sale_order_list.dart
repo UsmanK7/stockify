@@ -299,7 +299,6 @@ class _SaleOrderListState extends State<SaleOrderList> {
                         child: ListView.builder(
                           itemCount: state.saleList.length,
                           itemBuilder: (context, index) {
-                            
                             if (state.saleList[index].sSyncStatus == "0") {
                               syncIndex.add(state.saleList[index].saleId);
                             }

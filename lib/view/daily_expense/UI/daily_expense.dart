@@ -398,22 +398,22 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Please select a Bank')),
                       );
+                    } else {
+                      dailyExpenseBloc.add(AddDailyExpenseEvent(
+                          dailyExpense: DailyExpense(
+                        iExpenseTypeID: ExpenseTypeID,
+                        iBankID: iBankIDPAIDAmount,
+                        iTableID: 00,
+                        dcAmount: _amountController.text.toString(),
+                        sDescription: _descriptionController.text.toString(),
+                        iFirmID: _box.read('iFirmID'),
+                        iSystemUserID: _box.read('iSystemUserID'),
+                        dDate: dSaleDate,
+                        sSyncStatus: 0,
+                        sEntrySource: "mobile",
+                        dtCreatedDate: dtCreatedDate,
+                      )));
                     }
-                    print(iBankIDPAIDAmount);
-                    dailyExpenseBloc.add(AddDailyExpenseEvent(
-                        dailyExpense: DailyExpense(
-                      iExpenseTypeID: ExpenseTypeID,
-                      iBankID: iBankIDPAIDAmount,
-                      iTableID: 00,
-                      dcAmount: _amountController.text.toString(),
-                      sDescription: _descriptionController.text.toString(),
-                      iFirmID: _box.read('iFirmID'),
-                      iSystemUserID: _box.read('iSystemUserID'),
-                      dDate: dSaleDate,
-                      sSyncStatus: 0,
-                      sEntrySource: "mobile",
-                      dtCreatedDate: dtCreatedDate,
-                    )));
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
