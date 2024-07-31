@@ -1,0 +1,99 @@
+ Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1.5,
+                          color: Color.fromARGB(255, 188, 188, 189),
+                        ),
+                      ),
+                      width: MediaQuery.of(context).size.width * .90,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: BlocBuilder<Popbloc, Popstate>(
+                          builder: (context, state) {
+                            if (state.customers == null) {
+                              return CircularProgressIndicator();
+                            }
+                            print(
+                                'Dropdown state: ${state.selectedCustomer}, ${state.selectedBank}');
+                            return DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: BorderSide(
+                                    width: 1.5,
+                                    color: Color.fromARGB(255, 188, 188, 189),
+                                  ),
+                                ),
+                              ),
+                              isExpanded: true,
+                              style: TextStyle(
+                                color: Color(0xFF91919F),
+                                fontFamily: 'Roboto',
+                              ),
+                              hint: Text('Select Customer',
+                                  style: TextStyle(
+                                      fontSize: 15, fontFamily: 'Roboto')),
+                              value:
+                                  state.selectedCustomer ?? "Select Customer",
+                              onChanged: (String? newValue) async {
+                                if (newValue != null && newValue.isNotEmpty) {
+                                  int? customerId =
+                                      state.getCustomerIdByName(newValue);
+                                  if (customerId != null) {
+                                    context
+                                        .read<Popbloc>()
+                                        .add(UpdateSlectedCustomer(newValue));
+                                    context
+                                        .read<Popbloc>()
+                                        .add(SelectAreas(customerId));
+                                  } else {
+                                    context
+                                        .read<Popbloc>()
+                                        .add(ClearSelection());
+                                  }
+                                }
+                              },
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: "Select Customer",
+                                  child: Text("Select Customer"),
+                                ),
+                                ...?state.customers
+                                    ?.map<DropdownMenuItem<String>>(
+                                        (Customer value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value.name,
+                                    child: Text(value.name!),
+                                  );
+                                }).toList(),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    )
+
+
+
+
+                       GestureDetector(
+                            onTap: () {
+                              showDetailsDialog(context);
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    // color: Color(0xFFD9D9D9),
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(15),
+                                        bottomRight: Radius.circular(15))),
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 2),
+                                  child: Image(
+                                      width: MediaQuery.of(context).size.width *
+                                          .10,
+                                      image: AssetImage(
+                                          'assets/images/Search_ic.png')),
+                                )),
+                          )
