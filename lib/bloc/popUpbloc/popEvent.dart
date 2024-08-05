@@ -135,6 +135,15 @@ class LoadAllCustomer extends PopEvent {}
 
 class FetchCurrentTime extends PopEvent {}
 
+class TaskStatusFailed extends PopEvent {}
+
+class UpdateTaskStatus extends PopEvent {
+  final int taskIndex;
+  final String status;
+
+  UpdateTaskStatus(this.taskIndex, this.status);
+}
+
 class UpdateDropdownValue extends PopEvent {
   final String newValue;
 

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Color appBlue = Color(0xff746EF1);
 Color appBgWhite = Color(0xffF1F1F1);
@@ -6,9 +9,10 @@ Color appborder = Color(0xffC6C6DF);
 Color apptextColor = Color(0xff91919F);
 Color appsubtitletextColor = Color(0xff767E8C);
 Color appsearchBoxColor = Color(0xffD9D9D9);
-const baseUrl = 'https://5d47-223-123-22-84.ngrok-free.app';
+const baseUrl = 'https://1ba6-39-44-66-115.ngrok-free.app';
 const loginUrl = '$baseUrl/stockfiy/api/auth/login';
 const addSaleOrderUrl = '$baseUrl/stockfiy/api/realdata/storesaleorder';
+const addDailyExpenseUrl = '$baseUrl/stockfiy/api/realdata/StoreDailyExpenses';
 
 const userdetailsUrl = '$baseUrl/stockfiy/api/phase1/getUserDetails';
 double TotalScreenWidth(BuildContext context) {
@@ -21,6 +25,14 @@ double TotalScreenHeight(BuildContext context) {
 
 String formatDate(DateTime date) {
   return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+}
+
+String formatTime(TimeOfDay time) {
+  final now = DateTime.now();
+  final dateTime =
+      DateTime(now.year, now.month, now.day, time.hour, time.minute);
+  final formatter = DateFormat('hh:mm:ss a');
+  return formatter.format(dateTime);
 }
 
 DateTime getFirstDateOfLastMonth() {

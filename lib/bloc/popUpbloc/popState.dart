@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
+import 'package:okra_distributer/payment/views/apicheckingScreen.dart';
 
 class Popstate extends Equatable {
   final List<Country>? countries;
@@ -15,6 +16,7 @@ class Popstate extends Equatable {
   final List<Area>? areas;
   final List<Customer>? customers;
   final List<Bank>? banks;
+  final String? statuFailed;
   final String? selectedBank;
   final DateTime? startDate;
   final List<double>? saleAmount;
@@ -51,6 +53,7 @@ class Popstate extends Equatable {
       this.isLoading = false,
       this.cities,
       this.areas,
+      this.statuFailed,
       this.customerExpenses,
       this.customers,
       this.dateRange,
@@ -132,6 +135,7 @@ class Popstate extends Equatable {
       bool? isLoading,
       List<PermanentCustomerPayment>? filteredPayments,
       List<Customer>? customers,
+      String? statuFailed,
       final List<Bank>? banks,
       final DateTime? startDate,
       final DateTime? endDate,
@@ -176,6 +180,7 @@ class Popstate extends Equatable {
         selectedCustomerId: selectedCustomerId ?? this.selectedCustomerId,
         selectedBankId: selectedBankId ?? this.selectedBankId,
         customerExpenses: customerExpenses ?? this.customerExpenses,
+        statuFailed: statuFailed ?? this.statuFailed,
         selectedDate: selectedDate ?? this.selectedDate);
   }
 
@@ -191,6 +196,7 @@ class Popstate extends Equatable {
         paidAmount,
         areas,
         maxValue,
+        statuFailed,
         customers,
         filterCustomer,
         isLoading,

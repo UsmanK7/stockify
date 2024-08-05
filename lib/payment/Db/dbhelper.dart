@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
@@ -31,6 +33,7 @@ class DBHelper {
       await File(path).writeAsBytes(bytes, flush: true);
       print("Database copied");
       await clearAllData();
+      await insertRandomNumber();
     } else {
       // If the database exists, clear all data
     }
@@ -39,6 +42,22 @@ class DBHelper {
     _database = await openDatabase(path);
     return _database!;
   }
+
+  //For creating app id
+
+//   Future<void> insertRandomNumber() async {
+//     final db = await database;
+//     final randomNumber = generateRandomNumber();
+
+//     await db.insert('app', {'app_id': randomNumber});
+//     print("Random number $randomNumber inserted into the database.");
+//   }
+
+//   int generateRandomNumber({int min = 1000, int max = 9999}) {
+//     final random = Random();
+//     return min + random.nextInt(max - min + 1);
+//   }
+// }
 
   // Method to delete all data from all tables
   Future<void> clearAllData() async {
@@ -73,12 +92,42 @@ class DBHelper {
     print("Database has been vacuumed.");
   }
 
+  Future<void> insertRandomNumber() async {
+    final db = await database;
+    final randomNumber = generateRandomNumber();
+
+    await db.insert('app', {'app_id': randomNumber});
+    print("Random number $randomNumber inserted into the database.");
+  }
+
+  int generateRandomNumber({int min = 1000, int max = 9999}) {
+    final random = Random();
+    return min + random.nextInt(max - min + 1);
+  }
+
   Future<List<Country>> getCountries() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('country');
     return List.generate(maps.length, (i) {
       return Country.fromMap(maps[i]);
     });
+  }
+
+  Future<int?> getUserId() async {
+    final db = await DBHelper().database;
+    List<Map<String, dynamic>> result = await db.query(
+      'users',
+      columns: ['id'],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      print("Fetched user ID: ${result.first['id']}");
+      return result.first['id'] as int;
+    } else {
+      print("No user data found in the database.");
+    }
+    return null;
   }
 
   Future<List<States>> getStates(int countryId) async {
@@ -88,6 +137,15 @@ class DBHelper {
     return List.generate(maps.length, (i) {
       return States.fromMap(maps[i]);
     });
+  }
+
+  // getting app id
+  Future<int?> getAppId() async {
+    final db = await database;
+    List<Map<String, dynamic>> ressult = await db.query('app');
+    if (ressult.isNotEmpty) {
+      return ressult.first['app_id'] as int;
+    }
   }
 
   Future<List<City>> getCities(int stateId) async {

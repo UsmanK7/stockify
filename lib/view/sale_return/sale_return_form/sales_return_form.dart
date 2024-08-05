@@ -16,7 +16,6 @@ import 'package:okra_distributer/view/sale/bloc/date_picker_bloc/data_picker_sta
 import 'package:okra_distributer/view/sale_order/data/sale_order_billed_items.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/Items_order_screen.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/customer_ui/customer_screen.dart';
-import 'package:okra_distributer/view/sale_order/sale_order_form/sale_order_added_screen.dart';
 import 'package:okra_distributer/view/sale_return/bloc/sale_return_bloc/sale_return_bloc.dart';
 import 'package:okra_distributer/view/sale_return/bloc/sale_return_bloc/sale_return_event.dart';
 import 'package:okra_distributer/view/sale_return/bloc/sale_return_bloc/sale_return_state.dart';

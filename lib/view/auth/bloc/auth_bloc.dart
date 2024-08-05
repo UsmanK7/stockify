@@ -65,6 +65,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoginSuccess(user: event.email));
         // emit(InitialAuthState());
       }
+    } else {
+      print("error in auth post");
     }
   }
 

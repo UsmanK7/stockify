@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:okra_distributer/bloc/UpdatedBloc/updateBloc.dart';
+import 'package:okra_distributer/bloc/UpdatedBloc/updateEvent.dart';
+import 'package:okra_distributer/bloc/fetchdataaBloc/fetchDataBloc.dart';
+import 'package:okra_distributer/bloc/fetchdataaBloc/fetchdataevent.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popBloc.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
-import 'package:okra_distributer/payment/popUpbloc/popBloc.dart';
 
-import 'package:okra_distributer/view/dashboard/home_screen.dart';
+import 'package:okra_distributer/view/daily_expense/bloc/date_picker_bloc/data_picker_bloc.dart';
+
+import 'package:okra_distributer/view/dashboard/dashboard_screen.dart';
 import 'package:okra_distributer/view/sale/bloc/date_picker_bloc/data_picker_bloc.dart';
 import 'package:okra_distributer/view/sale/bloc_pop_sale/sale_pop_bloc.dart';
 import 'package:okra_distributer/view/sale_order/bloc/bloc_pop_sale_order/sale_pop_bloc.dart';
@@ -38,6 +44,19 @@ class MyApp extends StatelessWidget {
             BlocProvider<Popbloc>(
               create: (context) => Popbloc(database),
             ),
+            BlocProvider<CompletionBloc>(
+              create: (context) => CompletionBloc()..add(FetchData()),
+            ),
+            BlocProvider<DateBloc>(
+              create: (context) => DateBloc(),
+            ),
+            BlocProvider<UpdationBloc>(
+              create: (context) =>
+                  UpdationBloc()..add(FetchData() as UpdationEvent),
+            ),
+            BlocProvider<Popbloc>(
+              create: (context) => Popbloc(database),
+            ),
             BlocProvider<SaleOrderPopBloc>(
               create: (context) => SaleOrderPopBloc(database),
             ),
@@ -46,6 +65,9 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider<SalePopBloc>(
               create: (context) => SalePopBloc(database),
+            ),
+            BlocProvider<DailyExpenseDateBloc>(
+              create: (context) => DailyExpenseDateBloc(),
             ),
           ],
           child: MaterialApp(
@@ -56,7 +78,7 @@ class MyApp extends StatelessWidget {
                 child: widget!,
               );
             },
-            home: HomeScreen(database: database),
+            home: DashboardScreen(database: database),
           ),
         );
       },

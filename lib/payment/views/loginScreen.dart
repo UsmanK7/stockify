@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/payment/views/Constant.dart';
-import 'package:okra_distributer/payment/views/apicheckingScreen.dart';
+import 'package:okra_distributer/payment/views/GettingDataScreen.dart';
+import 'package:okra_distributer/payment/views/sendingDeviceInfo.dart';
 
 import 'dart:convert';
 
@@ -40,18 +42,21 @@ class _LoginscreenState extends State<Loginscreen> {
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         final token = jsonData['token'];
-        print(jsonData);
+        final userId = jsonData['user_id'];
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('authToken', token);
+        await prefs.setString('user_id', userId);
 
         if (token != null) {
           await Future.delayed(Duration(seconds: 1));
+          final sendingDeviceInfo = SendingDeviceInfo();
+          await sendingDeviceInfo.sendDeviceData(userId);
 
           print('Token: $token');
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => CompletionScreen()),
+            MaterialPageRoute(builder: (context) => GetDataScreen()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

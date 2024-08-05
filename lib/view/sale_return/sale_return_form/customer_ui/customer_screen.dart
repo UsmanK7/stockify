@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popBloc.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popEvent.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
-import 'package:okra_distributer/payment/popUpbloc/popBloc.dart';
-import 'package:okra_distributer/payment/popUpbloc/popEvent.dart';
-
-import 'package:okra_distributer/view/sale_order/data/sale_order_billed_items.dart';
-
 import 'package:sqflite/sqflite.dart';
 
 class CustomerOrderScreen extends StatefulWidget {

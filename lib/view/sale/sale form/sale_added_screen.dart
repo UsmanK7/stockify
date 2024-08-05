@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
-import 'package:okra_distributer/view/dashboard/home_screen.dart';
+import 'package:okra_distributer/view/dashboard/dashboard_screen.dart';
 import 'package:okra_distributer/view/sale/sale%20form/sales_form.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -73,7 +73,7 @@ class _SaleAddedScreenState extends State<SaleAddedScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  HomeScreen(database: widget.database)));
+                                  DashboardScreen(database: widget.database)));
                     },
                     child: Container(
                       height: 50,

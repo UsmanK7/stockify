@@ -7,12 +7,13 @@ import 'package:getwidget/components/accordion/gf_accordion.dart';
 import 'package:okra_distributer/components/sale_card.dart';
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
-import 'package:okra_distributer/payment/views/CustomerReciptList.dart';
 import 'package:okra_distributer/payment/views/Payment_recovery.dart';
 import 'package:okra_distributer/payment/views/apicheckingScreen.dart';
 import 'package:okra_distributer/payment/views/customer.dart';
 import 'package:okra_distributer/payment/views/loginScreen.dart';
 import 'package:okra_distributer/view/auth/login_screen.dart';
+import 'package:okra_distributer/view/daily_expense/UI/daily_expense.dart';
+
 import 'package:okra_distributer/view/dashboard/bar_chart.dart';
 import 'package:okra_distributer/view/dashboard/bloc/dash/dash_bloc.dart';
 import 'package:okra_distributer/view/dashboard/bloc/dash/dash_event.dart';
@@ -26,14 +27,14 @@ import 'package:okra_distributer/view/sale_return/sale_return_form/sales_return_
 
 import 'package:sqflite/sqflite.dart';
 
-class HomeScreen extends StatefulWidget {
-  final Database database;
-  const HomeScreen({super.key, required this.database});
+class DashboardScreen extends StatefulWidget {
+  final Database? database;
+  const DashboardScreen({super.key, this.database});
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _DashboardScreenState extends State<DashboardScreen> {
   DashBloc dashBloc = DashBloc();
 
   @override
@@ -408,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SalesForm(
-                                      database: widget.database,
+                                      database: widget.database!,
                                     )));
                       },
 
@@ -421,6 +422,49 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           AppText(
                               title: "Sale Form ",
+                              color: Color(0xffA0A0A0),
+                              font_size: 13,
+                              fontWeight: FontWeight.w600),
+                          Icon(Icons.arrow_right)
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+            GFAccordion(
+                titleBorderRadius: BorderRadius.circular(10),
+                collapsedTitleBackgroundColor: Colors.white,
+                title: 'Daily Expense',
+                contentChild: Column(
+                  children: [
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     AppText(
+                    //         title: "Sale Recovery",
+                    //         color: Color(0xffA0A0A0),
+                    //         font_size: 13,
+                    //         fontWeight: FontWeight.w600),
+                    //     Icon(Icons.arrow_right)
+                    //   ],
+                    // ),
+                    // Divider(
+                    //   color: appsubtitletextColor,
+                    //   thickness: 0.1,
+                    // ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const DailyExpenseScreen()));
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppText(
+                              title: "Daily Expense",
                               color: Color(0xffA0A0A0),
                               font_size: 13,
                               fontWeight: FontWeight.w600),
@@ -480,7 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SalesOrderForm(
-                                      database: widget.database,
+                                      database: widget.database!,
                                     )));
                       },
                       child: const Row(
@@ -649,7 +693,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SaleReturnForm(
-                                      database: widget.database,
+                                      database: widget.database!,
                                     )));
                       },
                       child: const Row(

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:okra_distributer/bloc/fetchdataaBloc/fectDataState.dart';
-import 'package:okra_distributer/bloc/fetchdataaBloc/fetchDataBloc.dart';
-import 'package:okra_distributer/bloc/fetchdataaBloc/fetchdataevent.dart';
+import 'package:okra_distributer/bloc/UpdatedBloc/updateBloc.dart';
+import 'package:okra_distributer/bloc/UpdatedBloc/updateEvent.dart';
+import 'package:okra_distributer/bloc/UpdatedBloc/updateState.dart';
 
-class CompletionScreen extends StatefulWidget {
+class UpdationScreen extends StatefulWidget {
   @override
-  State<CompletionScreen> createState() => _CompletionScreenState();
+  State<UpdationScreen> createState() => _UpdationScreenState();
 }
 
-class _CompletionScreenState extends State<CompletionScreen> {
+class _UpdationScreenState extends State<UpdationScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CompletionBloc()..add(FetchData()),
+      create: (context) => UpdationBloc()..add(UpdateData()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Completion Screen'),
+          title: const Text('Updation Screen'),
         ),
-        body: BlocBuilder<CompletionBloc, CompletionState>(
+        body: BlocBuilder<UpdationBloc, UpdationState>(
           builder: (context, state) {
-            if (state is InitialState) {
+            if (state is FirstState) {
               return const Center(child: Text("Initializing..."));
             } else if (state is LoadingState) {
               return Center(
@@ -28,10 +28,10 @@ class _CompletionScreenState extends State<CompletionScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(value: state.progress),
+                      CircularProgressIndicator(value: state.progres),
                       const SizedBox(height: 20),
                       Text(
-                        "${(state.progress * 100).toStringAsFixed(0)}% Completed",
+                        "${(state.progres * 100).toStringAsFixed(0)}% Completed",
                         style: const TextStyle(fontSize: 18),
                       ),
                       ...state.taskStatuses.map((taskStatus) {
@@ -44,10 +44,10 @@ class _CompletionScreenState extends State<CompletionScreen> {
                   ),
                 ),
               );
-            } else if (state is SuccessState) {
+            } else if (state is SucessfulState) {
               return const Center(
                   child: Text("All tasks completed successfully!"));
-            } else if (state is FailureState) {
+            } else if (state is FailedDState) {
               return Center(child: Text("Error: ${state.error}"));
             } else {
               return const Center(child: Text("Unexpected state"));

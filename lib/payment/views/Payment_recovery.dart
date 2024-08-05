@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,16 +7,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
-import 'package:okra_distributer/payment/popUpbloc/popBloc.dart';
-import 'package:okra_distributer/payment/popUpbloc/popEvent.dart';
-import 'package:okra_distributer/payment/popUpbloc/popState.dart';
-
+import 'package:okra_distributer/bloc/popUpbloc/popBloc.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popEvent.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popState.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:okra_distributer/payment/views/Constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PaymentRecovery extends StatefulWidget {
@@ -28,6 +33,51 @@ class PaymentRecovery extends StatefulWidget {
 }
 
 class _PaymentRecoveryState extends State<PaymentRecovery> {
+  Future<bool> isInternetAvailable() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  final db = DBHelper();
+
+  Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('authToken');
+  }
+
+  Future<http.Response> sendPaymentToApi(
+      PermanentCustomerPayment payment) async {
+    final appID = await db.getAppId();
+    final token = await _getToken();
+    if (token == null) {
+      print('Authorization token is missing');
+
+      throw Exception('Authorization token is missing');
+    }
+    final url = Uri.parse(Constant.sendApi);
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authorization_token': token,
+      'app_id': appID.toString(),
+    };
+
+    final body = jsonEncode({
+      'app_id': appID.toString(),
+      'authorization_token': token,
+      'iPermanentCustomerID': payment.iPermanentCustomerID,
+      'iBankID': payment.iBankID,
+      'dcPaidAmount': payment.dcPaidAmount,
+      'sInvoiceNo': payment.sInvoiceNo,
+      'sBank': payment.sBank,
+      'sDescription': payment.sDescription,
+      'dDate': payment.dDate!.toIso8601String(),
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    return response;
+  }
+
   DBHelper dbHelper = DBHelper();
   final dateController = TextEditingController();
   final payController = TextEditingController();
@@ -856,6 +906,7 @@ class _PaymentRecoveryState extends State<PaymentRecovery> {
                         builder: (context, state) {
                           return GestureDetector(
                             onTap: () async {
+                              final appID = await db.getAppId();
                               // if (IsPressed == true) {
                               // final payment = PermanentCustomerPayment(iBankID: 1);
                               // } else {
@@ -882,6 +933,45 @@ class _PaymentRecoveryState extends State<PaymentRecovery> {
                                         payment,
                                       ),
                                     );
+
+                                if (await isInternetAvailable()) {
+                                  try {
+                                    // Send data to API
+                                    final response =
+                                        await sendPaymentToApi(payment);
+                                    if (response.statusCode == 200) {
+                                      print('Payment sent to API successfully');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Payment sent to server and saved locally')),
+                                      );
+                                    } else {
+                                      print(
+                                          'Failed to send payment to API: ${response.body}');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Failed to send payment to server')),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    print('Error sending payment to API: $e');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Error occurred while sending payment to server')),
+                                    );
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'No internet connection. Payment saved locally')),
+                                  );
+                                }
                                 _handleSaveLocation();
                                 context.read<Popbloc>().add(ClearSelection());
                                 noteController.clear();

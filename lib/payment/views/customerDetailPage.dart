@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
-import 'package:okra_distributer/payment/popUpbloc/popBloc.dart';
-import 'package:okra_distributer/payment/popUpbloc/popEvent.dart';
-import 'package:okra_distributer/payment/popUpbloc/popState.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popBloc.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popEvent.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popState.dart';
 
 class Customerdetailpage extends StatefulWidget {
   final Customer customer;

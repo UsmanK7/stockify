@@ -1,5 +1,6 @@
 class Constant {
-  static const baseUrl = 'https://1918-39-44-67-217.ngrok-free.app';
+  static const baseUrl = 'https://1ba6-39-44-66-115.ngrok-free.app';
+////////////////this is for checkin am i opening the correct file
   static const loginUrl = '$baseUrl/stockfiy/api/auth/login';
   static const firmUrl = '$baseUrl/stockfiy/api/Phase1/getFirmDetails';
   static const userUrl = '$baseUrl/stockfiy/api/Phase1/getUserDetails';
@@ -15,8 +16,7 @@ class Constant {
   static const cities = '$baseUrl/stockfiy/api/Phase1/ListCities';
   static const areas = '$baseUrl/stockfiy/api/Phase1/ListAreas';
   static const customer = '$baseUrl/stockfiy/api/Phase1/ListPermanentCustomers';
+  static const appId = '$baseUrl/stockfiy/api/auth/saveDeviceData';
+  static const sendApi =
+      '$baseUrl/stockfiy/api/realdata/StorePermanentCustomerPayments';
 }
-
-
-
-// "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjE2MjU4NDgsImRhdGEiOnsiaWQiOiI3IiwidXNlcm5hbWUiOiJuYXZlZWQ1NTU3NiJ9fQ.sFxSZt0F4l2eUS2dsr3qpdNPEgCuRBK1e_gV7u1-lOU"

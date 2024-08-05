@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
-
 import 'package:okra_distributer/view/sale/bloc/date_picker_bloc/data_picker_bloc.dart';
 import 'package:okra_distributer/view/sale/bloc/date_picker_bloc/data_picker_event.dart';
 import 'package:okra_distributer/view/sale/bloc/date_picker_bloc/data_picker_state.dart';
-
 import 'package:okra_distributer/view/sale_order/bloc/sale_order_bloc/sale_order_bloc.dart';
 import 'package:okra_distributer/view/sale_order/bloc/sale_order_bloc/sale_order_state.dart';
 import 'package:okra_distributer/view/sale_order/bloc/sale_order_bloc/sale_order_event.dart';
@@ -21,6 +17,8 @@ import 'package:okra_distributer/view/sale_order/sale_order_form/Items_order_scr
 import 'package:okra_distributer/view/sale_order/sale_order_form/customer_ui/customer_screen.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/sale_order_added_screen.dart';
 import 'package:sqflite/sqflite.dart';
+
+
 
 class SalesOrderForm extends StatefulWidget {
   final Database database;

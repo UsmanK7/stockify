@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
-import 'package:okra_distributer/payment/popUpbloc/popEvent.dart';
-import 'package:okra_distributer/payment/popUpbloc/popState.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popEvent.dart';
+import 'package:okra_distributer/bloc/popUpbloc/popState.dart';
+import 'package:okra_distributer/payment/views/apicheckingScreen.dart';
 import 'package:path/path.dart';
 
 import 'package:intl/intl.dart';
@@ -28,6 +30,7 @@ class Popbloc extends Bloc<PopEvent, Popstate> {
     on<SelectCustomer>(_mapCustomer);
     on<UpdateSlectedCustomer>(_mapUpdateSelectedCustomer);
     on<UpdateSelectedBanks>(_mapUpdateSelectedBanks);
+
     on<InsertPayment>(_insertPayment);
     on<ClearSelection>(_clearSection);
     on<FetchCustomerExpenses>(_mapFetchCustomerExpenses);
@@ -38,6 +41,7 @@ class Popbloc extends Bloc<PopEvent, Popstate> {
     on<SelectDate>(_mapSelectDate);
     on<FetchCurrentTime>(_mapFetchCurrentTime);
     on<FilterPaymentsByDate>(_filterPaymentsByDate);
+
     // on<UpdateSelectedDate>(_updateDate);
 
     _startTimer();
