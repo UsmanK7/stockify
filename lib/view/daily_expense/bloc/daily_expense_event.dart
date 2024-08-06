@@ -6,3 +6,12 @@ class AddDailyExpenseEvent extends DailyExpenseEvent {
   final DailyExpense dailyExpense;
   AddDailyExpenseEvent({required this.dailyExpense});
 }
+
+class DailyExpenseTypeActionEvent extends DailyExpenseEvent {}
+
+class DailyExpenseTypeChangedActionEvent extends DailyExpenseEvent {
+  String selectedItem;
+  List<ExpenseTypeModel> expenseTypes;
+  DailyExpenseTypeChangedActionEvent(
+      {required this.selectedItem, required this.expenseTypes});
+}

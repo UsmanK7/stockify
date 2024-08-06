@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,9 +69,21 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
   void initState() {
     _dateController.text = formatDate(_selectedDate);
     context.read<Popbloc>().add(SelectBanks(''));
+    dailyExpenseBloc.add(DailyExpenseTypeActionEvent());
     super.initState();
   }
 
+  final List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
+  ];
+  int? ExpenseTypeID;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,37 +105,143 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   children: [
-                    BlocBuilder<DailyExpenseDateBloc, DateState>(
-                        builder: (context, state) {
-                      dSaleDate = state.date;
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            height: 56,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Color(0xffC6C6DF))),
+                            child: BlocBuilder<DailyExpenseBloc,
+                                DailyExpenseState>(
+                              bloc: dailyExpenseBloc,
+                              buildWhen: (current, previous) =>
+                                  previous is DailyExpenseTypeActionState,
+                              builder: (context, state) {
+                                if (state is DailyExpenseTypeActionState) {
+                                  List<String> typeNames = state.expenseTypes
+                                      .map((expenseType) =>
+                                          expenseType.sTypeName)
+                                      .toList();
 
-                      return GestureDetector(
-                        onTap: () async {
-                          context.read<DailyExpenseDateBloc>().add(
-                              DateEventChange(
-                                  date: await _selectDate(context)));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          height: 56,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: Color(0xffC6C6DF))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                state.date,
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black),
-                              ),
-                              Icon(Icons.calendar_today, color: Colors.grey),
-                            ],
+                                  return DropdownButtonHideUnderline(
+                                      child: DropdownButton2<String>(
+                                          isExpanded: true,
+                                          hint: const Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  'Expense Type',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          items: typeNames
+                                              .map((String item) =>
+                                                  DropdownMenuItem<String>(
+                                                    value: item,
+                                                    child: Text(
+                                                      item,
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: state.selectedItem ?? null,
+                                          onChanged: (value) {
+                                            dailyExpenseBloc.add(
+                                                DailyExpenseTypeChangedActionEvent(
+                                                    expenseTypes:
+                                                        state.expenseTypes,
+                                                    selectedItem: value!));
+
+                                            ExpenseTypeID =
+                                                typeNames.indexOf(value);
+
+                                            ExpenseTypeID = ExpenseTypeID! + 1;
+                                          },
+                                          dropdownStyleData: DropdownStyleData(
+                                            maxHeight: 200,
+                                            width: 150,
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  MaterialStateProperty.all(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all(
+                                                      true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                            padding: EdgeInsets.only(
+                                                left: 14, right: 14),
+                                          )));
+                                } else {
+                                  return CircularProgressIndicator();
+                                }
+                              },
+                            ),
                           ),
                         ),
-                      );
-                    }),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: BlocBuilder<DailyExpenseDateBloc, DateState>(
+                              builder: (context, state) {
+                            dSaleDate = state.date;
+
+                            return GestureDetector(
+                              onTap: () async {
+                                context.read<DailyExpenseDateBloc>().add(
+                                    DateEventChange(
+                                        date: await _selectDate(context)));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                height: 56,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border:
+                                        Border.all(color: Color(0xffC6C6DF))),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      state.date,
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black),
+                                    ),
+                                    Icon(Icons.calendar_today,
+                                        color: Colors.grey),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 10),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 15),
@@ -260,10 +379,23 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                 return GestureDetector(
                   onTap: () {
                     GetStorage _box = GetStorage();
+                    if (ExpenseTypeID == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please select a Expense Type')),
+                      );
+                    } else if (_amountController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please enter amount')),
+                      );
+                    } else if (_descriptionController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please enter description')),
+                      );
+                    }
 
                     dailyExpenseBloc.add(AddDailyExpenseEvent(
                         dailyExpense: DailyExpense(
-                      iExpenseTypeID: 9,
+                      iExpenseTypeID: ExpenseTypeID,
                       iBankID: iBankIDPAIDAmount,
                       iTableID: 00,
                       dcAmount: _amountController.text.toString(),

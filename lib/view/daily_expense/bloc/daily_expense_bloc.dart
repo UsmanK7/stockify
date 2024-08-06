@@ -9,10 +9,37 @@ import 'package:http/http.dart' as http;
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/view/daily_expense/bloc/daily_expense_event.dart';
 import 'package:okra_distributer/view/daily_expense/bloc/daily_expense_state.dart';
+import 'package:okra_distributer/view/daily_expense/model/daily_expense_model.dart';
 
 class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
   DailyExpenseBloc() : super(DailyExpenseInitialState()) {
     on<AddDailyExpenseEvent>(addDailyExpenseEvent);
+    on<DailyExpenseTypeActionEvent>(dailyExpenseTypeActionEvent);
+    on<DailyExpenseTypeChangedActionEvent>(dailyExpenseTypeChangedActionEvent);
+  }
+  FutureOr<void> dailyExpenseTypeActionEvent(DailyExpenseTypeActionEvent event,
+      Emitter<DailyExpenseState> emit) async {
+    DBHelper dbHelper = DBHelper();
+    final db = await dbHelper.database;
+
+    // Fetch rows from the database
+    List<Map<String, dynamic>> rows = await db.rawQuery('''
+    SELECT *
+    FROM expense_type
+  ''');
+
+    // Convert rows to a list of ExpenseType objects
+    List<ExpenseTypeModel> expenseTypes =
+        rows.map((row) => ExpenseTypeModel.fromMap(row)).toList();
+    emit(DailyExpenseTypeActionState(expenseTypes: expenseTypes));
+    // Use the list of ExpenseType objects as needed
+  }
+
+  FutureOr<void> dailyExpenseTypeChangedActionEvent(
+      DailyExpenseTypeChangedActionEvent event,
+      Emitter<DailyExpenseState> emit) {
+    emit(DailyExpenseTypeActionState(
+        expenseTypes: event.expenseTypes, selectedItem: event.selectedItem));
   }
 
   FutureOr<void> addDailyExpenseEvent(

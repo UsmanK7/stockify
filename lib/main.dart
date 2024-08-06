@@ -8,6 +8,7 @@ import 'package:okra_distributer/bloc/fetchdataaBloc/fetchDataBloc.dart';
 import 'package:okra_distributer/bloc/fetchdataaBloc/fetchdataevent.dart';
 import 'package:okra_distributer/bloc/popUpbloc/popBloc.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
+import 'package:okra_distributer/view/daily_expense/bloc/daily_expense_bloc.dart';
 
 import 'package:okra_distributer/view/daily_expense/bloc/date_picker_bloc/data_picker_bloc.dart';
 
@@ -68,6 +69,9 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider<DailyExpenseDateBloc>(
               create: (context) => DailyExpenseDateBloc(),
+            ),
+             BlocProvider<DailyExpenseBloc>(
+              create: (context) => DailyExpenseBloc(),
             ),
           ],
           child: MaterialApp(

@@ -113,3 +113,87 @@ class DailyExpense {
     );
   }
 }
+
+class ExpenseTypeModel {
+  final int iExpenseTypeID;
+  final int? iFirmID;
+  final String sTypeName;
+  final String? sCode;
+  final String? bStatus;
+  final String? sSyncStatus;
+  final String? sEntrySource;
+  final String? sAction;
+  final DateTime? dtCreatedDate;
+  final int? iAddedBy;
+  final DateTime? dtUpdatedDate;
+  final int? iUpdatedBy;
+  final DateTime? dtDeletedDate;
+  final int? iDeletedBy;
+  final int? transaction_id;
+
+  ExpenseTypeModel({
+    required this.iExpenseTypeID,
+    this.iFirmID,
+    required this.sTypeName,
+    this.sCode,
+    this.bStatus,
+    this.sSyncStatus,
+    this.sEntrySource,
+    this.sAction,
+    this.dtCreatedDate,
+    this.iAddedBy,
+    this.dtUpdatedDate,
+    this.iUpdatedBy,
+    this.dtDeletedDate,
+    this.iDeletedBy,
+    this.transaction_id,
+  });
+
+  // Convert a map to an ExpenseType object
+  factory ExpenseTypeModel.fromMap(Map<String, dynamic> map) {
+    return ExpenseTypeModel(
+      iExpenseTypeID: map['iExpenseTypeID'],
+      iFirmID: map['iFirmID'],
+      sTypeName: map['sTypeName'],
+      sCode: map['sCode'],
+      bStatus: map['bStatus'],
+      sSyncStatus: map['sSyncStatus'],
+      sEntrySource: map['sEntrySource'],
+      sAction: map['sAction'],
+      dtCreatedDate: map['dtCreatedDate'] != null
+          ? DateTime.parse(map['dtCreatedDate'])
+          : null,
+      iAddedBy: map['iAddedBy'],
+      dtUpdatedDate: map['dtUpdatedDate'] != null
+          ? DateTime.parse(map['dtUpdatedDate'])
+          : null,
+      iUpdatedBy: map['iUpdatedBy'],
+      dtDeletedDate: map['dtDeletedDate'] != null
+          ? DateTime.parse(map['dtDeletedDate'])
+          : null,
+      iDeletedBy: map['iDeletedBy'],
+      transaction_id: map['transaction_id'],
+    );
+  }
+
+  // Convert an ExpenseType object to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'iExpenseTypeID': iExpenseTypeID,
+      'iFirmID': iFirmID,
+      'sTypeName': sTypeName,
+      'sCode': sCode,
+      'bStatus': bStatus,
+      'sSyncStatus': sSyncStatus,
+      'sEntrySource': sEntrySource,
+      'sAction': sAction,
+      'dtCreatedDate': dtCreatedDate?.toIso8601String(),
+      'iAddedBy': iAddedBy,
+      'dtUpdatedDate': dtUpdatedDate?.toIso8601String(),
+      'iUpdatedBy': iUpdatedBy,
+      'dtDeletedDate': dtDeletedDate?.toIso8601String(),
+      'iDeletedBy': iDeletedBy,
+      'transaction_id': transaction_id,
+    };
+  }
+}

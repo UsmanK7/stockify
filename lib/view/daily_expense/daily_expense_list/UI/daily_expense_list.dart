@@ -411,13 +411,13 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                           padding: EdgeInsets.only(right: 20),
                           decoration: BoxDecoration(
                             border: Border(
-                              // right: BorderSide(
-                              //   color:
-                              //       appsearchBoxColor, // Set the color of the right border here
-                              //   width:
-                              //       1, // Set the width of the right border here
-                              // ),
-                            ),
+                                // right: BorderSide(
+                                //   color:
+                                //       appsearchBoxColor, // Set the color of the right border here
+                                //   width:
+                                //       1, // Set the width of the right border here
+                                // ),
+                                ),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

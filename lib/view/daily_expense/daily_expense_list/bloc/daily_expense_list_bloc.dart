@@ -39,7 +39,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     DBHelper dbHelper = DBHelper();
     final db = await dbHelper.database;
 
-    List<Map<String, dynamic>> result = await db.rawQuery('''
+    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
   SELECT de.*, et.sTypeName as expenseTypeName
   FROM daily_expense de
   LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
@@ -54,7 +54,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     // ''', [currentDate]);
 
     emit(SuccessState(
-        saleList: result, firstDate: currentDate, lastDate: currentDate));
+        saleList: saleRows, firstDate: currentDate, lastDate: currentDate));
   }
 
   FutureOr<void> saleListLastMonthEvent(SaleOrderListLastMonthEvent event,
@@ -71,30 +71,37 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     final db = await dbHelper.database;
 
     // Query to fetch sales between the first and last dates of last month
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-      SELECT s.*, pc.sName as customerName
-      FROM sale_order s
-      LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // ''', [firstDateStr, lastDateStr]);
+
+    List<Map<String, dynamic>> salesList = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate BETWEEN ? AND ?
     ''', [firstDateStr, lastDateStr]);
 
-    // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleOrderID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
+    // // List to hold SaleListModel instances
+    // List<SaleOrderListModel> salesList = [];
+    // // Iterate over fetched rows and populate SaleListModel instances
+    // saleRows.forEach((row) {
+    //   salesList.add(SaleOrderListModel(
+    //     saleId: row['iSaleOrderID'],
+    //     sSyncStatus: row['sSyncStatus'],
+    //     invoice_price: row['dcTotalBill'],
 
-        customer_Name: row['customerName'],
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
+    //     customer_Name: row['customerName'],
+    //     total_discount: row['dcTotalDiscount'],
+    //     sale_date: row['dSaleOrderDate'], // Add the sale date
+    //   ));
+    // });
+    // for (int i = 0; i < salesList.length; i++) {
+    //   print(salesList[i].sale_date);
+    // }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -114,30 +121,36 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     final db = await dbHelper.database;
 
     // Query to fetch sales between the first and last dates of this month
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-      SELECT s.*, pc.sName as customerName
-      FROM sale_order s
-      LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // ''', [firstDateStr, lastDateStr]);
+    List<Map<String, dynamic>> salesList = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate BETWEEN ? AND ?
     ''', [firstDateStr, lastDateStr]);
 
     // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleOrderID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
+    // List<SaleOrderListModel> salesList = [];
+    // // Iterate over fetched rows and populate SaleListModel instances
+    // saleRows.forEach((row) {
+    //   salesList.add(SaleOrderListModel(
+    //     saleId: row['iSaleOrderID'],
+    //     sSyncStatus: row['sSyncStatus'],
+    //     invoice_price: row['dcTotalBill'],
 
-        customer_Name: row['customerName'],
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
+    //     customer_Name: row['customerName'],
+    //     total_discount: row['dcTotalDiscount'],
+    //     sale_date: row['dSaleOrderDate'], // Add the sale date
+    //   ));
+    // });
+    // for (int i = 0; i < salesList.length; i++) {
+    //   print(salesList[i].sale_date);
+    // }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -156,30 +169,36 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     final db = await dbHelper.database;
 
     // Query to fetch sales between the first and last dates of this week
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-      SELECT s.*, pc.sName as customerName
-      FROM sale_order s
-      LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // ''', [firstDateStr, lastDateStr]);
+    List<Map<String, dynamic>> salesList = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate BETWEEN ? AND ?
     ''', [firstDateStr, lastDateStr]);
 
     // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleOrderID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
+    // List<SaleOrderListModel> salesList = [];
+    // // Iterate over fetched rows and populate SaleListModel instances
+    // saleRows.forEach((row) {
+    //   salesList.add(SaleOrderListModel(
+    //     saleId: row['iSaleOrderID'],
+    //     sSyncStatus: row['sSyncStatus'],
+    //     invoice_price: row['dcTotalBill'],
 
-        customer_Name: row['customerName'],
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
+    //     customer_Name: row['customerName'],
+    //     total_discount: row['dcTotalDiscount'],
+    //     sale_date: row['dSaleOrderDate'], // Add the sale date
+    //   ));
+    // });
+    // for (int i = 0; i < salesList.length; i++) {
+    //   print(salesList[i].sale_date);
+    // }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -198,30 +217,37 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     final db = await dbHelper.database;
 
     // Query to fetch sales between the first and last dates of this week
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-      SELECT s.*, pc.sName as customerName
-      FROM sale_order s
-      LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // ''', [firstDateStr, lastDateStr]);
+
+    List<Map<String, dynamic>> salesList = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate BETWEEN ? AND ?
     ''', [firstDateStr, lastDateStr]);
 
     // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleOrderID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
+    // List<SaleOrderListModel> salesList = [];
+    // // Iterate over fetched rows and populate SaleListModel instances
+    // saleRows.forEach((row) {
+    //   salesList.add(SaleOrderListModel(
+    //     saleId: row['iSaleOrderID'],
+    //     sSyncStatus: row['sSyncStatus'],
+    //     invoice_price: row['dcTotalBill'],
 
-        customer_Name: row['customerName'],
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
+    //     customer_Name: row['customerName'],
+    //     total_discount: row['dcTotalDiscount'],
+    //     sale_date: row['dSaleOrderDate'], // Add the sale date
+    //   ));
+    // });
+    // for (int i = 0; i < salesList.length; i++) {
+    //   print(salesList[i].sale_date);
+    // }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -241,30 +267,36 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     final db = await dbHelper.database;
 
     // Query to fetch sales between the first and last dates of this week
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-      SELECT s.*, pc.sName as customerName
-      FROM sale_order s
-      LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // ''', [firstDateStr, lastDateStr]);
+
+    List<Map<String, dynamic>> salesList = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate BETWEEN ? AND ?
     ''', [firstDateStr, lastDateStr]);
-
     // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleOrderID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
-        customer_Name: row['customerName'],
+    // List<SaleOrderListModel> salesList = [];
+    // // Iterate over fetched rows and populate SaleListModel instances
+    // saleRows.forEach((row) {
+    //   salesList.add(SaleOrderListModel(
+    //     saleId: row['iSaleOrderID'],
+    //     sSyncStatus: row['sSyncStatus'],
+    //     invoice_price: row['dcTotalBill'],
+    //     customer_Name: row['customerName'],
 
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
+    //     total_discount: row['dcTotalDiscount'],
+    //     sale_date: row['dSaleOrderDate'], // Add the sale date
+    //   ));
+    // });
+    // for (int i = 0; i < salesList.length; i++) {
+    //   print(salesList[i].sale_date);
+    // }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -276,27 +308,34 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     final db = await dbHelper.database;
 
     // Query to fetch sales between the first and last dates of this week
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-      SELECT s.*, pc.sName as customerName
-      FROM sale_order s
-      LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    // ''', [event.fastDay, event.lastDay]);
+
+    List<Map<String, dynamic>> salesList = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate BETWEEN ? AND ?
     ''', [event.fastDay, event.lastDay]);
 
     // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
+    // List<SaleOrderListModel> salesList = [];
+    // // Iterate over fetched rows and populate SaleListModel instances
+    // saleRows.forEach((row) {
+    //   salesList.add(SaleOrderListModel(
+    //     saleId: row['iSaleID'],
+    //     sSyncStatus: row['sSyncStatus'],
+    //     invoice_price: row['dcTotalBill'],
 
-        customer_Name: row['customerName'],
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
+    //     customer_Name: row['customerName'],
+    //     total_discount: row['dcTotalDiscount'],
+    //     sale_date: row['dSaleOrderDate'], // Add the sale date
+    //   ));
+    // });
     emit(SuccessState(
         saleList: salesList,
         firstDate: event.fastDay,
@@ -308,8 +347,8 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     DBHelper dbHelper = DBHelper();
     final db = await dbHelper.database;
     await db.delete(
-      'sale_order',
-      where: 'iSaleOrderID = ?',
+      'daily_expense',
+      where: 'iDailyExpenseID = ?',
       whereArgs: [event.SaleId],
     );
 
@@ -318,7 +357,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
       SELECT s.*, pc.sName as customerName
       FROM sale_order s
       LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-      WHERE s.dSaleOrderDate BETWEEN ? AND ?
+      WHERE de.dDate BETWEEN ? AND ?
     ''', [event.firstDate, event.lastDate]);
 
     // List to hold SaleListModel instances
