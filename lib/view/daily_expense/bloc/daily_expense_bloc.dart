@@ -27,29 +27,29 @@ class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
       'iBankID': dailyExpense.iBankID ?? 00,
       'iTableID': dailyExpense.iTableID ?? 00,
       'sTableName': dailyExpense.sTableName ?? 00,
-      'sExpenseFor': dailyExpense.sExpenseFor ?? '',
-      'sVocherNo': dailyExpense.sVocherNo ?? '',
+      'sExpenseFor': dailyExpense.sExpenseFor ?? '00',
+      'sVocherNo': dailyExpense.sVocherNo ?? '00',
       'sVocherScanImagePath': dailyExpense.sVocherScanImagePath ?? '',
       'dcAmount': dailyExpense.dcAmount ?? 00,
-      'sDescription': dailyExpense.sDescription ?? '',
+      'sDescription': dailyExpense.sDescription ?? '00',
       'iFirmID': dailyExpense.iFirmID ?? 00,
       'iSystemUserID': dailyExpense.iSystemUserID ?? 00,
-      'dDate': dailyExpense.dDate ?? '',
-      'sEtc': dailyExpense.sEtc ?? '',
-      'bStatus': dailyExpense.bStatus ?? '',
+      'dDate': dailyExpense.dDate ?? '00',
+      'sEtc': dailyExpense.sEtc ?? '00',
+      'bStatus': dailyExpense.bStatus ?? '00',
       'sSyncStatus': dailyExpense.sSyncStatus ?? 00,
       'sEntrySource': dailyExpense.sEntrySource ?? 00,
-      'sAction': dailyExpense.sAction ?? '',
-      'dtCreatedDate': dailyExpense.dtCreatedDate ?? '',
+      'sAction': dailyExpense.sAction ?? '00',
+      'dtCreatedDate': dailyExpense.dtCreatedDate ?? '00',
       'iAddedBy': dailyExpense.iAddedBy ?? 00,
-      'dtUpdatedDate': dailyExpense.dtUpdatedDate ?? '',
-      'iUpdatedBy': dailyExpense.iUpdatedBy ?? '',
-      'dtDeletedDate': dailyExpense.dtDeletedDate ?? '',
+      'dtUpdatedDate': dailyExpense.dtUpdatedDate ?? '00',
+      'iUpdatedBy': dailyExpense.iUpdatedBy ?? '00',
+      'dtDeletedDate': dailyExpense.dtDeletedDate ?? '00',
       'iDeletedBy': dailyExpense.iDeletedBy ?? 00,
       'iStoreID': dailyExpense.iStoreID ?? 00,
-      'transaction_id': dailyExpense.transactionId ?? '',
+      'transaction_id': dailyExpense.transactionId ?? '00',
     };
-    print(values);
+
     // Insert into the 'daily_expense' table
     await db.insert(
       'daily_expense',
@@ -59,7 +59,7 @@ class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
     var result = await db
         .rawQuery('SELECT MAX(iDailyExpenseID) as lastID FROM daily_expense');
     final lastid = result.first['lastID'];
-    print(lastid);
+
     // API CALL
     final Uri url = Uri.parse(addDailyExpenseUrl);
     final _box = GetStorage();
@@ -73,30 +73,29 @@ class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
       'iBankID': dailyExpense.iBankID ?? 00,
       'iTableID': dailyExpense.iTableID ?? 00,
       'sTableName': dailyExpense.sTableName ?? 00,
-      'sExpenseFor': dailyExpense.sExpenseFor ?? '',
-      'sVocherNo': dailyExpense.sVocherNo ?? '',
-      'sVocherScanImagePath': dailyExpense.sVocherScanImagePath ?? '',
+      'sExpenseFor': dailyExpense.sExpenseFor ?? '00',
+      'sVocherNo': dailyExpense.sVocherNo ?? '00',
+      'sVocherScanImagePath': dailyExpense.sVocherScanImagePath ?? '00',
       'dcAmount': dailyExpense.dcAmount ?? 00,
-      'sDescription': dailyExpense.sDescription ?? '',
+      'sDescription': dailyExpense.sDescription ?? '00',
       'iFirmID': dailyExpense.iFirmID ?? 00,
       'iSystemUserID': dailyExpense.iSystemUserID ?? 00,
-      'dDate': dailyExpense.dDate ?? '',
-      'sEtc': dailyExpense.sEtc ?? '',
-      'bStatus': dailyExpense.bStatus ?? '',
+      'dDate': dailyExpense.dDate ?? '00',
+      'sEtc': dailyExpense.sEtc ?? '00',
+      'bStatus': dailyExpense.bStatus ?? '00',
       'sSyncStatus': dailyExpense.sSyncStatus ?? 00,
       'sEntrySource': dailyExpense.sEntrySource ?? 00,
-      'sAction': dailyExpense.sAction ?? '',
-      'dtCreatedDate': dailyExpense.dtCreatedDate ?? '',
+      'sAction': dailyExpense.sAction ?? '00',
+      'dtCreatedDate': dailyExpense.dtCreatedDate ?? '00',
       'iAddedBy': dailyExpense.iAddedBy ?? 00,
-      'dtUpdatedDate': dailyExpense.dtUpdatedDate ?? '',
-      'iUpdatedBy': dailyExpense.iUpdatedBy ?? '',
-      'dtDeletedDate': dailyExpense.dtDeletedDate ?? '',
+      'dtUpdatedDate': dailyExpense.dtUpdatedDate ?? '00',
+      'iUpdatedBy': dailyExpense.iUpdatedBy ?? '00',
+      'dtDeletedDate': dailyExpense.dtDeletedDate ?? '00',
       'iDeletedBy': dailyExpense.iDeletedBy ?? 00,
       'iStoreID': dailyExpense.iStoreID ?? 00,
-      'transaction_id': dailyExpense.transactionId ?? '',
+      'transaction_id': dailyExpense.transactionId ?? '00',
     };
 
-    print(body);
     final headers = {'Content-Type': 'application/json'};
     final response = await http.post(
       url,
@@ -104,19 +103,24 @@ class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
       body: jsonEncode(body),
     );
 
+    print(response.statusCode);
+    final jsonResponse = jsonDecode(response.body);
+    print(jsonResponse);
+
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse.containsKey('error')) {
         print(jsonResponse['faced error']);
+
         // emit(InitialAuthState());
       } else if (jsonResponse.containsKey('success')) {
-        String transaction_id = jsonResponse['transaction_id'];
-        print(transaction_id);
+        final transaction_id = await jsonResponse['transaction_id'];
+
         await db.update(
           'daily_expense',
           {
             'sSyncStatus': 1,
-            'transaction_id': transaction_id,
+            'transaction_id': transaction_id.toString(),
           },
           where: 'iDailyExpenseID = ?',
           whereArgs: [lastid],
@@ -126,6 +130,7 @@ class DailyExpenseBloc extends Bloc<DailyExpenseEvent, DailyExpenseState> {
       print("Erorr: ${response.statusCode}");
       print("Error body: ${response.body}");
     }
+
     emit(DailyExpenseAddedState());
   }
 }

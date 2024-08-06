@@ -9,7 +9,7 @@ Color appborder = Color(0xffC6C6DF);
 Color apptextColor = Color(0xff91919F);
 Color appsubtitletextColor = Color(0xff767E8C);
 Color appsearchBoxColor = Color(0xffD9D9D9);
-const baseUrl = 'https://1ba6-39-44-66-115.ngrok-free.app';
+const baseUrl = 'https://e864-39-44-66-115.ngrok-free.app';
 const loginUrl = '$baseUrl/stockfiy/api/auth/login';
 const addSaleOrderUrl = '$baseUrl/stockfiy/api/realdata/storesaleorder';
 const addDailyExpenseUrl = '$baseUrl/stockfiy/api/realdata/StoreDailyExpenses';
@@ -99,4 +99,12 @@ DateTime getFirstDateOfLastSixMonthsIncludingCurrent() {
 DateTime getLastDateOfLastSixMonthsIncludingCurrent() {
   DateTime now = DateTime.now();
   return now; // Last date is the current date
+}
+
+String truncateAfterChars(String text, int maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) +
+        '...'; // Adding '...' to indicate truncation
+  }
+  return text;
 }

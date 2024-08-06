@@ -1,15 +1,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:okra_distributer/components/sale_order_list_card.dart';
+import 'package:okra_distributer/components/expense_list_card.dart';
 
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
-import 'package:okra_distributer/view/sale_order/sale_order_list/UI/sale_order_list_details_screen.dart';
-
-import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_bloc.dart';
-import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_event.dart';
-import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_state.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_bloc.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_event.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_state.dart';
 
 class DailyExpenseList extends StatefulWidget {
   const DailyExpenseList({super.key});
@@ -78,8 +76,8 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
         backgroundColor: appBlue,
         title: AppText(
           color: Colors.white,
-          title: "Sales List",
-          font_size: 18.0,
+          title: "Daily Expense List",
+          font_size: 14.0,
           fontWeight: FontWeight.w300,
         ),
         actions: [
@@ -109,7 +107,7 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                     width: 24, // Set the width of the container
                     height: 24, // Set the height of the container
                     child: Image.asset(
-                      "assets/images/sync.png",
+                      "assets/images/sync-button-card.png",
                       fit: BoxFit
                           .contain, // Use BoxFit.contain to fit the image within the container
                     ),
@@ -125,16 +123,12 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
         bloc: saleOrderListBloc,
         builder: (context, state) {
           if (state is SuccessState) {
-            double totalInvoicePrice = state.saleList.length == 0
-                ? 0
-                : state.saleList
-                    .map((sale) => sale.invoice_price)
-                    .reduce((value, element) => value + element);
-            double totalDiscount = state.saleList.length == 0
-                ? 0
-                : state.saleList
-                    .map((sale) => sale.total_discount)
-                    .reduce((value, element) => value + element);
+            // Calculate the sum of all `dcAmount` values
+            double sumExpenseAmount = state.saleList.fold(0.0, (sum, item) {
+              // Safely handle potential null values and convert to double
+              final amount = item['dcAmount'] as double? ?? 0.0;
+              return sum + amount;
+            });
             String firstDay = state.firstDate;
             String lastDay = state.lastDate;
             return Stack(
@@ -257,40 +251,38 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         child: ListView.builder(
                           itemCount: state.saleList.length,
                           itemBuilder: (context, index) {
-                            print(state.saleList[index].saleId);
-
+                            // print(state.saleList[index]['iDailyExpenseID']);
+                            // print(state.saleList[index]['sSyncStatus']);
+                            print(state.saleList[index]['dcAmount']);
                             if (state.saleList.isNotEmpty) {
-                              if (state.saleList[index].sSyncStatus != "0") {
+                              if (state.saleList[index]['sSyncStatus'] != "0") {
                                 return GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SaleOrderListDetails(
-                                                    SaleId: state
-                                                        .saleList[index]
-                                                        .saleId)));
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             SaleOrderListDetails(
+                                    //                 SaleId: state
+                                    //                     .saleList[index]
+                                    //                     .saleId)));
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 2),
-                                    child: SaleOrderListCard(
-                                      syncstatus:
-                                          state.saleList[index].sSyncStatus,
-                                      name:
-                                          state.saleList[index].customer_Name ??
-                                              "null",
-                                      index: state.saleList[index].saleId,
-                                      discount: state
-                                              .saleList[index].total_discount ??
-                                          0,
-                                      invoice_price:
-                                          state.saleList[index].invoice_price ??
-                                              0,
-                                      sale_date:
-                                          state.saleList[index].sale_date,
-                                    ),
-                                  ),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2),
+                                      child: ExpenseListCard(
+                                        ExpenseType: state.saleList[index]
+                                            ['expenseTypeName'],
+                                        date: state.saleList[index]['dDate'],
+                                        description: state.saleList[index]
+                                            ['sDescription'],
+                                        amount: state.saleList[index]
+                                            ['dcAmount'],
+                                        syncStatus: state.saleList[index]
+                                            ['sSyncStatus'],
+                                        transaction_id: state.saleList[index]
+                                            ['transaction_id'],
+                                      )),
                                 );
                               } else {
                                 // Render a Dismissible widget for items with sSyncStatus as "0"
@@ -311,48 +303,49 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                                         ),
                                       ),
                                     ),
-                                    key: Key(state.saleList[index].saleId
+                                    key: Key(state.saleList[index]
+                                            ['iDailyExpenseID']
                                         .toString()),
-                                    direction: DismissDirection.endToStart,
-                                    onDismissed: (direction) async {
-                                      saleOrderListBloc
-                                          .add(SaleOrderListDismissEvent(
-                                        firstDate: firstDay,
-                                        lastDate: lastDay,
-                                        SaleId: state.saleList[index].saleId,
-                                      ));
-                                    },
+                                    // key: Key(state.saleList[index].saleId
+                                    //     .toString()),
+                                    // direction: DismissDirection.endToStart,
+                                    // onDismissed: (direction) async {
+                                    //   saleOrderListBloc
+                                    //       .add(SaleOrderListDismissEvent(
+                                    //     firstDate: firstDay,
+                                    //     lastDate: lastDay,
+                                    //     SaleId: state.saleList[index].saleId,
+                                    //   ));
+                                    // },
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SaleOrderListDetails(
-                                                        SaleId: state
-                                                            .saleList[index]
-                                                            .saleId)));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             SaleOrderListDetails(
+                                        //                 SaleId: state
+                                        //                     .saleList[index]
+                                        //                     .saleId)));
                                       },
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 8),
-                                        child: SaleOrderListCard(
-                                          syncstatus:
-                                              state.saleList[index].sSyncStatus,
-                                          name: state.saleList[index]
-                                                  .customer_Name ??
-                                              "null",
-                                          index: state.saleList[index].saleId,
-                                          discount: state.saleList[index]
-                                                  .total_discount ??
-                                              0,
-                                          invoice_price: state.saleList[index]
-                                                  .invoice_price ??
-                                              0,
-                                          sale_date:
-                                              state.saleList[index].sale_date,
-                                        ),
-                                      ),
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 2),
+                                          child: ExpenseListCard(
+                                            ExpenseType: state.saleList[index]
+                                                ['expenseTypeName'],
+                                            date: state.saleList[index]
+                                                ['dDate'],
+                                            description: state.saleList[index]
+                                                ['sDescription'],
+                                            amount: state.saleList[index]
+                                                ['dcAmount'],
+                                            syncStatus: state.saleList[index]
+                                                ['sSyncStatus'],
+                                            transaction_id:
+                                                state.saleList[index]
+                                                    ['transaction_id'],
+                                          )),
                                     ),
                                   ),
                                 );
@@ -414,6 +407,37 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         SizedBox(
                           width: 20,
                         ),
+                        Container(
+                          padding: EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              // right: BorderSide(
+                              //   color:
+                              //       appsearchBoxColor, // Set the color of the right border here
+                              //   width:
+                              //       1, // Set the width of the right border here
+                              // ),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppText(
+                                  title: "Expense Amount",
+                                  color: Colors.black,
+                                  font_size: 15,
+                                  fontWeight: FontWeight.w400),
+                              AppText(
+                                  title: sumExpenseAmount.toString(),
+                                  color: appsubtitletextColor,
+                                  font_size: 15,
+                                  fontWeight: FontWeight.w400),
+                            ],
+                          ),
+                        ),
+                        // SizedBox(
+                        //   width: 20,
+                        // ),
                         // Container(
                         //   padding: EdgeInsets.only(right: 20),
                         //   decoration: BoxDecoration(
@@ -430,12 +454,12 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         //     crossAxisAlignment: CrossAxisAlignment.start,
                         //     children: [
                         //       AppText(
-                        //           title: "Paid bill",
+                        //           title: "Invoice",
                         //           color: Colors.black,
                         //           font_size: 15,
                         //           fontWeight: FontWeight.w400),
                         //       AppText(
-                        //           title: totalPaidBillAmount.toString(),
+                        //           title: totalInvoicePrice.toString(),
                         //           color: appsubtitletextColor,
                         //           font_size: 15,
                         //           fontWeight: FontWeight.w400),
@@ -445,52 +469,21 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         // SizedBox(
                         //   width: 20,
                         // ),
-                        Container(
-                          padding: EdgeInsets.only(right: 20),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              right: BorderSide(
-                                color:
-                                    appsearchBoxColor, // Set the color of the right border here
-                                width:
-                                    1, // Set the width of the right border here
-                              ),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                  title: "Invoice",
-                                  color: Colors.black,
-                                  font_size: 15,
-                                  fontWeight: FontWeight.w400),
-                              AppText(
-                                  title: totalInvoicePrice.toString(),
-                                  color: appsubtitletextColor,
-                                  font_size: 15,
-                                  fontWeight: FontWeight.w400),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppText(
-                                title: "Discount",
-                                color: Colors.black,
-                                font_size: 15,
-                                fontWeight: FontWeight.w400),
-                            AppText(
-                                title: totalDiscount.toString(),
-                                color: appsubtitletextColor,
-                                font_size: 15,
-                                fontWeight: FontWeight.w400),
-                          ],
-                        ),
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     AppText(
+                        //         title: "Discount",
+                        //         color: Colors.black,
+                        //         font_size: 15,
+                        //         fontWeight: FontWeight.w400),
+                        //     AppText(
+                        //         title: totalDiscount.toString(),
+                        //         color: appsubtitletextColor,
+                        //         font_size: 15,
+                        //         fontWeight: FontWeight.w400),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

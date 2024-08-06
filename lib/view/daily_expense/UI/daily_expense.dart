@@ -263,7 +263,7 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
 
                     dailyExpenseBloc.add(AddDailyExpenseEvent(
                         dailyExpense: DailyExpense(
-                      iExpenseTypeID: 00,
+                      iExpenseTypeID: 9,
                       iBankID: iBankIDPAIDAmount,
                       iTableID: 00,
                       dcAmount: _amountController.text.toString(),

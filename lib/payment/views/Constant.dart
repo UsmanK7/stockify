@@ -1,5 +1,5 @@
 class Constant {
-  static const baseUrl = 'https://1ba6-39-44-66-115.ngrok-free.app';
+  static const baseUrl = 'https://e864-39-44-66-115.ngrok-free.app';
 ////////////////this is for checkin am i opening the correct file
   static const loginUrl = '$baseUrl/stockfiy/api/auth/login';
   static const firmUrl = '$baseUrl/stockfiy/api/Phase1/getFirmDetails';

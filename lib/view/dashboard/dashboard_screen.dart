@@ -13,6 +13,7 @@ import 'package:okra_distributer/payment/views/customer.dart';
 import 'package:okra_distributer/payment/views/loginScreen.dart';
 import 'package:okra_distributer/view/auth/login_screen.dart';
 import 'package:okra_distributer/view/daily_expense/UI/daily_expense.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/UI/daily_expense_list.dart';
 
 import 'package:okra_distributer/view/dashboard/bar_chart.dart';
 import 'package:okra_distributer/view/dashboard/bloc/dash/dash_bloc.dart';
@@ -465,6 +466,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           AppText(
                               title: "Daily Expense",
+                              color: Color(0xffA0A0A0),
+                              font_size: 13,
+                              fontWeight: FontWeight.w600),
+                          Icon(Icons.arrow_right)
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: appsubtitletextColor,
+                      thickness: 0.2,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const DailyExpenseList()));
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppText(
+                              title: "Daily Expense List",
                               color: Color(0xffA0A0A0),
                               font_size: 13,
                               fontWeight: FontWeight.w600),

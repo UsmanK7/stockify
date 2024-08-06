@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
-
-import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_event.dart';
-import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_state.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_event.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_state.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_details_model.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_model.dart';
 
@@ -24,38 +23,38 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
   FutureOr<void> saleListInitialEvent(
       SaleOrderListInitialEvent event, Emitter<SaleOrderListState> emit) async {
+    // DateTime current = DateTime.now();
+    // String currentDate = formatDate(current);
+    // DBHelper dbHelper = DBHelper();
+    // final db = await dbHelper.database;
+    //   List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT s.*, pc.sName as customerName
+    //   FROM sale_order s
+    //   LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //   WHERE s.dSaleOrderDate = ?
+    // ''', [currentDate]);
+
     DateTime current = DateTime.now();
     String currentDate = formatDate(current);
     DBHelper dbHelper = DBHelper();
     final db = await dbHelper.database;
-    List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-    SELECT s.*, pc.sName as customerName
-    FROM sale_order s
-    LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-    WHERE s.dSaleOrderDate = ?
-  ''', [currentDate]);
 
-    // List to hold SaleListModel instances
-    List<SaleOrderListModel> salesList = [];
-    // Iterate over fetched rows and populate SaleListModel instances
-    saleRows.forEach((row) {
-      salesList.add(SaleOrderListModel(
-        saleId: row['iSaleOrderID'],
-        sSyncStatus: row['sSyncStatus'],
-        invoice_price: row['dcTotalBill'],
+    List<Map<String, dynamic>> result = await db.rawQuery('''
+  SELECT de.*, et.sTypeName as expenseTypeName
+  FROM daily_expense de
+  LEFT JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+  WHERE de.dDate = ?
+''', [currentDate]);
 
-        customer_Name: row['customerName'],
-        total_discount: row['dcTotalDiscount'],
-        sale_date: row['dSaleOrderDate'], // Add the sale date
-      ));
-    });
-
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
+    //   List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //   SELECT de.*
+    //   FROM daily_expense de
+    //   INNER JOIN expense_type et ON de.iExpenseTypeID = et.iExpenseTypeID
+    //   WHERE s. = ?
+    // ''', [currentDate]);
 
     emit(SuccessState(
-        saleList: salesList, firstDate: currentDate, lastDate: currentDate));
+        saleList: result, firstDate: currentDate, lastDate: currentDate));
   }
 
   FutureOr<void> saleListLastMonthEvent(SaleOrderListLastMonthEvent event,

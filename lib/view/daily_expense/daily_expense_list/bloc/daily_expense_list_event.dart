@@ -1,32 +1,32 @@
-abstract class DailyExpenseListEvent {}
+abstract class SaleOrderListEvent {}
 
-class DailyExpenseListInitialEvent extends DailyExpenseListEvent {}
+class SaleOrderListInitialEvent extends SaleOrderListEvent {}
 
-class DailyExpenseListThisWeekEvent extends DailyExpenseListEvent {}
+class SaleOrderListThisWeekEvent extends SaleOrderListEvent {}
 
-class DailyExpenseListThisMonthEvent extends DailyExpenseListEvent {}
+class SaleOrderListThisMonthEvent extends SaleOrderListEvent {}
 
-class DailyExpenseListLastMonthEvent extends DailyExpenseListEvent {}
+class SaleOrderListLastMonthEvent extends SaleOrderListEvent {}
 
-class DailyExpenseListThisQuarterEvent extends DailyExpenseListEvent {}
+class SaleOrderListThisQuarterEvent extends SaleOrderListEvent {}
 
-class DailyExpenseListThisYearEvent extends DailyExpenseListEvent {}
+class SaleOrderListThisYearEvent extends SaleOrderListEvent {}
 
-class DailyExpenseListCustomDate extends DailyExpenseListEvent {
+class SaleOrderListCustomDate extends SaleOrderListEvent {
   String fastDay;
   String lastDay;
-  DailyExpenseListCustomDate({required this.fastDay, required this.lastDay});
+  SaleOrderListCustomDate({required this.fastDay, required this.lastDay});
 }
 
-class DailyExpenseListDismissEvent extends DailyExpenseListEvent {
+class SaleOrderListDismissEvent extends SaleOrderListEvent {
   String firstDate;
   String lastDate;
   int SaleId;
-  DailyExpenseListDismissEvent(
+  SaleOrderListDismissEvent(
       {required this.firstDate, required this.lastDate, required this.SaleId});
 }
 
-class DailyExpenseListDetailsEvent extends DailyExpenseListEvent {
+class SaleOrderListDetailsEvent extends SaleOrderListEvent {
   int SaleId;
-  DailyExpenseListDetailsEvent({required this.SaleId});
+  SaleOrderListDetailsEvent({required this.SaleId});
 }
