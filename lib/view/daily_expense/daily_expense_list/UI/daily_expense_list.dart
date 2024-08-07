@@ -5,6 +5,7 @@ import 'package:okra_distributer/components/expense_list_card.dart';
 
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
+import 'package:okra_distributer/view/daily_expense/daily_expense_list/UI/daily_expense_list_details.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_bloc.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_event.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_state.dart';
@@ -241,6 +242,7 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         ),
                       ],
                     ),
+                    
                     Divider(
                       thickness: 0.5,
                       color: Color(0xff91919F),
@@ -258,14 +260,18 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                               if (state.saleList[index]['sSyncStatus'] != "0") {
                                 return GestureDetector(
                                   onTap: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) =>
-                                    //             SaleOrderListDetails(
-                                    //                 SaleId: state
-                                    //                     .saleList[index]
-                                    //                     .saleId)));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DailyExpenseListDetails(
+                                                  iDailyExpenseID:
+                                                      state.saleList[index]
+                                                          ['iDailyExpenseID'],
+                                                  syncStatus:
+                                                      state.saleList[index]
+                                                          ['sSyncStatus'],
+                                                )));
                                   },
                                   child: Padding(
                                       padding:
@@ -319,14 +325,18 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                                     // },
                                     child: GestureDetector(
                                       onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             SaleOrderListDetails(
-                                        //                 SaleId: state
-                                        //                     .saleList[index]
-                                        //                     .saleId)));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DailyExpenseListDetails(
+                                                      iDailyExpenseID: state
+                                                              .saleList[index]
+                                                          ['iDailyExpenseID'],
+                                                      syncStatus:
+                                                          state.saleList[index]
+                                                              ['sSyncStatus'],
+                                                    )));
                                       },
                                       child: Padding(
                                           padding:

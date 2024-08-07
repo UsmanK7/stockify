@@ -288,6 +288,10 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                               child: BlocBuilder<Popbloc, Popstate>(
                                 builder: (context, state) {
                                   if (state.customers == null) {}
+                                  if (state.selectedBank != null) {
+                                    iBankIDPAIDAmount = state
+                                        .getBankIdByName(state.selectedBank!);
+                                  }
                                   return (DropdownButton<String>(
                                     isExpanded: true,
                                     underline: SizedBox.shrink(),
@@ -391,8 +395,12 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Please enter description')),
                       );
+                    } else if (iBankIDPAIDAmount == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please select a Bank')),
+                      );
                     }
-
+                    print(iBankIDPAIDAmount);
                     dailyExpenseBloc.add(AddDailyExpenseEvent(
                         dailyExpense: DailyExpense(
                       iExpenseTypeID: ExpenseTypeID,

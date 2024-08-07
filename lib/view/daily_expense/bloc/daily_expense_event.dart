@@ -15,3 +15,8 @@ class DailyExpenseTypeChangedActionEvent extends DailyExpenseEvent {
   DailyExpenseTypeChangedActionEvent(
       {required this.selectedItem, required this.expenseTypes});
 }
+
+class DailyExpenseListDetailsEvent extends DailyExpenseEvent {
+  int SaleId;
+  DailyExpenseListDetailsEvent({required this.SaleId});
+}

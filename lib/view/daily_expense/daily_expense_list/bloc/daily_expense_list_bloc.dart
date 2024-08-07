@@ -5,7 +5,6 @@ import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_event.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/bloc/daily_expense_list_state.dart';
-import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_details_model.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_model.dart';
 
 class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
@@ -384,114 +383,125 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
       SaleOrderListDetailsEvent event, Emitter<SaleOrderListState> emit) async {
     DBHelper dbHelper = DBHelper();
     final db = await dbHelper.database;
-    final List<Map<String, dynamic>> result = await db.rawQuery('''
-      SELECT 
-          sale_order.*,
-          permanent_customer.*
-      FROM 
-          sale_order
-      LEFT JOIN 
-          permanent_customer ON sale_order.iPermanentCustomerID = permanent_customer.iPermanentCustomerID
-      WHERE 
-          sale_order.iSaleOrderID = ?
-      ''', [event.SaleId]);
+    final List<Map<String, dynamic>> daily_expense_list = await db.rawQuery('''
+    SELECT 
+         daily_expense.iDailyExpenseID,
+        daily_expense.transaction_id,
+        daily_expense.sDescription,
+        daily_expense.dcAmount,
+        daily_expense.dDate,
+        expense_type.sTypeName,
+        bank.sName
+    FROM 
+        daily_expense
+    LEFT JOIN 
+        expense_type ON daily_expense.iExpenseTypeID = expense_type.iExpenseTypeID
+    LEFT JOIN 
+        bank ON daily_expense.iBankID = bank.iBankID
+    WHERE 
+        daily_expense.iDailyExpenseID = ?
+    ''', [event.SaleId]);
 
-    if (result.isNotEmpty) {
-      final row = result.first;
+    //   if (result.isNotEmpty) {
+    //     final row = result.first;
 
-      final SaleOrder sale = SaleOrder(
-        iSaleOrderID: row['iSaleID'],
-        iSystemUserID: row['iSystemUserID'],
-        iFirmID: row['iFirmID'],
-        dcOnProuctDiscount: row['dcOnProuctDiscount'],
-        sTotal_Item: row['sTotal_Item'],
-        sNoficationStatus: row['sNoficationStatus'],
-        sReadStatus: row['sReadStatus'],
-        dSaleOrderDate: row['dSaleOrderDate'],
-        iStoreID: row['iStoreID'],
-        iPermanentCustomerID: row['iPermanentCustomerID'],
-        sAddress: row['sAddress'],
-        dcTotalBill: row['dcTotalBill'],
-        dcGrandTotal: row['dcGrandTotal'],
-        dcExtraDiscount: row['dcExtraDiscount'],
-        dcTotalDiscount: row['dcTotalDiscount'],
-        sTotalBonus: row['sTotalBonus'],
-        sSaleType: row['sSaleType'],
-        sSaleDescription: row['sSaleDescription'],
-        bStatus: row['bStatus'],
-        sSyncStatus: row['sSyncStatus'],
-        sEntrySource: row['sEntrySource'],
-        sAction: row['sAction'],
-        dtDueDate: row['dtDueDate'],
-        dtCreatedDate: row['dtCreatedDate'],
-        iAddedBy: row['iAddedBy'],
-        dtUpdatedDate: row['dtUpdatedDate'],
-        iUpdatedBy: row['iUpdatedBy'],
-        dtDeletedDate: row['dtDeletedDate'],
-        iDeletedBy: row['iDeletedBy'],
-      );
+    //     final SaleOrder sale = SaleOrder(
+    //       iSaleOrderID: row['iSaleID'],
+    //       iSystemUserID: row['iSystemUserID'],
+    //       iFirmID: row['iFirmID'],
+    //       dcOnProuctDiscount: row['dcOnProuctDiscount'],
+    //       sTotal_Item: row['sTotal_Item'],
+    //       sNoficationStatus: row['sNoficationStatus'],
+    //       sReadStatus: row['sReadStatus'],
+    //       dSaleOrderDate: row['dSaleOrderDate'],
+    //       iStoreID: row['iStoreID'],
+    //       iPermanentCustomerID: row['iPermanentCustomerID'],
+    //       sAddress: row['sAddress'],
+    //       dcTotalBill: row['dcTotalBill'],
+    //       dcGrandTotal: row['dcGrandTotal'],
+    //       dcExtraDiscount: row['dcExtraDiscount'],
+    //       dcTotalDiscount: row['dcTotalDiscount'],
+    //       sTotalBonus: row['sTotalBonus'],
+    //       sSaleType: row['sSaleType'],
+    //       sSaleDescription: row['sSaleDescription'],
+    //       bStatus: row['bStatus'],
+    //       sSyncStatus: row['sSyncStatus'],
+    //       sEntrySource: row['sEntrySource'],
+    //       sAction: row['sAction'],
+    //       dtDueDate: row['dtDueDate'],
+    //       dtCreatedDate: row['dtCreatedDate'],
+    //       iAddedBy: row['iAddedBy'],
+    //       dtUpdatedDate: row['dtUpdatedDate'],
+    //       iUpdatedBy: row['iUpdatedBy'],
+    //       dtDeletedDate: row['dtDeletedDate'],
+    //       iDeletedBy: row['iDeletedBy'],
+    //     );
 
-      PermanentCustomer? customer;
-      if (row['iPermanentCustomerID'] != null) {
-        customer = PermanentCustomer(
-          iPermanentCustomerID: row['iPermanentCustomerID'],
-          iSystemUserID: row['iSystemUserID'],
-          iAreaID: row['iAreaID'],
-          iFirmID: row['iFirmID'],
-          sName: row['sName'],
-          sShopName: row['sShopName'],
-          sEmail: row['sEmail'],
-          sCode: row['sCode'],
-          sAddress: row['permanent_customer.sAddress'],
-          sPhone: row['sPhone'],
-          sMobile: row['sMobile'],
-          sDescription: row['sDescription'],
-          dcDefaultAmount: row['dcDefaultAmount'],
-          dcPreviousAmount: row['dcPreviousAmount'],
-          dcTotalRemainingAmount: row['dcTotalRemainingAmount'],
-          bStatus: row['permanent_customer.bStatus'],
-          sSyncStatus: row['permanent_customer.sSyncStatus'],
-          sEntrySource: row['permanent_customer.sEntrySource'],
-          sAction: row['permanent_customer.sAction'],
-          sType: row['sType'],
-          dtCreatedDate: row['permanent_customer.dtCreatedDate'],
-          iAddedBy: row['permanent_customer.iAddedBy'],
-          dtUpdatedDate: row['permanent_customer.dtUpdatedDate'],
-          iUpdatedBy: row['permanent_customer.iUpdatedBy'],
-          dtDeletedDate: row['permanent_customer.dtDeletedDate'],
-          iDeletedBy: row['permanent_customer.iDeletedBy'],
-        );
-      }
-      final List<Map<String, dynamic>> sale_products = await db.query(
-        'sale_order_products_list',
-        where: 'iSaleOrderID = ?',
-        whereArgs: [event.SaleId],
-      );
-      // for (var product in sale_products) {
-      //   print(product);
-      // }
+    //     PermanentCustomer? customer;
+    //     if (row['iPermanentCustomerID'] != null) {
+    //       customer = PermanentCustomer(
+    //         iPermanentCustomerID: row['iPermanentCustomerID'],
+    //         iSystemUserID: row['iSystemUserID'],
+    //         iAreaID: row['iAreaID'],
+    //         iFirmID: row['iFirmID'],
+    //         sName: row['sName'],
+    //         sShopName: row['sShopName'],
+    //         sEmail: row['sEmail'],
+    //         sCode: row['sCode'],
+    //         sAddress: row['permanent_customer.sAddress'],
+    //         sPhone: row['sPhone'],
+    //         sMobile: row['sMobile'],
+    //         sDescription: row['sDescription'],
+    //         dcDefaultAmount: row['dcDefaultAmount'],
+    //         dcPreviousAmount: row['dcPreviousAmount'],
+    //         dcTotalRemainingAmount: row['dcTotalRemainingAmount'],
+    //         bStatus: row['permanent_customer.bStatus'],
+    //         sSyncStatus: row['permanent_customer.sSyncStatus'],
+    //         sEntrySource: row['permanent_customer.sEntrySource'],
+    //         sAction: row['permanent_customer.sAction'],
+    //         sType: row['sType'],
+    //         dtCreatedDate: row['permanent_customer.dtCreatedDate'],
+    //         iAddedBy: row['permanent_customer.iAddedBy'],
+    //         dtUpdatedDate: row['permanent_customer.dtUpdatedDate'],
+    //         iUpdatedBy: row['permanent_customer.iUpdatedBy'],
+    //         dtDeletedDate: row['permanent_customer.dtDeletedDate'],
+    //         iDeletedBy: row['permanent_customer.iDeletedBy'],
+    //       );
+    //     }
+    //     final List<Map<String, dynamic>> sale_products = await db.query(
+    //       'sale_order_products_list',
+    //       where: 'iSaleOrderID = ?',
+    //       whereArgs: [event.SaleId],
+    //     );
+    //     // for (var product in sale_products) {
+    //     //   print(product);
+    //     // }
 
-      Future<List<Map<String, dynamic>>> fetchAndProcessData(int saleID) async {
-        // Execute the query
-        final result = await db.rawQuery('''
-    SELECT sp.*, p.*, pu.*
-    FROM sale_order_products_list sp
-    JOIN product p ON sp.iProductID = p.iProductID
-    JOIN product_unit pu ON (sp.sSaleStatus = pu.iItemUnitID)
-    WHERE sp.iSaleOrderID = ?
-  ''', [saleID]);
-        return result;
-        // // Process the result
-        // List<Map<String, dynamic>> rows = result.map((row) => row).toList();
-        // return rows;
-      }
+    //     Future<List<Map<String, dynamic>>> fetchAndProcessData(int saleID) async {
+    //       // Execute the query
+    //       final result = await db.rawQuery('''
+    //   SELECT sp.*, p.*, pu.*
+    //   FROM sale_order_products_list sp
+    //   JOIN product p ON sp.iProductID = p.iProductID
+    //   JOIN product_unit pu ON (sp.sSaleStatus = pu.iItemUnitID)
+    //   WHERE sp.iSaleOrderID = ?
+    // ''', [saleID]);
+    //       return result;
+    //       // // Process the result
+    //       // List<Map<String, dynamic>> rows = result.map((row) => row).toList();
+    //       // return rows;
+    //     }
 
-      List<Map<String, dynamic>> products =
-          await fetchAndProcessData(event.SaleId);
+    //     List<Map<String, dynamic>> products =
+    //         await fetchAndProcessData(event.SaleId);
 
-      emit(SaleListDetailsState(
-          saleWithCustomer: SaleWithCustomer(sale: sale, customer: customer),
-          products: products));
-    }
+    //     emit(SaleListDetailsState(
+    //         saleWithCustomer: SaleWithCustomer(sale: sale, customer: customer),
+    //         products: products));
+    //   }
+
+    emit(SaleListDetailsState(
+      daily_expense_list: daily_expense_list,
+    ));
   }
 }
