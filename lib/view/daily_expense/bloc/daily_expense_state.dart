@@ -13,5 +13,7 @@ class DailyExpenseLoadingState extends DailyExpenseActionState {}
 class DailyExpenseTypeActionState extends DailyExpenseActionState {
   List<ExpenseTypeModel> expenseTypes;
   String? selectedItem;
+  
   DailyExpenseTypeActionState({required this.expenseTypes, this.selectedItem});
 }
+

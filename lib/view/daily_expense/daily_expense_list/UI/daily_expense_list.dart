@@ -21,6 +21,7 @@ class DailyExpenseList extends StatefulWidget {
 class _DailyExpenseListState extends State<DailyExpenseList> {
   void initState() {
     saleOrderListBloc.add(SaleOrderListInitialEvent());
+
     super.initState();
   }
 
@@ -132,6 +133,10 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
             });
             String firstDay = state.firstDate;
             String lastDay = state.lastDate;
+            List<String> typeNames = state.expenseTypes!
+                .map((expenseType) => expenseType.sTypeName)
+                .toList();
+
             return Stack(
               children: [
                 Column(
@@ -166,26 +171,38 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                               });
                               if (value == "This month") {
                                 datetap = false;
-                                saleOrderListBloc
-                                    .add(SaleOrderListThisMonthEvent());
+                                saleOrderListBloc.add(
+                                    SaleOrderListThisMonthEvent(
+                                        expenseTypes: state.expenseTypes,
+                                        selectedItem: null));
                               } else if (value == 'Last month') {
                                 datetap = false;
-                                saleOrderListBloc
-                                    .add(SaleOrderListLastMonthEvent());
+                                saleOrderListBloc.add(
+                                    SaleOrderListLastMonthEvent(
+                                        expenseTypes: state.expenseTypes,
+                                        selectedItem: null));
                               } else if (value == 'This week') {
                                 datetap = false;
-                                saleOrderListBloc
-                                    .add(SaleOrderListThisWeekEvent());
+                                saleOrderListBloc.add(
+                                    SaleOrderListThisWeekEvent(
+                                        expenseTypes: state.expenseTypes,
+                                        selectedItem: null));
                               } else if (value == 'This year') {
                                 datetap = false;
-                                saleOrderListBloc
-                                    .add(SaleOrderListThisYearEvent());
+                                saleOrderListBloc.add(
+                                    SaleOrderListThisYearEvent(
+                                        expenseTypes: state.expenseTypes,
+                                        selectedItem: null));
                               } else if (value == 'This quarter') {
                                 datetap = false;
-                                saleOrderListBloc
-                                    .add(SaleOrderListThisQuarterEvent());
+                                saleOrderListBloc.add(
+                                    SaleOrderListThisQuarterEvent(
+                                        expenseTypes: state.expenseTypes,
+                                        selectedItem: null));
                               } else if (value == 'Custom') {
                                 saleOrderListBloc.add(SaleOrderListCustomDate(
+                                    expenseTypes: state.expenseTypes,
+                                    selectedItem: null,
                                     fastDay: state.firstDate,
                                     lastDay: state.lastDate));
                               }
@@ -210,7 +227,10 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                             DateTime now = await _firstselectDate(context);
                             firstDay = formatDate(now);
                             saleOrderListBloc.add(SaleOrderListCustomDate(
-                                fastDay: firstDay, lastDay: lastDay));
+                                expenseTypes: state.expenseTypes,
+                                selectedItem: state.selectedItem,
+                                fastDay: firstDay,
+                                lastDay: lastDay));
                           },
                           child: Text(
                             state.firstDate,
@@ -233,7 +253,10 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                             DateTime now = await _lastselectDate(context);
                             lastDay = formatDate(now);
                             saleOrderListBloc.add(SaleOrderListCustomDate(
-                                fastDay: firstDay, lastDay: lastDay));
+                                selectedItem: state.selectedItem,
+                                expenseTypes: state.expenseTypes,
+                                fastDay: firstDay,
+                                lastDay: lastDay));
                           },
                           child: Text(
                             state.lastDate,
@@ -242,7 +265,97 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                         ),
                       ],
                     ),
-                    
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              height: 36,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Color(0xffC6C6DF))),
+                              child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<String>(
+                                      isExpanded: true,
+                                      hint: const Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'Filter by Expense Type',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      items: typeNames
+                                          .map((String item) =>
+                                              DropdownMenuItem<String>(
+                                                value: item,
+                                                child: Text(
+                                                  item,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ))
+                                          .toList(),
+                                      value: state.selectedItem ?? null,
+                                      onChanged: (value) {
+                                        int ExpenseTypeID =
+                                            typeNames.indexOf(value!);
+
+                                        ExpenseTypeID = ExpenseTypeID + 1;
+                                        saleOrderListBloc.add(
+                                            DailyExpenseTypeDropdownChangeEvent(
+                                                FilterState:
+                                                    selectedValue ?? '',
+                                                iExpenseTypeID: ExpenseTypeID,
+                                                selectedItem: value,
+                                                expenseTypes:
+                                                    state.expenseTypes,
+                                                fastDay: state.firstDate,
+                                                lastDay: state.lastDate));
+                                        // saleOrderListBloc.add(
+                                        //     DailyExpenseTypeChangedActionEvent(
+                                        //         expenseTypes:
+                                        //             state.expenseTypes,
+                                        //         selectedItem: value!));
+
+                                        // ExpenseTypeID =
+                                        //     typeNames.indexOf(value);
+
+                                        // ExpenseTypeID = ExpenseTypeID! + 1;
+                                      },
+                                      dropdownStyleData: DropdownStyleData(
+                                        maxHeight: 200,
+                                        width: 150,
+                                        scrollbarTheme: ScrollbarThemeData(
+                                          radius: const Radius.circular(40),
+                                          thickness:
+                                              MaterialStateProperty.all(6),
+                                          thumbVisibility:
+                                              MaterialStateProperty.all(true),
+                                        ),
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 40,
+                                        padding: EdgeInsets.only(
+                                            left: 14, right: 14),
+                                      )))),
+                        ),
+                      ],
+                    ),
                     Divider(
                       thickness: 0.5,
                       color: Color(0xff91919F),
