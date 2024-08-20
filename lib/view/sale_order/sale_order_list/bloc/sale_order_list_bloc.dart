@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
@@ -20,6 +21,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     on<SaleOrderListCustomDate>(saleListCustomDate);
     on<SaleOrderListDismissEvent>(saleListDismissEvent);
     on<SaleOrderListDetailsEvent>(saleListDetailsEvent);
+    on<SaleOrderListSyncEvent>(saleOrderListSyncEvent);
   }
 
   FutureOr<void> saleListInitialEvent(
@@ -447,7 +449,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
       List<Map<String, dynamic>> products =
           await fetchAndProcessData(event.SaleId);
-     
 
       // ======================== Remove Duplicate List ========================   //
       // Use a Map to filter out duplicates based on `iSaleOrderProductID`
@@ -465,5 +466,13 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
           saleWithCustomer: SaleWithCustomer(sale: sale, customer: customer),
           products: uniqueProducts));
     }
+  }
+
+  Future<void> saleOrderListSyncEvent(
+      SaleOrderListSyncEvent event, Emitter<SaleOrderListState> emit) async {
+    print(event.iSaleOrderID);
+    print(event.firstDate);
+    emit(SaleLoadingState());
+    // Check for internet connection
   }
 }

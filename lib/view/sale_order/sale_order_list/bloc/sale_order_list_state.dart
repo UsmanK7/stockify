@@ -17,6 +17,7 @@ class SuccessState extends SaleOrderListState {
       required this.firstDate,
       required this.lastDate});
 }
+class SaleLoadingState extends SaleOrderListState {}
 
 class SinkStatusIsOne extends SaleOrderListActionState {}
 

@@ -13,7 +13,7 @@ const baseUrl = 'https://864e-39-44-67-33.ngrok-free.app';
 const loginUrl = '$baseUrl/stockfiy/api/auth/login';
 const addSaleOrderUrl = '$baseUrl/stockfiy/api/realdata/storesaleorder';
 const addDailyExpenseUrl = '$baseUrl/stockfiy/api/realdata/StoreDailyExpenses';
-const SyncUrl = '$baseUrl/stockfiy/api/realdata/StoreDailyExpenses';
+const SyncUrl = '$baseUrl/stockfiy//api/sync';
 
 const userdetailsUrl = '$baseUrl/stockfiy/api/phase1/getUserDetails';
 double TotalScreenWidth(BuildContext context) {

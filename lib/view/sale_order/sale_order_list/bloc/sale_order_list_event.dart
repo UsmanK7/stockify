@@ -30,3 +30,14 @@ class SaleOrderListDetailsEvent extends SaleOrderListEvent {
   int SaleId;
   SaleOrderListDetailsEvent({required this.SaleId});
 }
+
+class SaleOrderListSyncEvent extends SaleOrderListEvent {
+  List<int> iSaleOrderID;
+  String firstDate;
+  String lastDate;
+
+  SaleOrderListSyncEvent(
+      {required this.iSaleOrderID,
+      required this.firstDate,
+      required this.lastDate});
+}

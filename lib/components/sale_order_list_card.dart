@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
+import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_bloc.dart';
 
 class SaleOrderListCard extends StatelessWidget {
   String name;
   int index;
   String syncstatus;
-
   double invoice_price;
   String sale_date;
   double discount;
+  final VoidCallback? onSync;
 
   SaleOrderListCard(
       {super.key,
@@ -17,13 +18,14 @@ class SaleOrderListCard extends StatelessWidget {
       required this.index,
       required this.discount,
       required this.syncstatus,
+      this.onSync,
       required this.invoice_price,
       required this.sale_date});
 
   @override
   Widget build(BuildContext context) {
     String status = "";
-
+    SaleOrderListBloc saleOrderListBloc = SaleOrderListBloc();
     return Container(
       width: TotalScreenWidth(context),
       color: Colors.white,
@@ -103,9 +105,7 @@ class SaleOrderListCard extends StatelessWidget {
                   int.parse(syncstatus) == 0
                       ? GestureDetector(
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Sync!!!")),
-                            );
+                            onSync!();
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(

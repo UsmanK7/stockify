@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:okra_distributer/view/sale_order/sale_order_list/UI/sale_order_l
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_bloc.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_event.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_state.dart';
+import 'package:http/http.dart' as http;
 
 class SaleOrderList extends StatefulWidget {
   const SaleOrderList({super.key});
@@ -39,6 +41,10 @@ class _SaleOrderListState extends State<SaleOrderList> {
   DateTime _selectedDate = DateTime.now();
   TextEditingController _firstdateController = TextEditingController();
   TextEditingController _lastdateController = TextEditingController();
+
+  List<int> syncIndex = [];
+  String firstDateForAppBar = '';
+  String lastDateForAppBar = '';
 
   Future<DateTime> _firstselectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -84,10 +90,46 @@ class _SaleOrderListState extends State<SaleOrderList> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              saleOrderListBloc.add(SaleOrderListSyncEvent(
+                  iSaleOrderID: syncIndex,
+                  firstDate: firstDateForAppBar,
+                  lastDate: lastDateForAppBar));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Syncing all")),
               );
+
+              var connectivityResult = await Connectivity().checkConnectivity();
+              if (connectivityResult == ConnectivityResult.none) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('No internet connection')),
+                );
+                return;
+              } else {
+                // Perform a simple internet connection check
+                try {
+                  final result =
+                      await http.get(Uri.parse('https://www.google.com'));
+                  if (result.statusCode == 200) {
+                    print("Internet is available");
+
+                    // Proceed with your event handling here
+                    saleOrderListBloc.add(SaleOrderListSyncEvent(
+                      iSaleOrderID: syncIndex,
+                      firstDate: firstDateForAppBar,
+                      lastDate: lastDateForAppBar,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('No internet connection')),
+                    );
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No internet connection')),
+                  );
+                }
+              }
             },
             child: Container(
               decoration: BoxDecoration(
@@ -137,6 +179,8 @@ class _SaleOrderListState extends State<SaleOrderList> {
                     .reduce((value, element) => value + element);
             String firstDay = state.firstDate;
             String lastDay = state.lastDate;
+            firstDateForAppBar = firstDay;
+            lastDateForAppBar = lastDay;
             return Stack(
               children: [
                 Column(
@@ -257,8 +301,9 @@ class _SaleOrderListState extends State<SaleOrderList> {
                         child: ListView.builder(
                           itemCount: state.saleList.length,
                           itemBuilder: (context, index) {
-                            print(state.saleList[index].saleId);
-
+                            if (state.saleList[index].sSyncStatus == "0") {
+                              syncIndex.add(state.saleList[index].saleId);
+                            }
                             if (state.saleList.isNotEmpty) {
                               if (state.saleList[index].sSyncStatus != "0") {
                                 return GestureDetector(
@@ -275,6 +320,55 @@ class _SaleOrderListState extends State<SaleOrderList> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(vertical: 2),
                                     child: SaleOrderListCard(
+                                      onSync: () async {
+                                        var connectivityResult =
+                                            await Connectivity()
+                                                .checkConnectivity();
+                                        if (connectivityResult ==
+                                            ConnectivityResult.none) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'No internet connection')),
+                                          );
+                                          return;
+                                        } else {
+                                          // Perform a simple internet connection check
+                                          try {
+                                            final result = await http.get(
+                                                Uri.parse(
+                                                    'https://www.google.com'));
+                                            if (result.statusCode == 200) {
+                                              print("Internet is available");
+
+                                              // Proceed with your event handling here
+                                              saleOrderListBloc
+                                                  .add(SaleOrderListSyncEvent(
+                                                iSaleOrderID: [
+                                                  state.saleList[index].saleId
+                                                ],
+                                                firstDate: state.firstDate,
+                                                lastDate: state.lastDate,
+                                              ));
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'No internet connection')),
+                                              );
+                                            }
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      'No internet connection')),
+                                            );
+                                          }
+                                        }
+                                      },
                                       syncstatus:
                                           state.saleList[index].sSyncStatus,
                                       name:
@@ -294,6 +388,7 @@ class _SaleOrderListState extends State<SaleOrderList> {
                                 );
                               } else {
                                 // Render a Dismissible widget for items with sSyncStatus as "0"
+
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 2),
                                   child: Dismissible(
@@ -337,11 +432,63 @@ class _SaleOrderListState extends State<SaleOrderList> {
                                         padding:
                                             EdgeInsets.symmetric(vertical: 8),
                                         child: SaleOrderListCard(
+                                          onSync: () async {
+                                            var connectivityResult =
+                                                await Connectivity()
+                                                    .checkConnectivity();
+                                            if (connectivityResult ==
+                                                ConnectivityResult.none) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'No internet connection')),
+                                              );
+                                              return;
+                                            } else {
+                                              // Perform a simple internet connection check
+                                              try {
+                                                final result = await http.get(
+                                                    Uri.parse(
+                                                        'https://www.google.com'));
+                                                if (result.statusCode == 200) {
+                                                  print(
+                                                      "Internet is available");
+
+                                                  // Proceed with your event handling here
+                                                  saleOrderListBloc.add(
+                                                      SaleOrderListSyncEvent(
+                                                    iSaleOrderID: [
+                                                      state.saleList[index]
+                                                          .saleId
+                                                    ],
+                                                    firstDate: state.firstDate,
+                                                    lastDate: state.lastDate,
+                                                  ));
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            'No internet connection')),
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                          'No internet connection')),
+                                                );
+                                              }
+                                            }
+                                          },
                                           syncstatus:
                                               state.saleList[index].sSyncStatus,
                                           name: state.saleList[index]
                                                   .customer_Name ??
                                               "null",
+                                          // iSaleOrderID: state.saleList[index].,
                                           index: state.saleList[index].saleId,
                                           discount: state.saleList[index]
                                                   .total_discount ??
@@ -495,6 +642,31 @@ class _SaleOrderListState extends State<SaleOrderList> {
                     ),
                   ),
                 ),
+              ],
+            );
+          } else if (state is SaleLoadingState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        AppText(
+                            title: "Syncing",
+                            color: Colors.black,
+                            font_size: 18,
+                            fontWeight: FontWeight.w500)
+                      ],
+                    )
+                  ],
+                )
               ],
             );
           } else {
