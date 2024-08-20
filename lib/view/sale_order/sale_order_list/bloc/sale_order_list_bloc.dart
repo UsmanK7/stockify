@@ -50,10 +50,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
       ));
     });
 
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
-
     emit(SuccessState(
         saleList: salesList, firstDate: currentDate, lastDate: currentDate));
   }
@@ -93,9 +89,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
         sale_date: row['dSaleOrderDate'], // Add the sale date
       ));
     });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -136,9 +129,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
         sale_date: row['dSaleOrderDate'], // Add the sale date
       ));
     });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -178,9 +168,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
         sale_date: row['dSaleOrderDate'], // Add the sale date
       ));
     });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -220,9 +207,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
         sale_date: row['dSaleOrderDate'], // Add the sale date
       ));
     });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -263,9 +247,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
         sale_date: row['dSaleOrderDate'], // Add the sale date
       ));
     });
-    for (int i = 0; i < salesList.length; i++) {
-      print(salesList[i].sale_date);
-    }
 
     emit(SuccessState(
         saleList: salesList, firstDate: firstDateStr, lastDate: lastDateStr));
@@ -346,6 +327,11 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
       SaleOrderListDetailsEvent event, Emitter<SaleOrderListState> emit) async {
     DBHelper dbHelper = DBHelper();
     final db = await dbHelper.database;
+    print("this : ${event.SaleId}");
+    int i = 4;
+    print(i);
+    i++;
+
     final List<Map<String, dynamic>> result = await db.rawQuery('''
       SELECT 
           sale_order.*,
@@ -432,6 +418,17 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
       // for (var product in sale_products) {
       //   print(product);
       // }
+      final List<Map<String, dynamic>> saleProducts = await db.query(
+        'sale_order_products_list',
+        where: 'iSaleOrderID = ?',
+        whereArgs: [event.SaleId],
+      );
+
+      // Loop through the products and print the details
+      for (var product in saleProducts) {
+        print('Product ID: ${product['iProductID']}');
+        print('Sale Order ID: ${product['iSaleOrderID']}');
+      }
 
       Future<List<Map<String, dynamic>>> fetchAndProcessData(int saleID) async {
         // Execute the query
@@ -450,10 +447,23 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
       List<Map<String, dynamic>> products =
           await fetchAndProcessData(event.SaleId);
+     
+
+      // ======================== Remove Duplicate List ========================   //
+      // Use a Map to filter out duplicates based on `iSaleOrderProductID`
+      Map<int, Map<String, dynamic>> uniqueProductsMap = {};
+
+      for (var product in products) {
+        uniqueProductsMap[product['iSaleOrderProductID']] = product;
+      }
+
+      // Convert back to List
+      List<Map<String, dynamic>> uniqueProducts =
+          uniqueProductsMap.values.toList();
 
       emit(SaleListDetailsState(
           saleWithCustomer: SaleWithCustomer(sale: sale, customer: customer),
-          products: products));
+          products: uniqueProducts));
     }
   }
 }

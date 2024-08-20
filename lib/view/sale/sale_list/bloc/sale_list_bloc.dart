@@ -440,13 +440,21 @@ class SaleListBloc extends Bloc<SaleListEvent, SaleListState> {
       List<Map<String, dynamic>> products =
           await fetchAndProcessData(event.SaleId);
 
-      // for (int i = 0; i < products.length; i++) {
-      //   print(products[i]);
-      // }
+      // ======================== Remove Duplicate List ========================   //
+      // Use a Map to filter out duplicates based on `iSaleID`
+      Map<int, Map<String, dynamic>> uniqueProductsMap = {};
+
+      for (var product in products) {
+        uniqueProductsMap[product['iSaleID']] = product;
+      }
+
+      // Convert back to List
+      List<Map<String, dynamic>> uniqueProducts =
+          uniqueProductsMap.values.toList();
 
       emit(SaleListDetailsState(
           saleWithCustomer: SaleWithCustomer(sale: sale, customer: customer),
-          products: products));
+          products: uniqueProducts));
     }
   }
 }

@@ -542,43 +542,60 @@ class SaleOrderBloc extends Bloc<SaleOrderEvent, SaleOrderState> {
       "sale_order_product_list": saleOrderProductList
     };
 
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
 
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse.containsKey('error')) {
-        print(jsonResponse['faced error']);
-        // emit(InitialAuthState());
-      } else if (jsonResponse.containsKey('success')) {
-        String transaction_id = jsonResponse['transaction_id'];
-        print(transaction_id);
-        await db.update(
-          'sale_order',
-          {
-            'sSyncStatus': 1,
-            'transaction_id': transaction_id,
-          },
-          where: 'iSaleOrderID = ?',
-          whereArgs: [lastid],
-        );
-        for (int i = 0; i < allIsaleProductIds.length; i++) {
-          await db.update(
-            'sale_order_products_list',
-            {
-              'transaction_id': transaction_id,
-            },
-            where: 'iSaleOrderID = ?',
-            whereArgs: [allIsaleProductIds[i]],
-          );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse.containsKey('error')) {
+          print('Faced error: ${jsonResponse['error']}');
+          // emit(InitialAuthState());
+        } else if (jsonResponse.containsKey('success')) {
+          String transaction_id = jsonResponse['transaction_id'];
+          print(transaction_id);
+
+          // Update sale_order with transaction_id
+          try {
+            await db.update(
+              'sale_order',
+              {
+                'sSyncStatus': 1,
+                'transaction_id': transaction_id,
+              },
+              where: 'iSaleOrderID = ?',
+              whereArgs: [lastid],
+            );
+
+            // Update sale_order_products_list with transaction_id
+            for (int i = 0; i < allIsaleProductIds.length; i++) {
+              try {
+                await db.update(
+                  'sale_order_products_list',
+                  {
+                    'transaction_id': transaction_id,
+                  },
+                  where: 'iSaleOrderID = ?',
+                  whereArgs: [allIsaleProductIds[i]],
+                );
+              } catch (e) {
+                print(
+                    'Error updating sale_order_products_list for product ID ${allIsaleProductIds[i]}: $e');
+              }
+            }
+          } catch (e) {
+            print('Error updating sale_order: $e');
+          }
         }
+      } else {
+        print("Error: ${response.statusCode}");
+        print("Error body: ${response.body}");
       }
-    } else {
-      print("Erorr: ${response.statusCode}");
-      print("Error body: ${response.body}");
+    } catch (e) {
+      print('Request failed: $e');
     }
 
     SaleOrderbilledItems = [];

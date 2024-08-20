@@ -18,7 +18,7 @@ class SaleOrderListDetailsState extends State<SaleOrderListDetails> {
   SaleOrderListBloc saleOrderListBloc = SaleOrderListBloc();
   @override
   void initState() {
-    saleOrderListBloc.add(SaleOrderListDetailsEvent(SaleId: widget.SaleId));
+    saleOrderListBloc.add(SaleOrderListDetailsEvent(SaleId: widget.SaleId));    
     super.initState();
   }
 
@@ -200,7 +200,7 @@ class SaleOrderListDetailsState extends State<SaleOrderListDetails> {
                             } else {
                               totalSalePrice = item['dcToalSalePriceInSecUnit'];
                             }
-                            print(item['sActive']);
+                            
                             final discountPercentage =
                                 item['sDiscountInPercentage'];
                             final discountAmount = item['dcDiscountInAmount'];

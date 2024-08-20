@@ -66,7 +66,7 @@ class SaleListCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   AppText(
-                      title: "Sal33e #${index}",
+                      title: "Sale #${index}",
                       color: appsubtitletextColor,
                       font_size: 12,
                       fontWeight: FontWeight.w500),
