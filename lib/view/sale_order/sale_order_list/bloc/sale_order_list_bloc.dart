@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_event.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_state.dart';
@@ -258,7 +261,6 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
       SaleOrderListCustomDate event, Emitter<SaleOrderListState> emit) async {
     DBHelper dbHelper = DBHelper();
     final db = await dbHelper.database;
-
     // Query to fetch sales between the first and last dates of this week
     List<Map<String, dynamic>> saleRows = await db.rawQuery('''
       SELECT s.*, pc.sName as customerName
@@ -272,7 +274,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     // Iterate over fetched rows and populate SaleListModel instances
     saleRows.forEach((row) {
       salesList.add(SaleOrderListModel(
-        saleId: row['iSaleID'],
+        saleId: row['iSaleOrderID'],
         sSyncStatus: row['sSyncStatus'],
         invoice_price: row['dcTotalBill'],
 
@@ -281,6 +283,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
         sale_date: row['dSaleOrderDate'], // Add the sale date
       ));
     });
+
     emit(SuccessState(
         saleList: salesList,
         firstDate: event.fastDay,
@@ -470,9 +473,87 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
   Future<void> saleOrderListSyncEvent(
       SaleOrderListSyncEvent event, Emitter<SaleOrderListState> emit) async {
-    print(event.iSaleOrderID);
-    print(event.firstDate);
     emit(SaleLoadingState());
-    // Check for internet connection
+    final Uri url = Uri.parse(SyncUrl);
+    final _box = GetStorage();
+    final authorization_token = _box.read('token');
+
+    Map<String, dynamic> data = {};
+    final headers = {'Content-Type': 'application/json'};
+
+    for (int i = 0; i < event.iSaleOrderID.length; i++) {
+      data["iSaleOrderID__${i + 1}"] = event.iSaleOrderID[i].toString();
+    }
+
+    final body = {
+      "authorization_token": authorization_token,
+      "data": {
+        "sale_order__1": data,
+      },
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse.containsKey('error')) {
+          print('Faced error: ${jsonResponse['error']}');
+          // emit(InitialAuthState());
+        } else if (jsonResponse.containsKey('success')) {
+          print(jsonResponse);
+          DBHelper dbHelper = DBHelper();
+          final db = await dbHelper.database;
+          for (int i = 0; i < event.iSaleOrderID.length; i++) {
+            await db.update(
+              'sale_order',
+              {
+                'sSyncStatus': 1,
+              },
+              where: 'iSaleOrderID = ?',
+              whereArgs: [event.iSaleOrderID[i]],
+            );
+          }
+
+          // Query to fetch sales between the first and last dates of this week
+          List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+            SELECT s.*, pc.sName as customerName
+            FROM sale_order s
+            LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+            WHERE s.dSaleOrderDate BETWEEN ? AND ?
+          ''', [event.firstDate, event.lastDate]);
+
+          // List to hold SaleListModel instances
+          List<SaleOrderListModel> salesList = [];
+          // Iterate over fetched rows and populate SaleListModel instances
+          saleRows.forEach((row) {
+            salesList.add(SaleOrderListModel(
+              saleId: row['iSaleOrderID'],
+              sSyncStatus: row['sSyncStatus'],
+              invoice_price: row['dcTotalBill'],
+
+              customer_Name: row['customerName'],
+              total_discount: row['dcTotalDiscount'],
+              sale_date: row['dSaleOrderDate'], // Add the sale date
+            ));
+          });
+          print(salesList.isEmpty);
+
+          emit(SuccessState(
+              saleList: salesList,
+              firstDate: event.firstDate,
+              lastDate: event.lastDate));
+        }
+      } else {
+        print("Error: ${response.statusCode}");
+        print("Error body: ${response.body}");
+      }
+    } catch (e) {
+      print('Request failed: $e');
+    }
   }
 }

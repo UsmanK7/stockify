@@ -1,3 +1,5 @@
+import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_model.dart';
+
 abstract class SaleOrderListEvent {}
 
 class SaleOrderListInitialEvent extends SaleOrderListEvent {}

@@ -12,6 +12,7 @@ import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_event.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_model.dart';
 
 class SaleOrderList extends StatefulWidget {
   const SaleOrderList({super.key});
@@ -91,44 +92,41 @@ class _SaleOrderListState extends State<SaleOrderList> {
         actions: [
           GestureDetector(
             onTap: () async {
-              saleOrderListBloc.add(SaleOrderListSyncEvent(
-                  iSaleOrderID: syncIndex,
-                  firstDate: firstDateForAppBar,
-                  lastDate: lastDateForAppBar));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Syncing all")),
-              );
-
               var connectivityResult = await Connectivity().checkConnectivity();
-              if (connectivityResult == ConnectivityResult.none) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('No internet connection')),
-                );
-                return;
-              } else {
-                // Perform a simple internet connection check
-                try {
-                  final result =
-                      await http.get(Uri.parse('https://www.google.com'));
-                  if (result.statusCode == 200) {
-                    print("Internet is available");
-
-                    // Proceed with your event handling here
-                    saleOrderListBloc.add(SaleOrderListSyncEvent(
-                      iSaleOrderID: syncIndex,
-                      firstDate: firstDateForAppBar,
-                      lastDate: lastDateForAppBar,
-                    ));
-                  } else {
+              if (syncIndex.isNotEmpty) {
+                if (connectivityResult == ConnectivityResult.none) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No internet connection')),
+                  );
+                  return;
+                } else {
+                  // Perform a simple internet connection check
+                  try {
+                    final result =
+                        await http.get(Uri.parse('https://www.google.com'));
+                    if (result.statusCode == 200) {
+                      print("Internet is available");
+                      // Proceed with your event handling here
+                      saleOrderListBloc.add(SaleOrderListSyncEvent(
+                        iSaleOrderID: syncIndex,
+                        firstDate: firstDateForAppBar,
+                        lastDate: lastDateForAppBar,
+                      ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('No internet connection')),
+                      );
+                    }
+                  } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('No internet connection')),
                     );
                   }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('No internet connection')),
-                  );
                 }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('No items to sink')),
+                );
               }
             },
             child: Container(
@@ -301,9 +299,11 @@ class _SaleOrderListState extends State<SaleOrderList> {
                         child: ListView.builder(
                           itemCount: state.saleList.length,
                           itemBuilder: (context, index) {
+                            
                             if (state.saleList[index].sSyncStatus == "0") {
                               syncIndex.add(state.saleList[index].saleId);
                             }
+
                             if (state.saleList.isNotEmpty) {
                               if (state.saleList[index].sSyncStatus != "0") {
                                 return GestureDetector(
@@ -334,7 +334,6 @@ class _SaleOrderListState extends State<SaleOrderList> {
                                           );
                                           return;
                                         } else {
-                                          // Perform a simple internet connection check
                                           try {
                                             final result = await http.get(
                                                 Uri.parse(
@@ -342,7 +341,6 @@ class _SaleOrderListState extends State<SaleOrderList> {
                                             if (result.statusCode == 200) {
                                               print("Internet is available");
 
-                                              // Proceed with your event handling here
                                               saleOrderListBloc
                                                   .add(SaleOrderListSyncEvent(
                                                 iSaleOrderID: [
