@@ -263,6 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     paid_amount: state.paidBillAmount,
                                     sale_amount: state.totalSaleAmount,
                                   ),
+                                  
                                 ],
                               ),
                             ),
@@ -399,9 +400,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: AppText(
                             title: "Sale Form",
                             color: Colors
-                                .black45, // Change the color to match your theme
+                                .black87, // Change the color to match your theme
                             font_size: 13,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         Icon(
@@ -430,9 +431,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: AppText(
                             title: "Sale List",
                             color: Colors
-                                .black45, // Change the color to match your theme
+                                .black87, // Change the color to match your theme
                             font_size: 13,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         Icon(
@@ -458,7 +459,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         width:
                             15), // Add some spacing between the icon and the text
                     AppText(
-                      title: 'Daily Expense',
+                      title: 'Daily expense',
                       color: Colors
                           .black87, // Change the color to match your theme
                       font_size: 14,
@@ -566,21 +567,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 contentChild: Column(
                   children: [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     AppText(
-                    //         title: "Sale Recovery",
-                    //         color: Color(0xffA0A0A0),
-                    //         font_size: 13,
-                    //         fontWeight: FontWeight.w600),
-                    //     Icon(Icons.arrow_right)
-                    //   ],
-                    // ),
-                    // Divider(
-                    //   color: appsubtitletextColor,
-                    //   thickness: 0.1,
-                    // ),
+                  
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -833,12 +820,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     //   color: appsubtitletextColor,
                     //   thickness: 0.1,
                     // ),
+
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SaleOrderList()));
+                                builder: (context) => SaleReturnForm(
+                                      database: widget.database!,
+                                    )));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -846,7 +836,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Padding(
                             padding: EdgeInsets.only(left: 20),
                             child: AppText(
-                                title: "Sale return list",
+                                title: "Sale return form",
                                 color: Colors
                                     .black87, // Change the color to match your theme
                                 font_size: 13,
@@ -868,9 +858,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SaleReturnForm(
-                                      database: widget.database!,
-                                    )));
+                                builder: (context) => const SaleOrderList()));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -878,7 +866,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Padding(
                             padding: EdgeInsets.only(left: 20),
                             child: AppText(
-                                title: "Sale return form",
+                                title: "Sale return list",
                                 color: Colors
                                     .black87, // Change the color to match your theme
                                 font_size: 13,

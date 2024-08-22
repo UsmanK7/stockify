@@ -41,7 +41,7 @@ class _AddItemState extends State<AddItem> {
   bool qtyPriceChangeEventTriggered = false;
   String sSaleStatus = '';
   String sSaleType = '';
-
+  bool isReset = false;
   @override
   void dispose() {
     textEditingController.dispose();
@@ -58,6 +58,7 @@ class _AddItemState extends State<AddItem> {
     print("widget rebuild");
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: appBlue,
         title: AppText(
           color: Colors.white,
@@ -98,7 +99,7 @@ class _AddItemState extends State<AddItem> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(color: appborder),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton2<String>(
@@ -210,7 +211,7 @@ class _AddItemState extends State<AddItem> {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border.all(color: appborder),
-                                    borderRadius: BorderRadius.circular(16)),
+                                    borderRadius: BorderRadius.circular(4)),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton2<String>(
                                     isExpanded: true,
@@ -232,8 +233,9 @@ class _AddItemState extends State<AddItem> {
                                               ),
                                             ))
                                         .toList(),
-                                    value: state.selectedUnit,
+                                    value: isReset ? null : state.selectedUnit,
                                     onChanged: (value) {
+                                      isReset = false;
                                       selectedUnit = value!;
                                       saleBloc.add(SaleUnitSelectedEvent(
                                           selectedUnit: value!,
@@ -273,7 +275,7 @@ class _AddItemState extends State<AddItem> {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border.all(color: appborder),
-                                    borderRadius: BorderRadius.circular(16)),
+                                    borderRadius: BorderRadius.circular(4)),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -321,7 +323,7 @@ class _AddItemState extends State<AddItem> {
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(color: appborder),
-                                      borderRadius: BorderRadius.circular(16)),
+                                      borderRadius: BorderRadius.circular(4)),
                                   child: TextField(
                                     controller: priceController,
                                     keyboardType: TextInputType.number,
@@ -358,8 +360,7 @@ class _AddItemState extends State<AddItem> {
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         border: Border.all(color: appborder),
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
+                                        borderRadius: BorderRadius.circular(4)),
                                     child: TextField(
                                       keyboardType: TextInputType.number,
                                       onChanged: (value) {
@@ -419,7 +420,7 @@ class _AddItemState extends State<AddItem> {
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color: appborder),
-                                  borderRadius: BorderRadius.circular(16)),
+                                  borderRadius: BorderRadius.circular(4)),
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -441,7 +442,7 @@ class _AddItemState extends State<AddItem> {
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color: appborder),
-                                  borderRadius: BorderRadius.circular(16)),
+                                  borderRadius: BorderRadius.circular(4)),
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -472,7 +473,7 @@ class _AddItemState extends State<AddItem> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(color: appborder),
-                            borderRadius: BorderRadius.circular(16)),
+                            borderRadius: BorderRadius.circular(4)),
                         child: TextField(
                           controller: BonusQTYController,
                           keyboardType: TextInputType.number,
@@ -700,7 +701,7 @@ class _AddItemState extends State<AddItem> {
                           height: 37,
                           decoration: BoxDecoration(
                               color: appBlue,
-                              borderRadius: BorderRadius.circular(30)),
+                              borderRadius: BorderRadius.circular(4)),
                           child: Center(
                             child: AppText(
                                 title: "Save",
@@ -715,27 +716,12 @@ class _AddItemState extends State<AddItem> {
                       width: 30,
                     ),
                     Expanded(
-                      child: Container(
-                        height: 37,
-                        decoration: BoxDecoration(
-                            color: appBlue,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Center(
-                          child: AppText(
-                              title: "Print",
-                              color: Colors.white,
-                              font_size: 15,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 30),
-                    Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             textEditingController.clear();
                             priceController.clear();
+                            isReset = true;
                             QTYController.clear();
                             BonusQTYController.clear();
                             NDiscountController.clear();
@@ -747,7 +733,7 @@ class _AddItemState extends State<AddItem> {
                         child: Container(
                           decoration: BoxDecoration(
                               color: appBlue,
-                              borderRadius: BorderRadius.circular(30)),
+                              borderRadius: BorderRadius.circular(4)),
                           height: 37,
                           child: Center(
                             child: AppText(

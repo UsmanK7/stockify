@@ -113,8 +113,8 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                             height: 56,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Color(0xffC6C6DF))),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: appborder)),
                             child: BlocBuilder<DailyExpenseBloc,
                                 DailyExpenseState>(
                               bloc: dailyExpenseBloc,
@@ -137,7 +137,7 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                                                   'Expense Type',
                                                   style: TextStyle(
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight: FontWeight.w500,
                                                     color: Colors.black,
                                                   ),
                                                   overflow:
@@ -155,7 +155,7 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                                                       style: const TextStyle(
                                                         fontSize: 14,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                            FontWeight.w500,
                                                         color: Colors.black,
                                                       ),
                                                       overflow:
@@ -220,9 +220,8 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                                 height: 56,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border:
-                                        Border.all(color: Color(0xffC6C6DF))),
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: appborder)),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -248,8 +247,8 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                       height: 56,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Color(0xffC6C6DF)),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: appborder),
                       ),
                       child: TextFormField(
                         keyboardType: TextInputType.number,
@@ -348,8 +347,8 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Color(0xffC6C6DF)),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: appborder),
                       ),
                       child: TextFormField(
                         controller: _descriptionController,
@@ -422,7 +421,7 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                     margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: appBlue,
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Center(
                       child: state is DailyExpenseLoadingState
@@ -434,7 +433,7 @@ class _DailyExpenseScreenState extends State<DailyExpenseScreen> {
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
-                                  fontWeight: FontWeight.w600),
+                                  fontWeight: FontWeight.w500),
                             ),
                     ),
                   ),

@@ -31,11 +31,9 @@ class _DailyExpenseAddedScreenState extends State<DailyExpenseAddedScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppText(
-                    
                       title: "Daily Expense \n Added",
                       color: Colors.black,
                       font_size: 40,
-                      
                       fontWeight: FontWeight.w600),
                 ],
               )
@@ -56,7 +54,7 @@ class _DailyExpenseAddedScreenState extends State<DailyExpenseAddedScreen> {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(4),
                         color: appBlue,
                       ),
                       child: Center(
@@ -85,7 +83,7 @@ class _DailyExpenseAddedScreenState extends State<DailyExpenseAddedScreen> {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(4),
                         color: appBlue,
                       ),
                       child: Center(

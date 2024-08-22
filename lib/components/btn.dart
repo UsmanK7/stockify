@@ -23,7 +23,7 @@ class AppBtn extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-            color: color, borderRadius: BorderRadius.circular(16)),
+            color: color, borderRadius: BorderRadius.circular(4)),
         child: Center(
             child: Text(
           title,

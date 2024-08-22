@@ -201,8 +201,8 @@ class _SalesFormState extends State<SalesForm> {
                                 horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)),
+                                    topLeft: Radius.circular(4),
+                                    bottomLeft: Radius.circular(4)),
                                 color: Colors.white),
                             child: TextField(
                               controller: paidBillController,
@@ -224,8 +224,8 @@ class _SalesFormState extends State<SalesForm> {
                           decoration: BoxDecoration(
                               color: appsearchBoxColor,
                               borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(15),
-                                  bottomRight: Radius.circular(15))),
+                                  topRight: Radius.circular(4),
+                                  bottomRight: Radius.circular(4))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -300,7 +300,7 @@ class _SalesFormState extends State<SalesForm> {
                     Row(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * .60,
+                          width: MediaQuery.of(context).size.width * .50,
                           child: TextField(
                             controller: noteController,
                             decoration: InputDecoration(
@@ -316,9 +316,9 @@ class _SalesFormState extends State<SalesForm> {
                         ),
                         Expanded(
                           child: Container(
-                            height: 106,
+                            height: 130,
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black)),
+                                border: Border.all(color: Colors.black26)),
                             child: Center(
                               child: Image(
                                 image: AssetImage("assets/images/image.png"),
@@ -404,7 +404,7 @@ class _SalesFormState extends State<SalesForm> {
                               height: 50,
                               decoration: BoxDecoration(
                                 color: appBlue,
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
                                   child: state is FormAddingLoadingState

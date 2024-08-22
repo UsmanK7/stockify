@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
@@ -315,25 +316,27 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              BlocBuilder<SalePopBloc, Popstate>(
-                builder: (context, state) {
-                  if (state.selectedCustomer != null) {
-                    selectedCustomerId =
-                        state.getCustomerIdByName(state.selectedCustomer!);
-                  }
-                  if (state.customers == null || state.customers!.isEmpty) {
-                    return Center(child: Text('No customers available'));
-                  }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            BlocBuilder<SalePopBloc, Popstate>(
+              builder: (context, state) {
+                if (state.selectedCustomer != null) {
+                  selectedCustomerId =
+                      state.getCustomerIdByName(state.selectedCustomer!);
+                }
+                if (state.customers == null || state.customers!.isEmpty) {
+                  return Center(child: Text('No customers available'));
+                }
 
-                  return DropdownButtonHideUnderline(
+                return Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 7),
+                  child: DropdownButtonHideUnderline(
                     child: DropdownButton2<String>(
-                      isExpanded: false,
+                      isExpanded: true,
                       hint: Text(
                         'Select Customer',
                         style: TextStyle(
@@ -373,7 +376,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       buttonStyleData: const ButtonStyleData(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         height: 40,
-                        width: 235,
+                        width: 200,
                       ),
                       dropdownStyleData: const DropdownStyleData(
                         maxHeight: 200,
@@ -420,15 +423,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         }
                       },
                     ),
-                  );
-                },
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .020,
-              ),
-              BlocBuilder<SalePopBloc, Popstate>(
-                builder: (context, state) {
-                  return GestureDetector(
+                  ),
+                );
+              },
+            ),
+            BlocBuilder<SalePopBloc, Popstate>(
+              builder: (context, state) {
+                return Expanded(
+                  child: GestureDetector(
                     onTap: () {
                       Future.delayed(Duration(milliseconds: 500), () {
                         showDetailsDialog(context);
@@ -438,93 +440,108 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       textEditingController.clear();
                     },
                     child: Container(
-                      decoration: const BoxDecoration(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(15),
                           bottomRight: Radius.circular(15),
                         ),
+                        color: appsearchBoxColor,
                       ),
                       child: Padding(
-                        padding: EdgeInsets.only(right: 2),
-                        child: Image(
-                          width: MediaQuery.of(context).size.width * .060,
-                          image:
-                              const AssetImage('assets/images/Search_ic.png'),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Color(0xffC6C6DF))),
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 4, right: 10, left: 10),
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            hintText: "Reference No", border: InputBorder.none),
-                      )),
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              // BlocBuilder<SaleBloc, SaleState>(builder: (context, state) {
-
-              // }),
-              BlocBuilder<DateBloc, DateState>(
-
-                  // buildWhen: (previous, current) =>
-                  //     previous.date != current.date,
-                  builder: (context, state) {
-                dSaleDate = state.date;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () async {
-                      context.read<DateBloc>().add(
-                          DateEventChange(date: await _selectDate(context)));
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      height: 56,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Color(0xffC6C6DF))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            state.date,
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                          Icon(Icons.calendar_today, color: Colors.grey),
-                        ],
-                      ),
+                          padding: EdgeInsets.only(right: 2),
+                          child: Row(
+                            children: [
+                              AppText(
+                                  title: "Filter",
+                                  color: Colors.black87,
+                                  font_size: 15,
+                                  fontWeight: FontWeight.w500),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Image(
+                                width: MediaQuery.of(context).size.width * .060,
+                                image: const AssetImage(
+                                    'assets/images/Search_ic.png'),
+                              ),
+                            ],
+                          )),
                     ),
                   ),
                 );
-              }),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .020,
-          ),
-        ],
-      ),
+              },
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 56,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: appborder)),
+                child: Padding(
+                    padding: EdgeInsets.only(top: 4, right: 10, left: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Reference No", border: InputBorder.none),
+                    )),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            // BlocBuilder<SaleBloc, SaleState>(builder: (context, state) {
+
+            // }),
+            BlocBuilder<DateBloc, DateState>(
+
+                // buildWhen: (previous, current) =>
+                //     previous.date != current.date,
+                builder: (context, state) {
+              dSaleDate = state.date;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    context
+                        .read<DateBloc>()
+                        .add(DateEventChange(date: await _selectDate(context)));
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    height: 56,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: appborder)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          state.date,
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        Icon(Icons.calendar_today, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * .020,
+        ),
+      ],
     );
   }
 }

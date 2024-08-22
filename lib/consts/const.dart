@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 Color appBlue = Color(0xff1789fc);
 Color appBgWhite = Color(0xffF1F1F1);
-Color appborder = Color(0xffC6C6DF);
+Color appborder = Color(0xffefefef);
 Color apptextColor = Color(0xff91919F);
 Color appsubtitletextColor = Color(0xff767E8C);
 Color appsearchBoxColor = Color(0xffD9D9D9);
