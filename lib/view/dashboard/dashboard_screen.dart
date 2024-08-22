@@ -327,6 +327,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       drawer: Drawer(
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -361,81 +362,110 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 )),
             GFAccordion(
-                titleBorderRadius: BorderRadius.circular(10),
-                collapsedTitleBackgroundColor: Colors.white,
-                title: 'Sale',
-                contentChild: Column(
-                  children: [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     AppText(
-                    //         title: "Sale Recovery",
-                    //         color: Color(0xffA0A0A0),
-                    //         font_size: 13,
-                    //         fontWeight: FontWeight.w600),
-                    //     Icon(Icons.arrow_right)
-                    //   ],
-                    // ),
-                    // Divider(
-                    //   color: appsubtitletextColor,
-                    //   thickness: 0.1,
-                    // ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SaleList()));
-                      },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AppText(
-                              title: "Sale List",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
-                        ],
-                      ),
+              titleBorderRadius: BorderRadius.circular(10),
+              expandedTitleBackgroundColor: Colors.transparent,
+              collapsedTitleBackgroundColor: Colors.transparent,
+              titleChild: Row(
+                children: [
+                  Image(width: 25, image: AssetImage("assets/images/sale.png")),
+                  SizedBox(
+                      width:
+                          15), // Add some spacing between the icon and the text
+                  AppText(
+                    title: 'Sale',
+                    color:
+                        Colors.black87, // Change the color to match your theme
+                    font_size: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ],
+              ),
+              contentChild: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SalesForm(
+                                    database: widget.database!,
+                                  )));
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: AppText(
+                            title: "Sale Form",
+                            color: Colors
+                                .black45, // Change the color to match your theme
+                            font_size: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Icon(
+                          Icons.add,
+                          color: Colors.black45,
+                        )
+                      ],
                     ),
-                    Divider(
-                      color: appsubtitletextColor,
-                      thickness: 0.2,
+                  ),
+                  Divider(
+                    color: appsubtitletextColor,
+                    thickness: 0.2,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SaleList()));
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: AppText(
+                            title: "Sale List",
+                            color: Colors
+                                .black45, // Change the color to match your theme
+                            font_size: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Icon(
+                          Icons.add,
+                          color: Colors.black45,
+                        )
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SalesForm(
-                                      database: widget.database!,
-                                    )));
-                      },
-
-                      //---------------------Muhammad Routes-----------------------//
-
-                      //--------------------Muhammad Merger End Here --------------------////////
-
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AppText(
-                              title: "Sale Form ",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
             GFAccordion(
                 titleBorderRadius: BorderRadius.circular(10),
-                collapsedTitleBackgroundColor: Colors.white,
-                title: 'Daily Expense',
+                expandedTitleBackgroundColor: Colors.transparent,
+                collapsedTitleBackgroundColor: Colors.transparent,
+                titleChild: Row(
+                  children: [
+                    Image(
+                        width: 20,
+                        image: AssetImage("assets/images/daily-expense.png")),
+                    SizedBox(
+                        width:
+                            15), // Add some spacing between the icon and the text
+                    AppText(
+                      title: 'Daily Expense',
+                      color: Colors
+                          .black87, // Change the color to match your theme
+                      font_size: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
                 contentChild: Column(
                   children: [
                     // Row(
@@ -464,12 +494,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Daily Expense",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Daily Expense Form",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -488,12 +525,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Daily Expense List",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Daily Expense List",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -501,8 +545,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 )),
             GFAccordion(
                 titleBorderRadius: BorderRadius.circular(10),
-                collapsedTitleBackgroundColor: Colors.white,
-                title: 'Sale Order',
+                expandedTitleBackgroundColor: Colors.transparent,
+                collapsedTitleBackgroundColor: Colors.transparent,
+                titleChild: Row(
+                  children: [
+                    Image(
+                        width: 20,
+                        image: AssetImage("assets/images/sale-order.png")),
+                    SizedBox(
+                        width:
+                            15), // Add some spacing between the icon and the text
+                    AppText(
+                      title: 'Sale order',
+                      color: Colors
+                          .black87, // Change the color to match your theme
+                      font_size: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
                 contentChild: Column(
                   children: [
                     // Row(
@@ -525,17 +586,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SaleOrderList()));
+                                builder: (context) => SalesOrderForm(
+                                      database: widget.database!,
+                                    )));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Sale order List",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Sale order form",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -548,23 +618,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SalesOrderForm(
-                                      database: widget.database!,
-                                    )));
+                                builder: (context) => const SaleOrderList()));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Sale order Form ",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Sale order list",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
 
+                    ///////////// Muhammad  Code  End Here-------------------////////////
+                  ],
+                )),
+            GFAccordion(
+                titleBorderRadius: BorderRadius.circular(10),
+                expandedTitleBackgroundColor: Colors.transparent,
+                collapsedTitleBackgroundColor: Colors.transparent,
+                titleChild: Row(
+                  children: [
+                    Image(
+                        width: 20,
+                        image: AssetImage("assets/images/payment.png")),
+                    SizedBox(
+                        width:
+                            15), // Add some spacing between the icon and the text
+                    AppText(
+                      title: 'Payment',
+                      color: Colors
+                          .black87, // Change the color to match your theme
+                      font_size: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
+                contentChild: Column(
+                  children: [
                     //////////////This is Muhammad Code -------------------////////////
 
                     GestureDetector(
@@ -577,12 +678,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Payment Screen",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Payment Screen",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -602,12 +710,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Custmer Screen",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Customer screen",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -626,12 +741,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "login Screen",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "login screen",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -650,12 +772,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "CompletionScreen",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "completion screen",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -664,14 +793,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       thickness: 0.2,
                     ),
                     //-----------------------
-
-                    ///////////// Muhammad  Code  End Here-------------------////////////
                   ],
                 )),
             GFAccordion(
                 titleBorderRadius: BorderRadius.circular(10),
-                collapsedTitleBackgroundColor: Colors.white,
-                title: 'Sale Return',
+                expandedTitleBackgroundColor: Colors.transparent,
+                collapsedTitleBackgroundColor: Colors.transparent,
+                titleChild: Row(
+                  children: [
+                    Image(
+                        width: 20,
+                        image: AssetImage("assets/images/sale-return.png")),
+                    SizedBox(
+                        width:
+                            15), // Add some spacing between the icon and the text
+                    AppText(
+                      title: 'Sale return',
+                      color: Colors
+                          .black87, // Change the color to match your theme
+                      font_size: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
                 contentChild: Column(
                   children: [
                     // Row(
@@ -699,12 +843,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Sale return List",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Sale return list",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
                     ),
@@ -724,63 +875,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(
-                              title: "Sale return Form ",
-                              color: Color(0xffA0A0A0),
-                              font_size: 13,
-                              fontWeight: FontWeight.w600),
-                          Icon(Icons.arrow_right)
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: AppText(
+                                title: "Sale return form",
+                                color: Colors
+                                    .black87, // Change the color to match your theme
+                                font_size: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(
+                            Icons.add,
+                            color: Colors.black45,
+                          )
                         ],
                       ),
-                    ),
-                  ],
-                )),
-            GFAccordion(
-                titleBorderRadius: BorderRadius.circular(10),
-                collapsedTitleBackgroundColor: Colors.white,
-                title: 'Payment List',
-                contentChild: Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppText(
-                            title: "Dummy",
-                            color: Color(0xffA0A0A0),
-                            font_size: 13,
-                            fontWeight: FontWeight.w600),
-                        Icon(Icons.arrow_right)
-                      ],
-                    ),
-                    Divider(
-                      color: appsubtitletextColor,
-                      thickness: 0.1,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppText(
-                            title: "Dummy",
-                            color: Color(0xffA0A0A0),
-                            font_size: 13,
-                            fontWeight: FontWeight.w600),
-                        Icon(Icons.arrow_right)
-                      ],
-                    ),
-                    Divider(
-                      color: appsubtitletextColor,
-                      thickness: 0.2,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppText(
-                            title: "Dummy",
-                            color: Color(0xffA0A0A0),
-                            font_size: 13,
-                            fontWeight: FontWeight.w600),
-                        Icon(Icons.arrow_right)
-                      ],
                     ),
                   ],
                 )),

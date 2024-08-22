@@ -484,7 +484,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     for (int i = 0; i < event.iSaleOrderID.length; i++) {
       data["iSaleOrderID__${i + 1}"] = event.iSaleOrderID[i].toString();
     }
-
+  
     final body = {
       "authorization_token": authorization_token,
       "data": {
