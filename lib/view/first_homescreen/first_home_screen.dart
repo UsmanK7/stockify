@@ -26,6 +26,7 @@ import 'package:okra_distributer/view/sale/sale_list/UI/sale_list.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/sales_order_form.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/UI/sale_order_list.dart';
 import 'package:okra_distributer/view/sale_return/sale_return_form/sales_return_form.dart';
+import 'package:okra_distributer/view/unknown/unknown.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -104,370 +105,389 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
         centerTitle: true,
         backgroundColor: appBlue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Container(
-              // color: Colors.blue,
-              height: 180,
-              child: BlocBuilder<DashBloc, DashState>(
-                bloc: dashBloc,
-                builder: (context, state) {
-                  if (state is DashSuccessState) {
-                    // double totalPaidBillAmount = state.saleList.length == 0
-                    //     ? 0
-                    //     : state.saleList
-                    //         .map((sale) => sale.paid_bill_amount)
-                    //         .reduce((value, element) => value + element);
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              Container(
+                // color: Colors.blue,
+                height: 180,
+                child: BlocBuilder<DashBloc, DashState>(
+                  bloc: dashBloc,
+                  builder: (context, state) {
+                    if (state is DashSuccessState) {
+                      // double totalPaidBillAmount = state.saleList.length == 0
+                      //     ? 0
+                      //     : state.saleList
+                      //         .map((sale) => sale.paid_bill_amount)
+                      //         .reduce((value, element) => value + element);
 
-                    // double totalInvoicePrice = state.saleList.length == 0
-                    //     ? 0
-                    //     : state.saleList
-                    //         .map((sale) => sale.invoice_price)
-                    //         .reduce((value, element) => value + element);
-                    // double totalDiscount = state.saleList.length == 0
-                    //     ? 0
-                    //     : state.saleList
-                    //         .map((sale) => sale.total_discount)
-                    //         .reduce((value, element) => value + element);
-                    String firstDay = state.firstDate;
-                    String lastDay = state.lastDate;
-                    return Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                DropdownButtonHideUnderline(
-                                  child: DropdownButton2<String>(
-                                    isExpanded: true,
-                                    hint: Text(
-                                      'Date Filter',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).hintColor,
+                      // double totalInvoicePrice = state.saleList.length == 0
+                      //     ? 0
+                      //     : state.saleList
+                      //         .map((sale) => sale.invoice_price)
+                      //         .reduce((value, element) => value + element);
+                      // double totalDiscount = state.saleList.length == 0
+                      //     ? 0
+                      //     : state.saleList
+                      //         .map((sale) => sale.total_discount)
+                      //         .reduce((value, element) => value + element);
+                      String firstDay = state.firstDate;
+                      String lastDay = state.lastDate;
+                      return Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Date Filter',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor,
+                                        ),
+                                      ),
+                                      items: items
+                                          .map((String item) =>
+                                              DropdownMenuItem<String>(
+                                                value: item,
+                                                child: Text(
+                                                  item,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                      value: datetap == "false"
+                                          ? "This month"
+                                          : datetap == "custom"
+                                              ? "Custom"
+                                              : selectedValue,
+                                      onChanged: (String? value) {
+                                        selectedValue = value;
+
+                                        if (value == "This month") {
+                                          datetap = "false";
+                                          dashBloc.add(DashThisMonthEvent());
+                                        } else if (value == 'Last month') {
+                                          datetap = "false";
+                                          dashBloc.add(DashLastMonthEvent());
+                                        } else if (value == 'This week') {
+                                          datetap = "false";
+                                          dashBloc.add(DashThisWeekEvent());
+                                        } else if (value == 'This year') {
+                                          datetap = "false";
+                                          dashBloc.add(DashThisYearEvent());
+                                        } else if (value == 'This quarter') {
+                                          datetap = "false";
+                                          dashBloc.add(DashThisQuarterEvent());
+                                        } else if (value == 'Custom') {
+                                          datetap = "custom";
+                                          dashBloc.add(DashCustomDate(
+                                              fastDay: state.firstDate,
+                                              lastDay: state.lastDate));
+                                        }
+                                      },
+                                      buttonStyleData: const ButtonStyleData(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        height: 40,
+                                        width: 140,
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 40,
                                       ),
                                     ),
-                                    items: items
-                                        .map((String item) =>
-                                            DropdownMenuItem<String>(
-                                              value: item,
-                                              child: Text(
-                                                item,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    value: datetap == "false"
-                                        ? "This month"
-                                        : datetap == "custom"
-                                            ? "Custom"
-                                            : selectedValue,
-                                    onChanged: (String? value) {
-                                      selectedValue = value;
-
-                                      if (value == "This month") {
-                                        datetap = "false";
-                                        dashBloc.add(DashThisMonthEvent());
-                                      } else if (value == 'Last month') {
-                                        datetap = "false";
-                                        dashBloc.add(DashLastMonthEvent());
-                                      } else if (value == 'This week') {
-                                        datetap = "false";
-                                        dashBloc.add(DashThisWeekEvent());
-                                      } else if (value == 'This year') {
-                                        datetap = "false";
-                                        dashBloc.add(DashThisYearEvent());
-                                      } else if (value == 'This quarter') {
-                                        datetap = "false";
-                                        dashBloc.add(DashThisQuarterEvent());
-                                      } else if (value == 'Custom') {
-                                        datetap = "custom";
-                                        dashBloc.add(DashCustomDate(
-                                            fastDay: state.firstDate,
-                                            lastDay: state.lastDate));
-                                      }
+                                  ),
+                                  const Icon(Icons.calendar_month),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      datetap = "custom";
+                                      DateTime now =
+                                          await _firstselectDate(context);
+                                      firstDay = formatDate(now);
+                                      dashBloc.add(DashCustomDate(
+                                          fastDay: firstDay, lastDay: lastDay));
                                     },
-                                    buttonStyleData: const ButtonStyleData(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
-                                      height: 40,
-                                      width: 140,
-                                    ),
-                                    menuItemStyleData: const MenuItemStyleData(
-                                      height: 40,
+                                    child: Text(
+                                      // state.firstDate,
+                                      state.firstDate,
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 12),
                                     ),
                                   ),
-                                ),
-                                const Icon(Icons.calendar_month),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    datetap = "custom";
-                                    DateTime now =
-                                        await _firstselectDate(context);
-                                    firstDay = formatDate(now);
-                                    dashBloc.add(DashCustomDate(
-                                        fastDay: firstDay, lastDay: lastDay));
-                                  },
-                                  child: Text(
-                                    // state.firstDate,
-                                    state.firstDate,
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 12),
+                                  const SizedBox(
+                                    width: 7,
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 7,
-                                ),
-                                const Text(
-                                  "to",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  width: 7,
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    datetap = "custom";
-                                    DateTime now =
-                                        await _lastselectDate(context);
-                                    lastDay = formatDate(now);
-                                    dashBloc.add(DashCustomDate(
-                                        fastDay: firstDay, lastDay: lastDay));
-                                  },
-                                  child: Text(
-                                    // state.lastDate,
-                                    state.lastDate,
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 12),
+                                  const Text(
+                                    "to",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              thickness: 0.5,
-                              color: Color(0xff91919F),
-                            ),
-                            Expanded(
-                              child: SaleDashboardCard(
-                                total_discount: state.totalDiscount,
-                                total_order: state.totalOrder,
-                                paid_amount: state.paidBillAmount,
-                                sale_amount: state.totalSaleAmount,
+                                  const SizedBox(
+                                    width: 7,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      datetap = "custom";
+                                      DateTime now =
+                                          await _lastselectDate(context);
+                                      lastDay = formatDate(now);
+                                      dashBloc.add(DashCustomDate(
+                                          fastDay: firstDay, lastDay: lastDay));
+                                    },
+                                    child: Text(
+                                      // state.lastDate,
+                                      state.lastDate,
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 12),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            // Expanded(
-                            //   child: ListView.builder(
-                            //       itemCount: 3,
-                            //       scrollDirection: Axis.horizontal,
-                            //       itemBuilder: (context, index) {
-                            //         return SaleDashboardCard(
-                            //           total_discount: state.totalDiscount,
-                            //           total_order: state.totalOrder,
-                            //           paid_amount: state.paidBillAmount,
-                            //           sale_amount: state.totalSaleAmount,
-                            //         );
-                            //       }),
-                            // ),
-                          ],
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
+                              const Divider(
+                                thickness: 0.5,
+                                color: Color(0xff91919F),
+                              ),
+                              Expanded(
+                                child: SaleDashboardCard(
+                                  total_discount: state.totalDiscount,
+                                  total_order: state.totalOrder,
+                                  paid_amount: state.paidBillAmount,
+                                  sale_amount: state.totalSaleAmount,
+                                ),
+                              ),
+                              // Expanded(
+                              //   child: ListView.builder(
+                              //       itemCount: 3,
+                              //       scrollDirection: Axis.horizontal,
+                              //       itemBuilder: (context, index) {
+                              //         return SaleDashboardCard(
+                              //           total_discount: state.totalDiscount,
+                              //           total_order: state.totalOrder,
+                              //           paid_amount: state.paidBillAmount,
+                              //           sale_amount: state.totalSaleAmount,
+                              //         );
+                              //       }),
+                              // ),
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              children: [
-                AppText(
-                    title: "Quick Links",
-                    color: Colors.black,
-                    font_size: 19,
-                    fontWeight: FontWeight.w600)
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                QuickLinkCard(
-                    imgpath: "assets/images/sale.png",
-                    text: "Add Sale",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  SalesForm(database: widget.database!)));
-                    }),
-                SizedBox(
-                  width: 10,
-                ),
-                QuickLinkCard(
-                    imgpath: "assets/images/sale.png",
-                    text: "Sales list",
-                    ontap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SaleList()));
-                    }),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Row(
+                children: [
+                  AppText(
+                      title: "Quick Links",
+                      color: Colors.black,
+                      font_size: 19,
+                      fontWeight: FontWeight.w600)
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  QuickLinkCard(
+                      imgpath: "assets/images/sale.png",
+                      text: "Add Sale",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SalesForm(database: widget.database!)));
+                      }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  QuickLinkCard(
+                      imgpath: "assets/images/sale.png",
+                      text: "Sales list",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SaleList()));
+                      }),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
 
-            Row(
-              children: [
-                QuickLinkCard(
-                    imgpath: "assets/images/payment.png",
-                    text: "Payment Screen",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentRecovery()));
-                    }),
-                SizedBox(
-                  width: 10,
-                ),
-                QuickLinkCard(
-                    imgpath: "assets/images/payment.png",
-                    text: "Customer Screen",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CustomerScreen()));
-                    }),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                QuickLinkCard(
-                    imgpath: "assets/images/sale-order.png",
-                    text: "Add Sale order",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  SalesForm(database: widget.database!)));
-                    }),
-                SizedBox(
-                  width: 10,
-                ),
-                QuickLinkCard(
-                    imgpath: "assets/images/sale.png",
-                    text: "Sale order list",
-                    ontap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SaleList()));
-                    }),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                QuickLinkCard(
-                    imgpath: "assets/images/sale-return.png",
-                    text: "Add Sale return",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  SalesForm(database: widget.database!)));
-                    }),
-                SizedBox(
-                  width: 10,
-                ),
-                QuickLinkCard(
-                    imgpath: "assets/images/sale-return.png",
-                    text: "Sale return list",
-                    ontap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SaleList()));
-                    }),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                QuickLinkCard(
-                    imgpath: "assets/images/payment.png",
-                    text: "Add Daily Expense",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DailyExpenseScreen()));
-                    }),
-                SizedBox(
-                  width: 10,
-                ),
-                QuickLinkCard(
-                    imgpath: "assets/images/daily-expense.png",
-                    text: "Daily Expense list",
-                    ontap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DailyExpenseList()));
-                    }),
-              ],
-            ),
+              Row(
+                children: [
+                  QuickLinkCard(
+                      imgpath: "assets/images/payment.png",
+                      text: "Payment Screen",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentRecovery()));
+                      }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  QuickLinkCard(
+                      imgpath: "assets/images/payment.png",
+                      text: "Customer Screen",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CustomerScreen()));
+                      }),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  QuickLinkCard(
+                      imgpath: "assets/images/sale-order.png",
+                      text: "Add Sale order",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SalesForm(database: widget.database!)));
+                      }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  QuickLinkCard(
+                      imgpath: "assets/images/sale.png",
+                      text: "Sale order list",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SaleList()));
+                      }),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  QuickLinkCard(
+                      imgpath: "assets/images/sale-return.png",
+                      text: "Add Sale return",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SalesForm(database: widget.database!)));
+                      }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  QuickLinkCard(
+                      imgpath: "assets/images/sale-return.png",
+                      text: "Sale return list",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SaleList()));
+                      }),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  QuickLinkCard(
+                      imgpath: "assets/images/payment.png",
+                      text: "Add Daily Expense",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DailyExpenseScreen()));
+                      }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  QuickLinkCard(
+                      imgpath: "assets/images/daily-expense.png",
+                      text: "Daily Expense list",
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DailyExpenseList()));
+                      }),
+                ],
+              ),
 
-            Row(
-              children: [
-                AppText(
-                    title: "Sale Information",
-                    color: Colors.black,
-                    font_size: 19,
-                    fontWeight: FontWeight.w600)
-              ],
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
-                },
-                child: const Text("Login")),
-            // Expanded(
-            //   child: SingleChildScrollView(
-            //     scrollDirection: Axis.horizontal,
-            //     child: Row(
-            //       children: [
-            //         Container(
-            //           width: 4 * 100.0,
-            //           height: 250,
-            //           child: const CustomBarchart(),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-          ],
+              Row(
+                children: [
+                  AppText(
+                      title: "Sale Information",
+                      color: Colors.black,
+                      font_size: 19,
+                      fontWeight: FontWeight.w600)
+                ],
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()));
+                  },
+                  child: const Text("Login")),
+
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const UnknownScreen()));
+                  },
+                  child: const Text("purchases")),
+              // Expanded(
+              //   child: SingleChildScrollView(
+              //     scrollDirection: Axis.horizontal,
+              //     child: Row(
+              //       children: [
+              //         Container(
+              //           width: 4 * 100.0,
+              //           height: 250,
+              //           child: const CustomBarchart(),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
       drawer: Drawer(
