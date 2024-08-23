@@ -51,14 +51,16 @@ class _ItemReturnScreenState extends State<ItemReturnScreen> {
             return Column(
               children: [
                 Container(
-                  width: TotalScreenWidth(context),
+                  width: AppTotalScreenWidth(context),
                   height: 31,
                   color: appBlue,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        Image(image: AssetImage("assets/images/dropdown.png")),
+                        Image(
+                            width: 20,
+                            image: AssetImage("assets/images/dropdown.png")),
                         SizedBox(
                           width: 10,
                         ),
@@ -72,7 +74,7 @@ class _ItemReturnScreenState extends State<ItemReturnScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: TotalScreenHeight(context) - 390,
+                  height: AppTotalScreenHeight(context) - 390,
                   child: SaleOrderbilledItems.isEmpty
                       ? Center(
                           child: Text("No records found"),
@@ -118,7 +120,7 @@ class _ItemReturnScreenState extends State<ItemReturnScreen> {
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 child: Container(
                                   padding: EdgeInsets.only(top: 3),
-                                  width: TotalScreenWidth(context),
+                                  width: AppTotalScreenWidth(context),
                                   height: 106,
                                   color: appsearchBoxColor,
                                   child: Column(
@@ -428,7 +430,7 @@ class _ItemReturnScreenState extends State<ItemReturnScreen> {
                         saleBloc.add(RefreshEvent());
                       },
                       child: Container(
-                          width: TotalScreenWidth(context) - 190,
+                          width: AppTotalScreenWidth(context) - 190,
                           height: 37,
                           decoration: BoxDecoration(
                               color: appBlue,
@@ -437,6 +439,7 @@ class _ItemReturnScreenState extends State<ItemReturnScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image(
+                                  width: 20,
                                   image: AssetImage(
                                       "assets/images/plus_inside_btn.png")),
                               SizedBox(

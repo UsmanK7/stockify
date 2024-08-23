@@ -92,7 +92,7 @@ class _DailyExpenseListDetailsState extends State<DailyExpenseListDetails> {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Container(
-                width: TotalScreenWidth(context),
+                width: AppTotalScreenWidth(context),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,

@@ -51,7 +51,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: TotalScreenWidth(context),
+                    width: AppTotalScreenWidth(context),
                     height: 31,
                     color: appBlue,
                     child: Padding(
@@ -75,7 +75,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                   ),
                   Container(
                     child: SizedBox(
-                      height: TotalScreenHeight(context) - 410,
+                      height: AppTotalScreenHeight(context) - 410,
                       child: billedItems.isEmpty
                           ? Center(
                               child: Text("No records found"),
@@ -120,7 +120,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                                     padding: EdgeInsets.symmetric(vertical: 3),
                                     child: Container(
                                       padding: EdgeInsets.only(top: 3),
-                                      width: TotalScreenWidth(context),
+                                      width: AppTotalScreenWidth(context),
                                       height: 106,
                                       color: appsearchBoxColor,
                                       child: Column(
@@ -449,7 +449,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                           saleBloc.add(RefreshEvent());
                         },
                         child: Container(
-                            width: TotalScreenWidth(context) - 190,
+                            width: AppTotalScreenWidth(context) - 190,
                             height: 37,
                             decoration: BoxDecoration(
                                 color: appBlue,

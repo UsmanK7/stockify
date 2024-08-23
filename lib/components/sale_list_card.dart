@@ -30,7 +30,7 @@ class SaleListCard extends StatelessWidget {
       status = "paid";
     }
     return Container(
-      width: TotalScreenWidth(context),
+      width: AppTotalScreenWidth(context),
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(

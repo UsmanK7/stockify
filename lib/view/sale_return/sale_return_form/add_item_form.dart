@@ -70,8 +70,8 @@ class _AddReturnItemState extends State<AddReturnItem> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: TotalScreenHeight(context),
-          width: TotalScreenWidth(context),
+          height: AppTotalScreenHeight(context),
+          width: AppTotalScreenWidth(context),
           decoration: BoxDecoration(
               color: appBgWhite,
               borderRadius: BorderRadius.only(
@@ -94,7 +94,7 @@ class _AddReturnItemState extends State<AddReturnItem> {
                           );
                         } else if (state is SaleSuccessState) {
                           return Container(
-                            width: TotalScreenWidth(context) / 1.8,
+                            width: AppTotalScreenWidth(context) / 1.8,
                             height: 45,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -189,7 +189,7 @@ class _AddReturnItemState extends State<AddReturnItem> {
                           );
                         } else {
                           return Container(
-                            width: TotalScreenWidth(context) / 1.8,
+                            width: AppTotalScreenWidth(context) / 1.8,
                             child: Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -316,7 +316,7 @@ class _AddReturnItemState extends State<AddReturnItem> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                  width: TotalScreenWidth(context) / 1.8,
+                                  width: AppTotalScreenWidth(context) / 1.8,
                                   padding: EdgeInsets.only(left: 10),
                                   height: 45,
                                   decoration: BoxDecoration(
@@ -414,7 +414,7 @@ class _AddReturnItemState extends State<AddReturnItem> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                              width: TotalScreenWidth(context) / 1.8,
+                              width: AppTotalScreenWidth(context) / 1.8,
                               padding: EdgeInsets.only(left: 10),
                               height: 45,
                               decoration: BoxDecoration(

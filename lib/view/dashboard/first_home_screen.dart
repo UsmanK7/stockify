@@ -28,14 +28,14 @@ import 'package:okra_distributer/view/sale_return/sale_return_form/sales_return_
 
 import 'package:sqflite/sqflite.dart';
 
-class DashboardScreen extends StatefulWidget {
+class FirstHomeScreen extends StatefulWidget {
   final Database? database;
-  const DashboardScreen({super.key, this.database});
+  const FirstHomeScreen({super.key, this.database});
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<FirstHomeScreen> createState() => _FirstHomeScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _FirstHomeScreenState extends State<FirstHomeScreen> {
   DashBloc dashBloc = DashBloc();
 
   @override
@@ -96,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const AppText(
-            title: "Dashboard",
+            title: "Home Screen",
             color: Colors.white,
             font_size: 22,
             fontWeight: FontWeight.w500),
@@ -109,7 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Container(
               // color: Colors.blue,
-              height: 160,
+              height: 180,
               child: BlocBuilder<DashBloc, DashState>(
                 bloc: dashBloc,
                 builder: (context, state) {
@@ -254,17 +254,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               color: Color(0xff91919F),
                             ),
                             Expanded(
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  SaleDashboardCard(
-                                    total_discount: state.totalDiscount,
-                                    total_order: state.totalOrder,
-                                    paid_amount: state.paidBillAmount,
-                                    sale_amount: state.totalSaleAmount,
-                                  ),
-                                  
-                                ],
+                              child: SaleDashboardCard(
+                                total_discount: state.totalDiscount,
+                                total_order: state.totalOrder,
+                                paid_amount: state.paidBillAmount,
+                                sale_amount: state.totalSaleAmount,
                               ),
                             ),
                             // Expanded(
@@ -296,6 +290,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Row(
               children: [
                 AppText(
+                    title: "Quick Links",
+                    color: Colors.black,
+                    font_size: 19,
+                    fontWeight: FontWeight.w600)
+              ],
+            ),
+
+            Container(
+              width: AppTotalScreenWidth(context),
+            ),
+
+            Row(
+              children: [
+                AppText(
                     title: "Sale Information",
                     color: Colors.black,
                     font_size: 19,
@@ -310,20 +318,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           builder: (context) => const LoginScreen()));
                 },
                 child: const Text("Login")),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 4 * 100.0,
-                      height: 250,
-                      child: const CustomBarchart(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // Expanded(
+            //   child: SingleChildScrollView(
+            //     scrollDirection: Axis.horizontal,
+            //     child: Row(
+            //       children: [
+            //         Container(
+            //           width: 4 * 100.0,
+            //           height: 250,
+            //           child: const CustomBarchart(),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -567,7 +575,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 contentChild: Column(
                   children: [
-                  
                     GestureDetector(
                       onTap: () {
                         Navigator.push(

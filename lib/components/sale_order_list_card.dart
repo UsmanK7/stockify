@@ -27,7 +27,7 @@ class SaleOrderListCard extends StatelessWidget {
     String status = "";
     SaleOrderListBloc saleOrderListBloc = SaleOrderListBloc();
     return Container(
-      width: TotalScreenWidth(context),
+      width: AppTotalScreenWidth(context),
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(

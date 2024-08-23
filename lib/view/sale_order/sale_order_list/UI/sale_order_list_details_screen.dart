@@ -47,7 +47,7 @@ class SaleOrderListDetailsState extends State<SaleOrderListDetails> {
                     child: Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      width: TotalScreenWidth(context),
+                      width: AppTotalScreenWidth(context),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10)),
@@ -136,7 +136,7 @@ class SaleOrderListDetailsState extends State<SaleOrderListDetails> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Container(
-                      width: TotalScreenWidth(context),
+                      width: AppTotalScreenWidth(context),
                       height: 31,
                       color: appBlue,
                       child: Padding(
@@ -209,7 +209,7 @@ class SaleOrderListDetailsState extends State<SaleOrderListDetails> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               child: Container(
                                 padding: EdgeInsets.only(top: 3),
-                                width: TotalScreenWidth(context),
+                                width: AppTotalScreenWidth(context),
                                 height: 106,
                                 color: appsearchBoxColor,
                                 child: Column(

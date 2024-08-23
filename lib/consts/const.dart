@@ -7,18 +7,18 @@ Color appborder = Color(0xffefefef);
 Color apptextColor = Color(0xff91919F);
 Color appsubtitletextColor = Color(0xff767E8C);
 Color appsearchBoxColor = Color(0xffD9D9D9);
-const baseUrl = 'https://7c26-39-44-65-94.ngrok-free.app';
+const baseUrl = 'https://eef1-39-44-65-94.ngrok-free.app';
 const loginUrl = '$baseUrl/stockfiy/api/auth/login';
 const addSaleOrderUrl = '$baseUrl/stockfiy/api/realdata/storesaleorder';
 const addDailyExpenseUrl = '$baseUrl/stockfiy/api/realdata/StoreDailyExpenses';
 const SyncUrl = '$baseUrl/stockfiy//api/sync';
 
 const userdetailsUrl = '$baseUrl/stockfiy/api/phase1/getUserDetails';
-double TotalScreenWidth(BuildContext context) {
+double AppTotalScreenWidth(BuildContext context) {
   return MediaQuery.of(context).size.width;
 }
 
-double TotalScreenHeight(BuildContext context) {
+double AppTotalScreenHeight(BuildContext context) {
   return MediaQuery.of(context).size.height;
 }
 

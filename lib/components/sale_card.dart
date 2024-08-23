@@ -22,18 +22,19 @@ class SaleDashboardCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         width: MediaQuery.of(context).size.width,
-        height: 105,
+        // height: 155,
         decoration: BoxDecoration(
             color: appBlue, borderRadius: BorderRadius.circular(4)),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppText(
-                    title: "Sales ",
+                    title: "Summary",
                     color: Colors.white,
-                    font_size: 14,
+                    font_size: 15,
                     fontWeight: FontWeight.bold),
                 GestureDetector(
                   onTap: () {
@@ -41,58 +42,117 @@ class SaleDashboardCard extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => SaleList()));
                   },
                   child: AppText(
-                      title: "See all ",
+                      title: "See all >",
                       color: Colors.white,
-                      font_size: 14,
+                      font_size: 15,
                       fontWeight: FontWeight.bold),
                 )
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText(
-                    title: "Total sales",
-                    color: Colors.white,
-                    font_size: 12,
-                    fontWeight: FontWeight.w600),
-                AppText(
-                    title: total_order.toString(),
-                    color: Colors.white,
-                    font_size: 12,
-                    fontWeight: FontWeight.w600),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                        title: "Total sales",
+                        color: Colors.white,
+                        font_size: 11,
+                        fontWeight: FontWeight.w600),
+                    AppText(
+                        title: total_order.toString(),
+                        color: Colors.white,
+                        font_size: 13,
+                        fontWeight: FontWeight.w600),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                        title: "Total sales order",
+                        color: Colors.white,
+                        font_size: 11,
+                        fontWeight: FontWeight.w600),
+                    AppText(
+                        title: total_order.toString(),
+                        color: Colors.white,
+                        font_size: 13,
+                        fontWeight: FontWeight.w600),
+                  ],
+                )
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText(
-                    title: "Sale amount",
-                    color: Colors.white,
-                    font_size: 12,
-                    fontWeight: FontWeight.w600),
-                AppText(
-                    title: sale_amount.toString(),
-                    color: Colors.white,
-                    font_size: 12,
-                    fontWeight: FontWeight.w600),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                        title: "Total sale return",
+                        color: Colors.white,
+                        font_size: 11,
+                        fontWeight: FontWeight.w600),
+                    AppText(
+                        title: total_order.toString(),
+                        color: Colors.white,
+                        font_size: 12,
+                        fontWeight: FontWeight.w600),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                        title: "Customer recovery",
+                        color: Colors.white,
+                        font_size: 11,
+                        fontWeight: FontWeight.w600),
+                    AppText(
+                        title: total_order.toString(),
+                        color: Colors.white,
+                        font_size: 12,
+                        fontWeight: FontWeight.w600),
+                  ],
+                )
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppText(
-                    title: "Paid amount",
-                    color: Colors.white,
-                    font_size: 12,
-                    fontWeight: FontWeight.w600),
-                AppText(
-                    title: paid_amount.toString(),
-                    color: Colors.white,
-                    font_size: 12,
-                    fontWeight: FontWeight.w600),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     AppText(
+            //         title: "Sale amount",
+            //         color: Colors.white,
+            //         font_size: 12,
+            //         fontWeight: FontWeight.w600),
+            //     AppText(
+            //         title: sale_amount.toString(),
+            //         color: Colors.white,
+            //         font_size: 12,
+            //         fontWeight: FontWeight.w600),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     AppText(
+            //         title: "Paid amount",
+            //         color: Colors.white,
+            //         font_size: 12,
+            //         fontWeight: FontWeight.w600),
+            //     AppText(
+            //         title: paid_amount.toString(),
+            //         color: Colors.white,
+            //         font_size: 12,
+            //         fontWeight: FontWeight.w600),
+            //   ],
+            // ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
             //   children: [
