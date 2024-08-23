@@ -12,7 +12,7 @@ import 'package:okra_distributer/view/daily_expense/bloc/daily_expense_bloc.dart
 
 import 'package:okra_distributer/view/daily_expense/bloc/date_picker_bloc/data_picker_bloc.dart';
 
-import 'package:okra_distributer/view/dashboard/first_home_screen.dart';
+import 'package:okra_distributer/view/first_homescreen/first_home_screen.dart';
 import 'package:okra_distributer/view/sale/bloc/date_picker_bloc/data_picker_bloc.dart';
 import 'package:okra_distributer/view/sale/bloc_pop_sale/sale_pop_bloc.dart';
 import 'package:okra_distributer/view/sale_order/bloc/bloc_pop_sale_order/sale_pop_bloc.dart';

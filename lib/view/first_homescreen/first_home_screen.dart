@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/components/accordion/gf_accordion.dart';
+import 'package:okra_distributer/components/quick_link_card.dart';
 import 'package:okra_distributer/components/sale_card.dart';
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
@@ -15,10 +16,10 @@ import 'package:okra_distributer/view/auth/login_screen.dart';
 import 'package:okra_distributer/view/daily_expense/UI/daily_expense.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/UI/daily_expense_list.dart';
 
-import 'package:okra_distributer/view/dashboard/bar_chart.dart';
-import 'package:okra_distributer/view/dashboard/bloc/dash/dash_bloc.dart';
-import 'package:okra_distributer/view/dashboard/bloc/dash/dash_event.dart';
-import 'package:okra_distributer/view/dashboard/bloc/dash/dash_state.dart';
+import 'package:okra_distributer/view/first_homescreen/bar_chart.dart';
+import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_bloc.dart';
+import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_event.dart';
+import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_state.dart';
 
 import 'package:okra_distributer/view/sale/sale%20form/sales_form.dart';
 import 'package:okra_distributer/view/sale/sale_list/UI/sale_list.dart';
@@ -296,9 +297,143 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                     fontWeight: FontWeight.w600)
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                QuickLinkCard(
+                    imgpath: "assets/images/sale.png",
+                    text: "Add Sale",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SalesForm(database: widget.database!)));
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                QuickLinkCard(
+                    imgpath: "assets/images/sale.png",
+                    text: "Sales list",
+                    ontap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SaleList()));
+                    }),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
 
-            Container(
-              width: AppTotalScreenWidth(context),
+            Row(
+              children: [
+                QuickLinkCard(
+                    imgpath: "assets/images/payment.png",
+                    text: "Payment Screen",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentRecovery()));
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                QuickLinkCard(
+                    imgpath: "assets/images/payment.png",
+                    text: "Customer Screen",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CustomerScreen()));
+                    }),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                QuickLinkCard(
+                    imgpath: "assets/images/sale-order.png",
+                    text: "Add Sale order",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SalesForm(database: widget.database!)));
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                QuickLinkCard(
+                    imgpath: "assets/images/sale.png",
+                    text: "Sale order list",
+                    ontap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SaleList()));
+                    }),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                QuickLinkCard(
+                    imgpath: "assets/images/sale-return.png",
+                    text: "Add Sale return",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SalesForm(database: widget.database!)));
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                QuickLinkCard(
+                    imgpath: "assets/images/sale-return.png",
+                    text: "Sale return list",
+                    ontap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SaleList()));
+                    }),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                QuickLinkCard(
+                    imgpath: "assets/images/payment.png",
+                    text: "Add Daily Expense",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DailyExpenseScreen()));
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                QuickLinkCard(
+                    imgpath: "assets/images/daily-expense.png",
+                    text: "Daily Expense list",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DailyExpenseList()));
+                    }),
+              ],
             ),
 
             Row(

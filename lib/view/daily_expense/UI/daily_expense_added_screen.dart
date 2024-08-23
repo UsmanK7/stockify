@@ -3,7 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/view/daily_expense/UI/daily_expense.dart';
-import 'package:okra_distributer/view/dashboard/first_home_screen.dart';
+import 'package:okra_distributer/view/first_homescreen/first_home_screen.dart';
 
 import 'package:sqflite/sqflite.dart';
 

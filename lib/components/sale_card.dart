@@ -32,7 +32,7 @@ class SaleDashboardCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppText(
-                    title: "Summary",
+                    title: "Quick Overview",
                     color: Colors.white,
                     font_size: 15,
                     fontWeight: FontWeight.bold),
@@ -110,7 +110,7 @@ class SaleDashboardCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppText(
-                        title: "Customer recovery",
+                        title: "Total Daily Expense",
                         color: Colors.white,
                         font_size: 11,
                         fontWeight: FontWeight.w600),

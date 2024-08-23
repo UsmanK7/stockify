@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
-import 'package:okra_distributer/view/dashboard/bloc/dash/dash_event.dart';
-import 'package:okra_distributer/view/dashboard/bloc/dash/dash_state.dart';
-import 'package:okra_distributer/view/dashboard/models/sale_table_model.dart';
+import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_event.dart';
+import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_state.dart';
+import 'package:okra_distributer/view/first_homescreen/models/sale_table_model.dart';
 
 class DashBloc extends Bloc<DashEvent, DashState> {
   DashBloc() : super(InitialState()) {
