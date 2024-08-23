@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:okra_distributer/components/text_component.dart';
 import 'package:okra_distributer/consts/const.dart';
+import 'package:okra_distributer/view/unknown/customer_ui/unknown_customer_ui.dart';
 
 class Transaction {
   final int serialNumber;
@@ -32,6 +33,8 @@ class UnknownScreen extends StatefulWidget {
 }
 
 class _UnknownScreenState extends State<UnknownScreen> {
+  //Muhammad's code
+  //Muhammad's code
   List<bool> _expanded = [];
 
   List<Transaction> transactions = [
@@ -55,6 +58,97 @@ class _UnknownScreenState extends State<UnknownScreen> {
       balance: 50.0,
       description: 'Description of Item 2',
     ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
+    Transaction(
+      serialNumber: 2,
+      particle: 'Item 2',
+      date: '2024-08-23',
+      customerName: "Cristiano ronaldo",
+      debit: 0.0,
+      credit: 50.0,
+      balance: 50.0,
+      description: 'Description of Item 2',
+    ),
     // Add more transactions as needed
   ];
 
@@ -67,36 +161,291 @@ class _UnknownScreenState extends State<UnknownScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        title: const AppText(
-          title: "Purchases",
-          color: Colors.white,
-          font_size: 22,
-          fontWeight: FontWeight.w500,
-        ),
-        centerTitle: true,
-        backgroundColor: appBlue,
-      ),
-      body: Column(
-        children: [
-          _buildTableHeader(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: transactions.length,
-              itemBuilder: (context, index) {
-                return _buildTableRow(transactions[index], index);
-              },
-            ),
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          title: const AppText(
+            title: "Purchases",
+            color: Colors.white,
+            font_size: 22,
+            fontWeight: FontWeight.w500,
           ),
-        ],
-      ),
-    );
+          centerTitle: true,
+          backgroundColor: appBlue,
+        ),
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                CustomerOrderScreen(),
+                SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: appBlue,
+                        ),
+                        height: 40,
+                        child: Center(
+                          child: AppText(
+                            color: Colors.white,
+                            title: "Print",
+                            font_size: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Expanded(
+                          child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: appBlue,
+                        ),
+                        height: 40,
+                        child: Center(
+                          child: AppText(
+                            title: "Pdf",
+                            color: Colors.white,
+                            font_size: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Expanded(
+                          child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: appBlue,
+                        ),
+                        height: 40,
+                        child: Center(
+                          child: AppText(
+                            title: "Excel",
+                            color: Colors.white,
+                            font_size: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Expanded(
+                          child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: appBlue,
+                        ),
+                        height: 40,
+                        child: Center(
+                          child: AppText(
+                            title: "CSV",
+                            color: Colors.white,
+                            font_size: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 7,
+                ),
+                _buildTableHeader(),
+                SizedBox(
+                  height: AppTotalScreenHeight(context) - 340,
+                  child: ListView.builder(
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) {
+                      return _buildTableRow(transactions[index], index);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 5.0,
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8.0,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(right: 20),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color:
+                                appsearchBoxColor, // Set the color of the right border here
+                            width: 1, // Set the width of the right border here
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppText(
+                              title: "Total",
+                              color: Colors.black,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                          SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    // Container(
+                    //   padding: EdgeInsets.only(right: 20),
+                    //   decoration: BoxDecoration(
+                    //     border: Border(
+                    //       right: BorderSide(
+                    //         color:
+                    //             appsearchBoxColor, // Set the color of the right border here
+                    //         width:
+                    //             1, // Set the width of the right border here
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       AppText(
+                    //           title: "Paid bill",
+                    //           color: Colors.black,
+                    //           font_size: 15,
+                    //           fontWeight: FontWeight.w400),
+                    //       AppText(
+                    //           title: totalPaidBillAmount.toString(),
+                    //           color: appsubtitletextColor,
+                    //           font_size: 15,
+                    //           fontWeight: FontWeight.w400),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   width: 20,
+                    // ),
+                    Container(
+                      padding: EdgeInsets.only(right: 20),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color:
+                                appsearchBoxColor, // Set the color of the right border here
+                            width: 1, // Set the width of the right border here
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                              title: "Balance",
+                              color: Colors.black,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                          AppText(
+                              title: "35515",
+                              color: appsubtitletextColor,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+
+                    Container(
+                      padding: EdgeInsets.only(right: 20),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color:
+                                appsearchBoxColor, // Set the color of the right border here
+                            width: 1, // Set the width of the right border here
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                              title: "Credit",
+                              color: Colors.black,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                          AppText(
+                              title: "35515",
+                              color: appsubtitletextColor,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                              title: "Debit",
+                              color: Colors.black,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                          AppText(
+                              title: "35515",
+                              color: appsubtitletextColor,
+                              font_size: 15,
+                              fontWeight: FontWeight.w400),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildTableHeader() {
     return Container(
-      color: Colors.blueGrey,
+      color: appBlue,
       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
         children: [
@@ -134,7 +483,8 @@ class _UnknownScreenState extends State<UnknownScreen> {
             });
           },
           child: Container(
-            color: _expanded[index] ? Colors.grey[200] : Colors.white,
+            // color: _expanded[index] ? Colors.grey[200] : Colors.white,
+            color: Colors.white,
             padding: EdgeInsets.symmetric(
               vertical: 8.0,
             ),
@@ -155,11 +505,13 @@ class _UnknownScreenState extends State<UnknownScreen> {
               padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               color: Colors.grey[100],
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       AppText(
-                        title: "Added by: ",
+                        title: "Added by :  ",
                         color: Colors.black,
                         font_size: 15,
                         fontWeight: FontWeight.bold,
@@ -171,20 +523,18 @@ class _UnknownScreenState extends State<UnknownScreen> {
                     ],
                   ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          AppText(
-                            title: "Description",
-                            color: Colors.black,
-                            font_size: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          Text(
-                            transaction.description,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
+                      AppText(
+                        title: "Description : ",
+                        color: Colors.black,
+                        font_size: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      Text(
+                        transaction.description,
+                        style: TextStyle(color: Colors.black),
                       ),
                     ],
                   )
