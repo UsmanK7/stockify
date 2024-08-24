@@ -15,6 +15,7 @@ import 'package:okra_distributer/payment/views/loginScreen.dart';
 import 'package:okra_distributer/view/auth/login_screen.dart';
 import 'package:okra_distributer/view/daily_expense/UI/daily_expense.dart';
 import 'package:okra_distributer/view/daily_expense/daily_expense_list/UI/daily_expense_list.dart';
+import 'package:okra_distributer/view/dashboard/dashboard_screen.dart';
 
 import 'package:okra_distributer/view/first_homescreen/bar_chart.dart';
 import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_bloc.dart';
@@ -97,6 +98,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
     }
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: const AppText(
             title: "Home Screen",
             color: Colors.white,
@@ -472,6 +474,14 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                             builder: (context) => const UnknownScreen()));
                   },
                   child: const Text("purchases")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DashboardScreen()));
+                  },
+                  child: const Text("Dashbaord")),
               // Expanded(
               //   child: SingleChildScrollView(
               //     scrollDirection: Axis.horizontal,

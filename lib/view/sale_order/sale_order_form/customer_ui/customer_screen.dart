@@ -2,6 +2,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:okra_distributer/components/text_component.dart';
+import 'package:okra_distributer/consts/const.dart';
 import 'package:okra_distributer/payment/Db/dbhelper.dart';
 import 'package:okra_distributer/payment/Models/model.dart';
 import 'package:okra_distributer/view/sale_order/bloc/bloc_pop_sale_order/sale_pop_bloc.dart';
@@ -43,98 +45,102 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                         return Center(child: Text('No customers available'));
                       }
 
-                      return DropdownButtonHideUnderline(
-                        child: DropdownButton2<String>(
-                          isExpanded: false,
-                          hint: Text(
-                            'Select Customer',
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              fontFamily: 'Roboto',
-                            ),
-                          ),
-                          value: state.selectedCustomer,
-                          onChanged: (String? newValue) {
-                            if (newValue != null && newValue.isNotEmpty) {
-                              int? customerId =
-                                  state.getCustomerIdByName(newValue);
-                              selectedCustomerId = state
-                                  .getCustomerIdByName(state.selectedCustomer!);
-                              if (customerId != null) {
-                                context
-                                    .read<SaleOrderPopBloc>()
-                                    .add(UpdateSlectedCustomer(newValue));
-                              } else {
-                                print(
-                                    'No customer ID found for selected name.');
-                              }
-                            }
-                          },
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'Select Customer',
-                              child: Text("Select Customer"),
-                            ),
-                            ...state.customers!.map<DropdownMenuItem<String>>(
-                              (Customer value) {
-                                return DropdownMenuItem<String>(
-                                  value: value.name,
-                                  child: Text(value.name ?? 'No Name'),
-                                );
-                              },
-                            ).toList(),
-                          ],
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            height: 40,
-                            width: 235,
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                          ),
-                          dropdownSearchData: DropdownSearchData(
-                            searchController: textEditingController,
-                            searchInnerWidgetHeight: 50,
-                            searchInnerWidget: Container(
-                              height: 50,
-                              padding: const EdgeInsets.only(
-                                top: 8,
-                                bottom: 4,
-                                right: 8,
-                                left: 8,
+                      return Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 7),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: false,
+                            hint: Text(
+                              'Select Customer',
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                fontFamily: 'Roboto',
                               ),
-                              child: TextFormField(
-                                expands: true,
-                                maxLines: null,
-                                controller: textEditingController,
-                                decoration: InputDecoration(
-                                  isDense: false,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 8,
-                                  ),
-                                  hintText: 'Search for a customer...',
-                                  hintStyle: const TextStyle(fontSize: 12),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                            ),
+                            value: state.selectedCustomer,
+                            onChanged: (String? newValue) {
+                              if (newValue != null && newValue.isNotEmpty) {
+                                int? customerId =
+                                    state.getCustomerIdByName(newValue);
+                                selectedCustomerId = state.getCustomerIdByName(
+                                    state.selectedCustomer!);
+                                if (customerId != null) {
+                                  context
+                                      .read<SaleOrderPopBloc>()
+                                      .add(UpdateSlectedCustomer(newValue));
+                                } else {
+                                  print(
+                                      'No customer ID found for selected name.');
+                                }
+                              }
+                            },
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: 'Select Customer',
+                                child: Text("Select Customer"),
+                              ),
+                              ...state.customers!.map<DropdownMenuItem<String>>(
+                                (Customer value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value.name,
+                                    child: Text(value.name ?? 'No Name'),
+                                  );
+                                },
+                              ).toList(),
+                            ],
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              height: 40,
+                              width: 235,
+                            ),
+                            dropdownStyleData: const DropdownStyleData(
+                              maxHeight: 200,
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                            ),
+                            dropdownSearchData: DropdownSearchData(
+                              searchController: textEditingController,
+                              searchInnerWidgetHeight: 50,
+                              searchInnerWidget: Container(
+                                height: 50,
+                                padding: const EdgeInsets.only(
+                                  top: 8,
+                                  bottom: 4,
+                                  right: 8,
+                                  left: 8,
+                                ),
+                                child: TextFormField(
+                                  expands: true,
+                                  maxLines: null,
+                                  controller: textEditingController,
+                                  decoration: InputDecoration(
+                                    isDense: false,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 8,
+                                    ),
+                                    hintText: 'Search for a customer...',
+                                    hintStyle: const TextStyle(fontSize: 12),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
                                 ),
                               ),
+                              searchMatchFn: (item, searchValue) {
+                                return item.value
+                                    .toString()
+                                    .contains(searchValue);
+                              },
                             ),
-                            searchMatchFn: (item, searchValue) {
-                              return item.value
-                                  .toString()
-                                  .contains(searchValue);
+                            onMenuStateChange: (isOpen) {
+                              if (!isOpen) {
+                                textEditingController.clear();
+                              }
                             },
                           ),
-                          onMenuStateChange: (isOpen) {
-                            if (!isOpen) {
-                              textEditingController.clear();
-                            }
-                          },
                         ),
                       );
                     },
@@ -156,20 +162,35 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                           textEditingController.clear();
                         },
                         child: Container(
-                          decoration: const BoxDecoration(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(15),
                               bottomRight: Radius.circular(15),
                             ),
+                            color: appsearchBoxColor,
                           ),
                           child: Padding(
-                            padding: EdgeInsets.only(right: 2),
-                            child: Image(
-                              width: MediaQuery.of(context).size.width * .060,
-                              image: const AssetImage(
-                                  'assets/images/Search_ic.png'),
-                            ),
-                          ),
+                              padding: EdgeInsets.only(right: 2),
+                              child: Row(
+                                children: [
+                                  AppText(
+                                      title: "Filter",
+                                      color: Colors.black87,
+                                      font_size: 15,
+                                      fontWeight: FontWeight.w500),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Image(
+                                    width: MediaQuery.of(context).size.width *
+                                        .060,
+                                    image: const AssetImage(
+                                        'assets/images/Search_ic.png'),
+                                  ),
+                                ],
+                              )),
                         ),
                       );
                     },
