@@ -795,8 +795,25 @@ class _DailyExpenseListState extends State<DailyExpenseList> {
                 ),
               ],
             );
+          } else if (state is LoadingState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AppText(
+                    title: "Syncing",
+                    color: Colors.black,
+                    font_size: 14,
+                    fontWeight: FontWeight.bold),
+                CircularProgressIndicator(),
+              ],
+            );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [CircularProgressIndicator()],
+            ));
           }
         },
       ),

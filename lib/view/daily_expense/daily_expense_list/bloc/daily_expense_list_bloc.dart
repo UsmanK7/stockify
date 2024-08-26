@@ -963,36 +963,46 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
           DBHelper dbHelper = DBHelper();
           final db = await dbHelper.database;
-          print(event.iDailyExpenseID.length);
-          for (int i = 0; i < event.iDailyExpenseID.length; i++) {
-          
-            // Extract the first transaction_id
-            String firstTransactionId = "";
-            Map<String, dynamic> dailyExpenseData =
-                jsonResponse['$i']['data']['daily_expense'];
+          final dailyExpenseData = jsonResponse['0']['data']['daily_expense'];
+          int i = -1;
+          dailyExpenseData.forEach((key, value) async {
+            i = i + 1;
+            // Extract the transaction_id for each entry
+            String transactionId = value['transaction_id'];
+            print('Transaction ID: $transactionId');
 
-            // Get the first key (iDailyExpenseID__1051) dynamically
-            if (dailyExpenseData.isNotEmpty) {
-              String firstKey = dailyExpenseData.keys.first;
-              if (dailyExpenseData[firstKey] != null) {
-                firstTransactionId =
-                    dailyExpenseData[firstKey]['transaction_id'];
-              }
-            }
+            // Here, you can store the transaction_id in a variable or a list
+            // For example, store in a list:
+            List<String> transactionIds = [];
+            transactionIds.add(transactionId);
+            await db.update(
+              'daily_expense',
+              {
+                'transaction_id': transactionId,
+                'sSyncStatus': 1,
+              },
+              where: 'iDailyExpenseID = ?',
+              whereArgs: [event.iDailyExpenseID[i]],
+            );
+          });
 
-            // Print the extracted transaction_id
-            print('First transaction_id: $firstTransactionId');
+          // for (int i = 0; i < event.iDailyExpenseID.length; i++) {
+          //   // Extract the first transaction_id
+          //   String firstTransactionId = "";
+          //   Map<String, dynamic> dailyExpenseData =
+          //       jsonResponse['$i']['data']['daily_expense'];
 
-            // await db.update(
-            //   'daily_expense',
-            //   {
-            //     'transaction_id': transaction_id,
-            //     'sSyncStatus': 1,
-            //   },
-            //   where: 'iSaleOrderID = ?',
-            //   whereArgs: [event.iDailyExpenseID[i]],
-            // );
-          }
+          //   // Get the first key (iDailyExpenseID__1051) dynamically
+          //   if (dailyExpenseData.isNotEmpty) {
+          //     String firstKey = dailyExpenseData.keys.first;
+          //     if (dailyExpenseData[firstKey] != null) {
+          //       firstTransactionId =
+          //           dailyExpenseData[firstKey]['transaction_id'];
+          //     }
+          //   }
+
+          // Print the extracted transaction_id
+          // print('First transaction_id: $firstTransactionId');
 
           List<Map<String, dynamic>> salesList = await db.rawQuery('''
           SELECT de.*, et.sTypeName as expenseTypeName
@@ -1003,7 +1013,7 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
           // List to hold SaleListModel instances
           // List<SaleOrderListModel> salesList = [];
-          // // Iterate over fetched rows and populate SaleListModel instances
+          // // Iterate over  fetched rows and populate SaleListModel instances
           // saleRows.forEach((row) {
           //   salesList.add(SaleOrderListModel(
           //     saleId: row['iSaleID'],
