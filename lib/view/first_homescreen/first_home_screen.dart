@@ -21,6 +21,7 @@ import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_event.dart
 import 'package:okra_distributer/view/first_homescreen/bloc/dash/dash_state.dart';
 import 'package:okra_distributer/view/sale/sale%20form/sales_form.dart';
 import 'package:okra_distributer/view/sale/sale_list/UI/sale_list.dart';
+import 'package:okra_distributer/view/sale_list/UI/sale_list_table.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/sales_order_form.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/UI/sale_order_list.dart';
 import 'package:okra_distributer/view/sale_return/sale_return_form/sales_return_form.dart';
@@ -471,6 +472,15 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                             builder: (context) => const UnknownScreen()));
                   },
                   child: const Text("purchases")),
+
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SaleListTable()));
+                  },
+                  child: const Text("Table")),
               ElevatedButton(
                   onPressed: () {
                     Navigator.push(

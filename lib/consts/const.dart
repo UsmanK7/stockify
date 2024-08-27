@@ -7,7 +7,7 @@ Color appborder = Color(0xffefefef);
 Color apptextColor = Color(0xff91919F);
 Color appsubtitletextColor = Color(0xff767E8C);
 Color appsearchBoxColor = Color(0xffD9D9D9);
-const baseUrl = 'https://f142-39-44-65-49.ngrok-free.app';
+const baseUrl = 'https://3ccc-39-44-65-200.ngrok-free.app';
 const loginUrl = '$baseUrl/stockfiy/api/auth/login';
 const addSaleOrderUrl = '$baseUrl/stockfiy/api/realdata/storesaleorder';
 

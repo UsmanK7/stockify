@@ -12,7 +12,6 @@ import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_event.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/bloc/sale_order_list_state.dart';
 import 'package:http/http.dart' as http;
-import 'package:okra_distributer/view/sale_order/sale_order_list/model/sale_order_list_model.dart';
 
 class SaleOrderList extends StatefulWidget {
   const SaleOrderList({super.key});

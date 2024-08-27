@@ -517,30 +517,63 @@ class SaleOrderBloc extends Bloc<SaleOrderEvent, SaleOrderState> {
         };
       }
     }
+
+    int? appId = await dbHelper.getAppId();
+
     final body = {
       "authorization_token": authorization_token,
-      "sale_order": {
-        "iSystemUserID": iSystemUserID,
-        "iFirmID": iFirmID ?? 0,
-        "iPermanentCustomerID": event.selectedCustomerId,
-        "dcTotalBill": event.dcTotalBill,
-        "dcGrandTotal": event.dcGrandTotal,
-        "dcOnProuctDiscount": 00,
-        "dcExtraDiscount": 00,
-        "dcTotalDiscount": event.dctotaldiscount,
-        // "sSyncStatus": 0,
-        "dSaleOrderDate": event.dSaleDate,
-        "dtDueDate": "0000-00-00",
-        "dtCreatedDate": "0000-00-00",
-        "iAddedBy": 00,
-        "dtUpdatedDate": "0000-00-00",
-        "iUpdatedBy": 00,
-        "dtDeletedDate": "0000-00-00",
-        "iDeletedBy": 00,
-        "iStoreID": 00,
-      },
-      "sale_order_product_list": saleOrderProductList
+      "app_id": "${appId}",
+      "data": {
+        "sale_order__1": {
+          "sale_order": {
+            "iSystemUserID": iSystemUserID,
+            "iFirmID": iFirmID ?? 0,
+            "iPermanentCustomerID": event.selectedCustomerId,
+            "dcTotalBill": event.dcTotalBill,
+            "dcGrandTotal": event.dcGrandTotal,
+            "dcOnProuctDiscount": 00,
+            "dcExtraDiscount": 00,
+            "dcTotalDiscount": event.dctotaldiscount,
+            // "sSyncStatus": 0,
+            "dSaleOrderDate": event.dSaleDate,
+            "dtDueDate": "0000-00-00",
+            "dtCreatedDate": "0000-00-00",
+            "iAddedBy": 00,
+            "dtUpdatedDate": "0000-00-00",
+            "iUpdatedBy": 00,
+            "dtDeletedDate": "0000-00-00",
+            "iDeletedBy": 00,
+            "iStoreID": 00,
+          },
+          "sale_order_product_list": saleOrderProductList
+        },
+        "sale_order__2": {
+          "sale_order": {
+            "iSystemUserID": iSystemUserID,
+            "iFirmID": iFirmID ?? 0,
+            "iPermanentCustomerID": event.selectedCustomerId,
+            "dcTotalBill": event.dcTotalBill,
+            "dcGrandTotal": event.dcGrandTotal,
+            "dcOnProuctDiscount": 00,
+            "dcExtraDiscount": 00,
+            "dcTotalDiscount": event.dctotaldiscount,
+            // "sSyncStatus": 0,
+            "dSaleOrderDate": event.dSaleDate,
+            "dtDueDate": "0000-00-00",
+            "dtCreatedDate": "0000-00-00",
+            "iAddedBy": 00,
+            "dtUpdatedDate": "0000-00-00",
+            "iUpdatedBy": 00,
+            "dtDeletedDate": "0000-00-00",
+            "iDeletedBy": 00,
+            "iStoreID": 00,
+          },
+          "sale_order_product_list": saleOrderProductList
+        },
+      }
     };
+
+    print(body);
 
     try {
       final response = await http.post(
@@ -555,16 +588,29 @@ class SaleOrderBloc extends Bloc<SaleOrderEvent, SaleOrderState> {
           print('Faced error: ${jsonResponse['error']}');
           // emit(InitialAuthState());
         } else if (jsonResponse.containsKey('success')) {
-          String transaction_id = jsonResponse['transaction_id'];
-          print(transaction_id);
+          // String transaction_id = jsonResponse['transaction_id'];
+          // print(transaction_id);
+          print(jsonResponse);
+          // Access the transactionIDs map
+          Map<String, dynamic> transactionIDs = jsonResponse['transactionIDs'];
 
-          // Update sale_order with transaction_id
+          // Create a list to store the transaction IDs
+          List<String> transactionIDList = [];
+
+          // Iterate over the map and add the values to the list
+          transactionIDs.forEach((key, value) {
+            transactionIDList.add(value);
+          });
+
+          // Print the list of transaction IDs
+          print('Transaction IDs: $transactionIDList');
+
           try {
             await db.update(
               'sale_order',
               {
                 'sSyncStatus': 1,
-                'transaction_id': transaction_id,
+                'transaction_id': transactionIDList[0],
               },
               where: 'iSaleOrderID = ?',
               whereArgs: [lastid],
@@ -576,7 +622,7 @@ class SaleOrderBloc extends Bloc<SaleOrderEvent, SaleOrderState> {
                 await db.update(
                   'sale_order_products_list',
                   {
-                    'transaction_id': transaction_id,
+                    'transaction_id':  transactionIDList[0],
                   },
                   where: 'iSaleOrderID = ?',
                   whereArgs: [allIsaleProductIds[i]],
