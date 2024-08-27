@@ -473,28 +473,64 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
 
   Future<void> saleOrderListSyncEvent(
       SaleOrderListSyncEvent event, Emitter<SaleOrderListState> emit) async {
-    emit(SaleLoadingState());
-    final Uri url = Uri.parse(SyncUrl);
+    // emit(SaleLoadingState());
+    final Uri url = Uri.parse(addSaleOrderUrl);
     final _box = GetStorage();
     final authorization_token = _box.read('token');
 
-    Map<String, dynamic> data = {};
     final headers = {'Content-Type': 'application/json'};
 
-    for (int i = 0; i < event.iSaleOrderID.length; i++) {
-      data["iSaleOrderID__${i + 1}"] = event.iSaleOrderID[i].toString();
+    DBHelper dbHelper = DBHelper();
+    final db = await dbHelper.database;
+    int? appId = await dbHelper.getAppId();
+
+    Map<String, dynamic> data = {};
+
+    for (int saleOrderID in event.iSaleOrderID) {
+      // Query the sale_order table
+
+      List<Map<String, dynamic>> saleOrderList = await db.query(
+        'sale_order',
+        where: 'iSaleOrderID = ?',
+        whereArgs: [saleOrderID],
+      );
+
+      if (saleOrderList.isNotEmpty) {
+        Map<String, dynamic> saleOrder = saleOrderList.first;
+
+        // Query the sale_order_products_list table
+        List<Map<String, dynamic>> saleOrderProductList = await db.query(
+          'sale_order_products_list',
+          where: 'iSaleOrderID = ?',
+          whereArgs: [saleOrderID],
+        );
+
+        // Organize the sale_order and sale_order_product_list into the desired structure
+        Map<String, dynamic> saleOrderData = {
+          'sale_order': saleOrder,
+          'sale_order_product_list': {
+            for (int i = 0; i < saleOrderProductList.length; i++)
+              'product_${i + 1}': saleOrderProductList[i]
+          }
+        };
+
+        // Add the structured data to the main data map
+        data['sale_order__${saleOrderID}'] = saleOrderData;
+      }
     }
 
-    DBHelper dbHelper = DBHelper();
-    // final db = dbHelper.database;
-    int? appId = await dbHelper.getAppId();
-    
+    // // Structure the final JSON request body
+    // Map<String, dynamic> requestBody = {
+    //   'authorization_token': authorizationToken,
+    //   'data': data,
+    // };
+
     final body = {
       "authorization_token": authorization_token,
-      "data": {
-        "sale_order__1": data,
-      },
+      "app_id": "${appId}",
+      "data": data,
     };
+    print(body);
 
     try {
       final response = await http.post(
@@ -509,48 +545,55 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
           print('Faced error: ${jsonResponse['error']}');
           // emit(InitialAuthState());
         } else if (jsonResponse.containsKey('success')) {
+          // String transaction_id = jsonResponse['transaction_id'];
+          // print(transaction_id);
           print(jsonResponse);
-          DBHelper dbHelper = DBHelper();
-          final db = await dbHelper.database;
-          for (int i = 0; i < event.iSaleOrderID.length; i++) {
-            await db.update(
-              'sale_order',
-              {
-                'sSyncStatus': 1,
-              },
-              where: 'iSaleOrderID = ?',
-              whereArgs: [event.iSaleOrderID[i]],
-            );
-          }
+          // Access the transactionIDs map
+          Map<String, dynamic> transactionIDs = jsonResponse['transactionIDs'];
 
-          // Query to fetch sales between the first and last dates of this week
-          List<Map<String, dynamic>> saleRows = await db.rawQuery('''
-            SELECT s.*, pc.sName as customerName
-            FROM sale_order s
-            LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
-            WHERE s.dSaleOrderDate BETWEEN ? AND ?
-          ''', [event.firstDate, event.lastDate]);
+          // Create a list to store the transaction IDs
+          List<String> transactionIDList = [];
 
-          // List to hold SaleListModel instances
-          List<SaleOrderListModel> salesList = [];
-          // Iterate over fetched rows and populate SaleListModel instances
-          saleRows.forEach((row) {
-            salesList.add(SaleOrderListModel(
-              saleId: row['iSaleOrderID'],
-              sSyncStatus: row['sSyncStatus'],
-              invoice_price: row['dcTotalBill'],
-
-              customer_Name: row['customerName'],
-              total_discount: row['dcTotalDiscount'],
-              sale_date: row['dSaleOrderDate'], // Add the sale date
-            ));
+          // Iterate over the map and add the values to the list
+          transactionIDs.forEach((key, value) {
+            transactionIDList.add(value);
           });
-          print(salesList.isEmpty);
 
-          emit(SuccessState(
-              saleList: salesList,
-              firstDate: event.firstDate,
-              lastDate: event.lastDate));
+          // Print the list of transaction IDs
+          print('Transaction IDs: $transactionIDList');
+
+          try {
+            for (int i = 0; i < event.iSaleOrderID.length; i++) {
+              await db.update(
+                'sale_order',
+                {
+                  'sSyncStatus': 1,
+                  'transaction_id': transactionIDList[i],
+                },
+                where: 'iSaleOrderID = ?',
+                whereArgs: [event.iSaleOrderID[i]],
+              );
+            }
+
+            // Update sale_order_products_list with transaction_id
+            for (int i = 0; i < event.iSaleOrderID.length; i++) {
+              try {
+                await db.update(
+                  'sale_order_products_list',
+                  {
+                    'transaction_id': transactionIDList[0],
+                  },
+                  where: 'iSaleOrderID = ?',
+                  whereArgs: [event.iSaleOrderID[i]],
+                );
+              } catch (e) {
+                print(
+                    'Error updating sale_order_products_list for product ID ${event.iSaleOrderID[i]}: $e');
+              }
+            }
+          } catch (e) {
+            print('Error updating sale_order: $e');
+          }
         }
       } else {
         print("Error: ${response.statusCode}");
@@ -559,5 +602,68 @@ class SaleOrderListBloc extends Bloc<SaleOrderListEvent, SaleOrderListState> {
     } catch (e) {
       print('Request failed: $e');
     }
+    // try {
+    //   final response = await http.post(
+    //     url,
+    //     headers: headers,
+    //     body: jsonEncode(body),
+    //   );
+
+    //   if (response.statusCode == 200) {
+    //     final jsonResponse = jsonDecode(response.body);
+    //     if (jsonResponse.containsKey('error')) {
+    //       print('Faced error: ${jsonResponse['error']}');
+    //       // emit(InitialAuthState());
+    //     } else if (jsonResponse.containsKey('success')) {
+    //       print(jsonResponse);
+    //       DBHelper dbHelper = DBHelper();
+    //       final db = await dbHelper.database;
+    //       for (int i = 0; i < event.iSaleOrderID.length; i++) {
+    //         await db.update(
+    //           'sale_order',
+    //           {
+    //             'sSyncStatus': 1,
+    //           },
+    //           where: 'iSaleOrderID = ?',
+    //           whereArgs: [event.iSaleOrderID[i]],
+    //         );
+    //       }
+
+    //       // Query to fetch sales between the first and last dates of this week
+    //       List<Map<String, dynamic>> saleRows = await db.rawQuery('''
+    //         SELECT s.*, pc.sName as customerName
+    //         FROM sale_order s
+    //         LEFT JOIN permanent_customer pc ON s.iPermanentCustomerID = pc.iPermanentCustomerID
+    //         WHERE s.dSaleOrderDate BETWEEN ? AND ?
+    //       ''', [event.firstDate, event.lastDate]);
+
+    //       // List to hold SaleListModel instances
+    //       List<SaleOrderListModel> salesList = [];
+    //       // Iterate over fetched rows and populate SaleListModel instances
+    //       saleRows.forEach((row) {
+    //         salesList.add(SaleOrderListModel(
+    //           saleId: row['iSaleOrderID'],
+    //           sSyncStatus: row['sSyncStatus'],
+    //           invoice_price: row['dcTotalBill'],
+
+    //           customer_Name: row['customerName'],
+    //           total_discount: row['dcTotalDiscount'],
+    //           sale_date: row['dSaleOrderDate'], // Add the sale date
+    //         ));
+    //       });
+    //       print(salesList.isEmpty);
+
+    //       emit(SuccessState(
+    //           saleList: salesList,
+    //           firstDate: event.firstDate,
+    //           lastDate: event.lastDate));
+    //     }
+    //   } else {
+    //     print("Error: ${response.statusCode}");
+    //     print("Error body: ${response.body}");
+    //   }
+    // } catch (e) {
+    //   print('Request failed: $e');
+    // }
   }
 }
