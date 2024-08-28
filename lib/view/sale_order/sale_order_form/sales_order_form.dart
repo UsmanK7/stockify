@@ -15,10 +15,9 @@ import 'package:okra_distributer/view/sale_order/bloc/sale_order_bloc/sale_order
 import 'package:okra_distributer/view/sale_order/data/sale_order_billed_items.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/Items_order_screen.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/customer_ui/customer_screen.dart';
+import 'package:okra_distributer/view/sale_order/sale_order_form/printer.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/sale_order_added_screen.dart';
 import 'package:sqflite/sqflite.dart';
-
-
 
 class SalesOrderForm extends StatefulWidget {
   final Database database;
@@ -296,84 +295,123 @@ class _SalesOrderFormState extends State<SalesOrderForm> {
                   // SizedBox(
                   //   height: 20,
                   // ),
-                  BlocConsumer(
-                      listener: (context, state) {
-                        if (state is FormAddedState) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SaleOrderAddedScreen(
-                                        database: widget.database,
-                                      )));
-                        }
-                      },
-                      listenWhen: (previous, current) =>
-                          current is SaleOrderActionState,
-                      buildWhen: (previous, current) =>
-                          current is SaleOrderState,
-                      bloc: saleOrderBloc,
-                      builder: (context, state) {
-                        return GestureDetector(
-                          onTap: () async {
-                            if (selectedCustomerId == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Please select a customer')),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: BlocConsumer(
+                            listener: (context, state) {
+                              if (state is FormAddedState) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SaleOrderAddedScreen(
+                                              database: widget.database,
+                                            )));
+                              }
+                            },
+                            listenWhen: (previous, current) =>
+                                current is SaleOrderActionState,
+                            buildWhen: (previous, current) =>
+                                current is SaleOrderState,
+                            bloc: saleOrderBloc,
+                            builder: (context, state) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  if (selectedCustomerId == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Please select a customer')),
+                                    );
+                                  } else {
+                                    saleOrderBloc
+                                        .add(SaleAdddingLoadingEvent());
+
+                                    // Print statements for all variables
+                                    // SaleOrderbilledItems.forEach((item) {
+                                    //   print(item);
+                                    // });
+                                    // print(selectedCustomerId);
+
+                                    dcGrandTotal =
+                                        dcTotalBill! - dctotaldiscount!;
+
+                                    // String returning_value =
+                                    //     await _handleSaveLocation();
+                                    // if (returning_value == "error") {
+                                    //   saleOrderBloc.add(FormErrorEvent());
+                                    //   return;
+                                    // }
+
+                                    // DBHelper().printSalesmanLocations();
+
+                                    saleOrderBloc.add(AddSaleInvoice(
+                                        selectedCustomerId: selectedCustomerId!,
+                                        // iBankIDPAIDAmount: iBankIDPAIDAmount!,
+                                        dcTotalBill: dcTotalBill!,
+                                        // dcPaidBillAmount: dcPaidBillAmount!,
+                                        dcGrandTotal: dcGrandTotal,
+                                        dctotaldiscount: dctotaldiscount!,
+                                        sTotal_Item: sTotal_Item!,
+                                        dSaleDate: dSaleDate!,
+                                        dtCreatedDate: dtCreatedDate));
+                                  }
+                                },
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: appBlue,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Center(
+                                      child: state is FormAddingLoadingState
+                                          ? CircularProgressIndicator(
+                                              color: Colors.white,
+                                            )
+                                          : Text(
+                                              "Save invoice",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                ),
                               );
-                            } else {
-                              saleOrderBloc.add(SaleAdddingLoadingEvent());
-
-                              // Print statements for all variables
-                              // SaleOrderbilledItems.forEach((item) {
-                              //   print(item);
-                              // });
-                              // print(selectedCustomerId);
-
-                              dcGrandTotal = dcTotalBill! - dctotaldiscount!;
-
-                              // String returning_value =
-                              //     await _handleSaveLocation();
-                              // if (returning_value == "error") {
-                              //   saleOrderBloc.add(FormErrorEvent());
-                              //   return;
-                              // }
-
-                              // DBHelper().printSalesmanLocations();
-
-                              saleOrderBloc.add(AddSaleInvoice(
-                                  selectedCustomerId: selectedCustomerId!,
-                                  // iBankIDPAIDAmount: iBankIDPAIDAmount!,
-                                  dcTotalBill: dcTotalBill!,
-                                  // dcPaidBillAmount: dcPaidBillAmount!,
-                                  dcGrandTotal: dcGrandTotal,
-                                  dctotaldiscount: dctotaldiscount!,
-                                  sTotal_Item: sTotal_Item!,
-                                  dSaleDate: dSaleDate!,
-                                  dtCreatedDate: dtCreatedDate));
-                            }
+                            }),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ThermalPrintScreen(
+                                          invoiceData: "invoice",
+                                        )));
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
                             height: 50,
                             decoration: BoxDecoration(
                               color: appBlue,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Center(
-                                child: state is FormAddingLoadingState
-                                    ? CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text(
-                                        "Save invoice",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      )),
+                                child: Text(
+                              "Save & Print",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                            )),
                           ),
-                        );
-                      }),
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(
                     height: 20,
                   ),
