@@ -389,9 +389,8 @@ class _SalesOrderFormState extends State<SalesOrderForm> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ThermalPrintScreen(
-                                          invoiceData: "invoice",
-                                        )));
+                                    builder: (context) =>
+                                        ThermalPrintScreen()));
                           },
                           child: Container(
                             height: 50,
