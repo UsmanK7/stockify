@@ -86,19 +86,59 @@ class _ThermalPrintScreenState extends State<ThermalPrintScreen> {
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text("Invoice #12345", style: pw.TextStyle(fontSize: 24)),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.Text("Date: 2024/12/12",
+                        style: pw.TextStyle(
+                          fontSize: pageWidth / 30,
+                        )),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  children: [
+                    pw.Text("Okrasoft",
+                        style: pw.TextStyle(
+                            fontSize: pageWidth / 20,
+                            fontWeight: pw.FontWeight.bold)),
+                  ],
+                ),
+                // pw.SizedBox(height: 10),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  children: [
+                    pw.Text("Second floor ajwa foods, balokhel road, Mianwali",
+                        style: pw.TextStyle(
+                          fontSize: pageWidth / 30,
+                        )),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  children: [
+                    pw.Text("Phone : 0333-1234567",
+                        style: pw.TextStyle(
+                          fontSize: pageWidth / 30,
+                        )),
+                  ],
+                ),
                 pw.SizedBox(height: 10),
-                pw.Text("Date: 2024-08-29"),
-                pw.SizedBox(height: 20),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text("Item",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        style: pw.TextStyle(
+                            fontSize: pageWidth / 25,
+                            fontWeight: pw.FontWeight.bold)),
                     pw.Text("Qty",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        style: pw.TextStyle(
+                            fontSize: pageWidth / 25,
+                            fontWeight: pw.FontWeight.bold)),
                     pw.Text("Price",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        style: pw.TextStyle(
+                            fontSize: pageWidth / 25,
+                            fontWeight: pw.FontWeight.bold)),
                   ],
                 ),
                 pw.Divider(),

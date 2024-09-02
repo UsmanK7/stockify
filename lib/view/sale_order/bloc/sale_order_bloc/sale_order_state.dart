@@ -61,6 +61,9 @@ class RefreshState extends SaleOrderState {}
 
 class FormAddingLoadingState extends SaleOrderState {}
 
+class FormAddingLoadingPrintState extends SaleOrderState {}
+
 class FormAddedState extends SaleOrderActionState {}
+class FormAddedPrintState extends SaleOrderActionState {}
 
 class FormErrorState extends SaleOrderState {}

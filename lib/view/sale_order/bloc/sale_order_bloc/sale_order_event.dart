@@ -54,6 +54,33 @@ class AddSaleInvoice extends SaleOrderEvent {
   });
 }
 
+class AddSalePrintInvoice extends SaleOrderEvent {
+  int selectedCustomerId;
+  // int iBankIDPAIDAmount;
+  double dcTotalBill;
+  // double dcPaidBillAmount;
+  double dcGrandTotal;
+  double dctotaldiscount;
+  String sTotal_Item;
+  String dSaleDate;
+  int sSyncStatus = 0;
+  String dtCreatedDate;
+
+  AddSalePrintInvoice({
+    required this.selectedCustomerId,
+    // required this.iBankIDPAIDAmount,
+    required this.dcTotalBill,
+    // required this.dcPaidBillAmount,
+    required this.dcGrandTotal,
+    required this.dctotaldiscount,
+    required this.sTotal_Item,
+    required this.dSaleDate,
+    required this.dtCreatedDate,
+  });
+}
+
 class SaleAdddingLoadingEvent extends SaleOrderEvent {}
+
+class SaleAdddingLoadingPrintEvent extends SaleOrderEvent {}
 
 class FormErrorEvent extends SaleOrderEvent {}

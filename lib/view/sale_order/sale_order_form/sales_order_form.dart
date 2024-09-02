@@ -300,15 +300,15 @@ class _SalesOrderFormState extends State<SalesOrderForm> {
                       Expanded(
                         child: BlocConsumer(
                             listener: (context, state) {
-                              if (state is FormAddedState) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SaleOrderAddedScreen(
-                                              database: widget.database,
-                                            )));
-                              }
+                              // if (state is FormAddedState) {
+                              //   Navigator.pushReplacement(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) =>
+                              //               SaleOrderAddedScreen(
+                              //                 database: widget.database,
+                              //               )));
+                              // }
                             },
                             listenWhen: (previous, current) =>
                                 current is SaleOrderActionState,
@@ -356,6 +356,14 @@ class _SalesOrderFormState extends State<SalesOrderForm> {
                                         sTotal_Item: sTotal_Item!,
                                         dSaleDate: dSaleDate!,
                                         dtCreatedDate: dtCreatedDate));
+
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SaleOrderAddedScreen(
+                                                  database: widget.database,
+                                                )));
                                   }
                                 },
                                 child: Container(
@@ -384,31 +392,121 @@ class _SalesOrderFormState extends State<SalesOrderForm> {
                         width: 10,
                       ),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ThermalPrintScreen()));
-                          },
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: appBlue,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                                child: Text(
-                              "Save & Print",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                            )),
-                          ),
-                        ),
+                        child: BlocConsumer(
+                            listener: (context, state) {
+                              // if (state is FormAddedPrintState) {
+                              //   Navigator.pushReplacement(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) =>
+                              //               SaleOrderAddedScreen(
+                              //                 database: widget.database,
+                              //               )));
+                              // }
+                            },
+                            // listenWhen: (previous, current) =>
+                            //     current is SaleOrderActionState,
+                            buildWhen: (previous, current) =>
+                                current is SaleOrderState,
+                            bloc: saleOrderBloc,
+                            builder: (context, state) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  if (selectedCustomerId == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Please select a customer')),
+                                    );
+                                  } else {
+                                    saleOrderBloc
+                                        .add(SaleAdddingLoadingPrintEvent());
+
+                                    // Print statements for all variables
+                                    // SaleOrderbilledItems.forEach((item) {
+                                    //   print(item);
+                                    // });
+                                    // print(selectedCustomerId);
+
+                                    dcGrandTotal =
+                                        dcTotalBill! - dctotaldiscount!;
+
+                                    // String returning_value =
+                                    //     await _handleSaveLocation();
+                                    // if (returning_value == "error") {
+                                    //   saleOrderBloc.add(FormErrorEvent());
+                                    //   return;
+                                    // }
+
+                                    // DBHelper().printSalesmanLocations();
+
+                                    saleOrderBloc.add(AddSaleInvoice(
+                                        selectedCustomerId: selectedCustomerId!,
+                                        // iBankIDPAIDAmount: iBankIDPAIDAmount!,
+                                        dcTotalBill: dcTotalBill!,
+                                        // dcPaidBillAmount: dcPaidBillAmount!,
+                                        dcGrandTotal: dcGrandTotal,
+                                        dctotaldiscount: dctotaldiscount!,
+                                        sTotal_Item: sTotal_Item!,
+                                        dSaleDate: dSaleDate!,
+                                        dtCreatedDate: dtCreatedDate));
+
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ThermalPrintScreen()));
+                                  }
+                                },
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: appBlue,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Center(
+                                      child: state
+                                              is FormAddingLoadingPrintState
+                                          ? CircularProgressIndicator(
+                                              color: Colors.white,
+                                            )
+                                          : Text(
+                                              "Save & Print",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600),
+                                            )),
+                                ),
+                              );
+                            }),
                       ),
+                      // Expanded(
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) =>
+                      //                   ThermalPrintScreen()));
+                      //     },
+                      //     child: Container(
+                      //       height: 50,
+                      //       decoration: BoxDecoration(
+                      //         color: appBlue,
+                      //         borderRadius: BorderRadius.circular(15),
+                      //       ),
+                      //       child: Center(
+                      //           child: Text(
+                      //         "Save & Print",
+                      //         style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontSize: 15,
+                      //             fontWeight: FontWeight.w600),
+                      //       )),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(
