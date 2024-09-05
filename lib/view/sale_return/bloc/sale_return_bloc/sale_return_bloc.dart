@@ -14,7 +14,6 @@ class SaleReturnBloc extends Bloc<SaleReturnEvent, SaleReturnState> {
     on<SaleInitalEvent>(saleInitalEvent);
     on<SaleDropdownSelectEvent>(saleDropdownSelectEvent);
     on<SaleUnitSelectedEvent>(saleUnitSelectedEvent);
-
     on<BonusQuantityChangeEvent>(bonusQuantityChangeEvent);
     on<RefreshEvent>(refreshEvent);
     on<AddSaleInvoice>(addSaleInvoice);
@@ -157,222 +156,231 @@ class SaleReturnBloc extends Bloc<SaleReturnEvent, SaleReturnState> {
 
   FutureOr<void> addSaleInvoice(
       AddSaleInvoice event, Emitter<SaleReturnState> emit) async {
-    DBHelper dbHelper = DBHelper();
-    final db = await dbHelper.database;
+    print(event.dSaleDate);
+    print(event.dSaleDate);
+    print(event.selectedCustomerId);
+    print(event.dcTotalBill);
+    print(event.dcGrandTotal);
+    print(event.dctotaldiscount);
+    print(event.sSyncStatus);
+    print(event.dtCreatedDate);
 
-    int lastid = await db.insert(
-      'sale_order',
-      {
-        'iPermanentCustomerID': event.selectedCustomerId,
-        'dcTotalBill': event.dcTotalBill,
-        'dcGrandTotal': event.dcGrandTotal,
-        // 'sSaleStatus':
-        //     dcTotalBill == dcPaidBillAmount ? "netsale" : "creditsale",
-        // 'dcPaidBillAmount': event.dcPaidBillAmount,
-        // 'iBankIDPaidAmount': event.iBankIDPAIDAmount,
-        'dcTotalDiscount': event.dctotaldiscount,
-        'sSyncStatus': event.sSyncStatus,
-        'dSaleOrderDate': event.dSaleDate,
-        'dtCreatedDate': event.dtCreatedDate,
-      },
-    );
+    // DBHelper dbHelper = DBHelper();
+    // final db = await dbHelper.database;
 
-    final Uri url = Uri.parse(
-        'https://02bb-39-44-67-217.ngrok-free.app/stockfiy/api/realdata/storesaleorder');
-    final _box = GetStorage();
-    final authorization_token = _box.read('token');
-    final iFirmID = _box.read('iFirmID');
-    final iSystemUserID = _box.read('iSystemUserID');
+    // int lastid = await db.insert(
+    //   'sale_order',
+    //   {
+    //     'iPermanentCustomerID': event.selectedCustomerId,
+    //     'dcTotalBill': event.dcTotalBill,
+    //     'dcGrandTotal': event.dcGrandTotal,
+    //     // 'sSaleStatus':
+    //     //     dcTotalBill == dcPaidBillAmount ? "netsale" : "creditsale",
+    //     // 'dcPaidBillAmount': event.dcPaidBillAmount,
+    //     // 'iBankIDPaidAmount': event.iBankIDPAIDAmount,
+    //     'dcTotalDiscount': event.dctotaldiscount,
+    //     'sSyncStatus': event.sSyncStatus,
+    //     'dSaleOrderDate': event.dSaleDate,
+    //     'dtCreatedDate': event.dtCreatedDate,
+    //   },
+    // );
 
-    final headers = {'Content-Type': 'application/json'};
-    print("authorization token: ${authorization_token}");
-    final body = {
-      "authorization_token": authorization_token,
-      "iSystemUserID": iSystemUserID,
-      "iFirmID": iFirmID ?? 0,
-      "iPermanentCustomerID": event.selectedCustomerId,
-      "dcTotalBill": event.dcTotalBill,
-      "dcGrandTotal": event.dcGrandTotal,
-      "dcOnProuctDiscount": 00,
-      "dcExtraDiscount": 00,
-      "dcTotalDiscount": event.dctotaldiscount,
-      // "sSyncStatus": 0,
-      "dSaleOrderDate": event.dSaleDate,
-      "dtDueDate": "0000-00-00",
-      "dtCreatedDate": "0000-00-00",
-      "iAddedBy": 00,
-      "dtUpdatedDate": "0000-00-00",
-      "iUpdatedBy": 00,
-      "dtDeletedDate": "0000-00-00",
-      "iDeletedBy": 0,
-      "iStoreID": 00,
-    };
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
-    );
+    // final Uri url = Uri.parse(
+    //     'https://02bb-39-44-67-217.ngrok-free.app/stockfiy/api/realdata/storesaleorder');
+    // final _box = GetStorage();
+    // final authorization_token = _box.read('token');
+    // final iFirmID = _box.read('iFirmID');
+    // final iSystemUserID = _box.read('iSystemUserID');
 
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse.containsKey('error')) {
-        print(jsonResponse['faced error']);
-        // emit(InitialAuthState());
-      } else if (jsonResponse.containsKey('success')) {
-        print(jsonResponse['success']);
-        List<Map<String, dynamic>> beforeUpdate = await db.query(
-          'sale_order',
-          where: 'iSaleOrderID = ?',
-          whereArgs: [lastid],
-        );
-        print('Before update: $beforeUpdate');
-        await db.update(
-          'sale_order',
-          {
-            'sSyncStatus': 1,
-          },
-          where: 'iSaleOrderID = ?',
-          whereArgs: [lastid],
-        );
-        List<Map<String, dynamic>> afterUpdate = await db.query(
-          'sale_order',
-          where: 'iSaleOrderID = ?',
-          whereArgs: [lastid],
-        );
-        print('Before update: $afterUpdate');
-      }
-    } else {
-      print("Erorr: ${response.statusCode}");
-      print("Error body: ${response.body}");
-    }
+    // final headers = {'Content-Type': 'application/json'};
+    // print("authorization token: ${authorization_token}");
+    // final body = {
+    //   "authorization_token": authorization_token,
+    //   "iSystemUserID": iSystemUserID,
+    //   "iFirmID": iFirmID ?? 0,
+    //   "iPermanentCustomerID": event.selectedCustomerId,
+    //   "dcTotalBill": event.dcTotalBill,
+    //   "dcGrandTotal": event.dcGrandTotal,
+    //   "dcOnProuctDiscount": 00,
+    //   "dcExtraDiscount": 00,
+    //   "dcTotalDiscount": event.dctotaldiscount,
+    //   // "sSyncStatus": 0,
+    //   "dSaleOrderDate": event.dSaleDate,
+    //   "dtDueDate": "0000-00-00",
+    //   "dtCreatedDate": "0000-00-00",
+    //   "iAddedBy": 00,
+    //   "dtUpdatedDate": "0000-00-00",
+    //   "iUpdatedBy": 00,
+    //   "dtDeletedDate": "0000-00-00",
+    //   "iDeletedBy": 0,
+    //   "iStoreID": 00,
+    // };
+    // final response = await http.post(
+    //   url,
+    //   headers: headers,
+    //   body: jsonEncode(body),
+    // );
 
-    final List<Map<String, dynamic>> result = await db.query(
-      'sale_order',
-      columns: ['iSaleOrderID'],
-      orderBy: 'iSaleOrderID DESC',
-      limit: 1,
-    );
+    // if (response.statusCode == 200) {
+    //   final jsonResponse = jsonDecode(response.body);
+    //   if (jsonResponse.containsKey('error')) {
+    //     print(jsonResponse['faced error']);
+    //     // emit(InitialAuthState());
+    //   } else if (jsonResponse.containsKey('success')) {
+    //     print(jsonResponse['success']);
+    //     List<Map<String, dynamic>> beforeUpdate = await db.query(
+    //       'sale_order',
+    //       where: 'iSaleOrderID = ?',
+    //       whereArgs: [lastid],
+    //     );
+    //     print('Before update: $beforeUpdate');
+    //     await db.update(
+    //       'sale_order',
+    //       {
+    //         'sSyncStatus': 1,
+    //       },
+    //       where: 'iSaleOrderID = ?',
+    //       whereArgs: [lastid],
+    //     );
+    //     List<Map<String, dynamic>> afterUpdate = await db.query(
+    //       'sale_order',
+    //       where: 'iSaleOrderID = ?',
+    //       whereArgs: [lastid],
+    //     );
+    //     print('Before update: $afterUpdate');
+    //   }
+    // } else {
+    //   print("Erorr: ${response.statusCode}");
+    //   print("Error body: ${response.body}");
+    // }
 
-    int lastSaleID =
-        result.isNotEmpty ? result.first['iSaleOrderID'] as int : 0;
+    // final List<Map<String, dynamic>> result = await db.query(
+    //   'sale_order',
+    //   columns: ['iSaleOrderID'],
+    //   orderBy: 'iSaleOrderID DESC',
+    //   limit: 1,
+    // );
 
-    for (int i = 0; i < SaleReturnbilledItems.length; i++) {
-      List<Map<String, dynamic>> product = await db.query('product');
-      int iProductID =
-          product[SaleReturnbilledItems[i].productIndex]['iProductID'];
-      if (SaleReturnbilledItems[i].unitType == 0) {
-        await db.insert(
-          'sale_order_products_list',
-          {
-            'iProductID': iProductID,
-            'iSaleOrderID': lastSaleID,
-            'sSaleQtyInBaseUnit': SaleReturnbilledItems[i].Qty,
-            'sSaleQtyInSecUnit': null,
-            'sSaleBonusInBaseUnit':
-                SaleReturnbilledItems[i].bonusQty.toString(),
-            'sSaleBonusInSecUnit': null,
-            'sSaleTotalInBaseUnitQty': (SaleReturnbilledItems[i].Qty +
-                    SaleReturnbilledItems[i].bonusQty)
-                .toString(),
-            'sSaleTotalInSecUnitQty': null,
-            'dcSalePricePerBaseUnit': SaleReturnbilledItems[i].price,
-            'dcSalePriceSecUnit': null,
-            // 'iPermanentCustomerID': iPermanentCustomerID,
-            'dcToalSalePriceInBaseUnit':
-                SaleReturnbilledItems[i].price * SaleReturnbilledItems[i].Qty,
-            'dcToalSalePriceInSecUnit': null,
-            // 'dcPurchaseValuePricePerBaseUnit': dcPurchaseValuePricePerBaseUnit,
-            // 'dcPurchaseValuePerSecUnit': dcPurchaseValuePerSecUnit,
-            // 'dcProfitValuePricePerBaeUnit': dcProfitValuePricePerBaeUnit,
-            // 'dcProfitValuePerSecUnit': dcProfitValuePerSecUnit,
-            // 'dcTotalProductSaleProfit': dcTotalProductSaleProfit,
-            // 'iTaxCodeID': iTaxCodeID,
-            'sSaleType': SaleReturnbilledItems[i].sSaleType,
-            'sSaleStatus': SaleReturnbilledItems[i].sSaleStatus,
-            // 'dcSaleTax': dcSaleTax,
-            'sDiscountInPercentage':
-                SaleReturnbilledItems[i].discountPercentage.toString(),
-            'dcDiscountInAmount': SaleReturnbilledItems[i].disountNumber,
-            // 'dcExtraDiscount': dcExtraDiscount,
-            // 'dcTotalDiscountInVal': dcTotalDiscountInVal,
-            // 'iExtra_Charges_ID': iExtra_Charges_ID,
-            // 'sExtraChargesAmount': sExtraChargesAmount,
-            'dSaleDate': dSaleDate,
-            // 'sCustomerInvoiceNo': sCustomerInvoiceNo,
-            // 'sSaleStatus':
-            //     dcTotalBill == dcPaidBillAmount ? "netsale" : "creditsale",
-            // 'sSaleType': sSaleType,
-            // 'sClaim': sClaim,
-            // 'bStatus': bStatus,
-            'sSyncStatus': "0",
-            'sEntrySource': "mobile",
-            'sAction': "add",
-            'dtCreatedDate': dtCreatedDate,
-            // 'iAddedBy': iAddedBy,
-            // 'dtUpdatedDate': dtUpdatedDate,
-            // 'iUpdatedBy': iUpdatedBy,
-            // 'dtDeletedDate': dtDeletedDate,
-            // 'iDeletedBy': iDeletedBy,
-          },
-        );
-      } else if (SaleReturnbilledItems[i].unitType == 1) {
-        await db.insert(
-          'sale_order_products_list',
-          {
-            'iProductID': iProductID,
-            'iSaleOrderID': lastSaleID,
-            'sSaleQtyInBaseUnit': null,
-            'sSaleType': SaleReturnbilledItems[i].sSaleType,
-            'sSaleStatus': SaleReturnbilledItems[i].sSaleStatus,
-            'sSaleQtyInSecUnit': SaleReturnbilledItems[i].Qty,
-            'sSaleBonusInBaseUnit': null,
-            'sSaleBonusInSecUnit': SaleReturnbilledItems[i].bonusQty.toString(),
-            'sSaleTotalInBaseUnitQty': null,
-            'sSaleTotalInSecUnitQty': (SaleReturnbilledItems[i].Qty +
-                    SaleReturnbilledItems[i].bonusQty)
-                .toString(),
-            'dcSalePricePerBaseUnit': null,
-            'dcSalePriceSecUnit': SaleReturnbilledItems[i].price,
-            // 'iPermanentCustomerID': iPermanentCustomerID,
-            'dcToalSalePriceInBaseUnit': null,
-            'dcToalSalePriceInSecUnit':
-                SaleReturnbilledItems[i].price * SaleReturnbilledItems[i].Qty,
-            // 'dcPurchaseValuePricePerBaseUnit': dcPurchaseValuePricePerBaseUnit,
-            // 'dcPurchaseValuePerSecUnit': dcPurchaseValuePerSecUnit,
-            // 'dcProfitValuePricePerBaeUnit': dcProfitValuePricePerBaeUnit,
-            // 'dcProfitValuePerSecUnit': dcProfitValuePerSecUnit,
-            // 'dcTotalProductSaleProfit': dcTotalProductSaleProfit,
-            // 'iTaxCodeID': iTaxCodeID,
-            // 'dcSaleTax': dcSaleTax,
-            'sDiscountInPercentage':
-                SaleReturnbilledItems[i].discountPercentage.toString(),
-            'dcDiscountInAmount': SaleReturnbilledItems[i].disountNumber,
-            // 'dcExtraDiscount': dcExtraDiscount,
-            // 'dcTotalDiscountInVal': dcTotalDiscountInVal,
-            // 'iExtra_Charges_ID': iExtra_Charges_ID,
-            // 'sExtraChargesAmount': sExtraChargesAmount,
-            'dSaleDate': dSaleDate,
-            // 'sCustomerInvoiceNo': sCustomerInvoiceNo,
+    // int lastSaleID =
+    //     result.isNotEmpty ? result.first['iSaleOrderID'] as int : 0;
 
-            // 'sSaleType': sSaleType,
-            // 'sClaim': sClaim,
-            // 'bStatus': bStatus,
-            'sSyncStatus': "0",
-            'sEntrySource': "mobile",
-            'sAction': "add",
-            'dtCreatedDate': dtCreatedDate,
-            // 'iAddedBy': iAddedBy,
-            // 'dtUpdatedDate': dtUpdatedDate,
-            // 'iUpdatedBy': iUpdatedBy,
-            // 'dtDeletedDate': dtDeletedDate,
-            // 'iDeletedBy': iDeletedBy,
-          },
-        );
-      }
-    }
+    // for (int i = 0; i < SaleReturnbilledItems.length; i++) {
+    //   List<Map<String, dynamic>> product = await db.query('product');
+    //   int iProductID =
+    //       product[SaleReturnbilledItems[i].productIndex]['iProductID'];
+    //   if (SaleReturnbilledItems[i].unitType == 0) {
+    //     await db.insert(
+    //       'sale_order_products_list',
+    //       {
+    //         'iProductID': iProductID,
+    //         'iSaleOrderID': lastSaleID,
+    //         'sSaleQtyInBaseUnit': SaleReturnbilledItems[i].Qty,
+    //         'sSaleQtyInSecUnit': null,
+    //         'sSaleBonusInBaseUnit':
+    //             SaleReturnbilledItems[i].bonusQty.toString(),
+    //         'sSaleBonusInSecUnit': null,
+    //         'sSaleTotalInBaseUnitQty': (SaleReturnbilledItems[i].Qty +
+    //                 SaleReturnbilledItems[i].bonusQty)
+    //             .toString(),
+    //         'sSaleTotalInSecUnitQty': null,
+    //         'dcSalePricePerBaseUnit': SaleReturnbilledItems[i].price,
+    //         'dcSalePriceSecUnit': null,
+    //         // 'iPermanentCustomerID': iPermanentCustomerID,
+    //         'dcToalSalePriceInBaseUnit':
+    //             SaleReturnbilledItems[i].price * SaleReturnbilledItems[i].Qty,
+    //         'dcToalSalePriceInSecUnit': null,
+    //         // 'dcPurchaseValuePricePerBaseUnit': dcPurchaseValuePricePerBaseUnit,
+    //         // 'dcPurchaseValuePerSecUnit': dcPurchaseValuePerSecUnit,
+    //         // 'dcProfitValuePricePerBaeUnit': dcProfitValuePricePerBaeUnit,
+    //         // 'dcProfitValuePerSecUnit': dcProfitValuePerSecUnit,
+    //         // 'dcTotalProductSaleProfit': dcTotalProductSaleProfit,
+    //         // 'iTaxCodeID': iTaxCodeID,
+    //         'sSaleType': SaleReturnbilledItems[i].sSaleType,
+    //         'sSaleStatus': SaleReturnbilledItems[i].sSaleStatus,
+    //         // 'dcSaleTax': dcSaleTax,
+    //         'sDiscountInPercentage':
+    //             SaleReturnbilledItems[i].discountPercentage.toString(),
+    //         'dcDiscountInAmount': SaleReturnbilledItems[i].disountNumber,
+    //         // 'dcExtraDiscount': dcExtraDiscount,
+    //         // 'dcTotalDiscountInVal': dcTotalDiscountInVal,
+    //         // 'iExtra_Charges_ID': iExtra_Charges_ID,
+    //         // 'sExtraChargesAmount': sExtraChargesAmount,
+    //         'dSaleDate': dSaleDate,
+    //         // 'sCustomerInvoiceNo': sCustomerInvoiceNo,
+    //         // 'sSaleStatus':
+    //         //     dcTotalBill == dcPaidBillAmount ? "netsale" : "creditsale",
+    //         // 'sSaleType': sSaleType,
+    //         // 'sClaim': sClaim,
+    //         // 'bStatus': bStatus,
+    //         'sSyncStatus': "0",
+    //         'sEntrySource': "mobile",
+    //         'sAction': "add",
+    //         'dtCreatedDate': dtCreatedDate,
+    //         // 'iAddedBy': iAddedBy,
+    //         // 'dtUpdatedDate': dtUpdatedDate,
+    //         // 'iUpdatedBy': iUpdatedBy,
+    //         // 'dtDeletedDate': dtDeletedDate,
+    //         // 'iDeletedBy': iDeletedBy,
+    //       },
+    //     );
+    //   } else if (SaleReturnbilledItems[i].unitType == 1) {
+    //     await db.insert(
+    //       'sale_order_products_list',
+    //       {
+    //         'iProductID': iProductID,
+    //         'iSaleOrderID': lastSaleID,
+    //         'sSaleQtyInBaseUnit': null,
+    //         'sSaleType': SaleReturnbilledItems[i].sSaleType,
+    //         'sSaleStatus': SaleReturnbilledItems[i].sSaleStatus,
+    //         'sSaleQtyInSecUnit': SaleReturnbilledItems[i].Qty,
+    //         'sSaleBonusInBaseUnit': null,
+    //         'sSaleBonusInSecUnit': SaleReturnbilledItems[i].bonusQty.toString(),
+    //         'sSaleTotalInBaseUnitQty': null,
+    //         'sSaleTotalInSecUnitQty': (SaleReturnbilledItems[i].Qty +
+    //                 SaleReturnbilledItems[i].bonusQty)
+    //             .toString(),
+    //         'dcSalePricePerBaseUnit': null,
+    //         'dcSalePriceSecUnit': SaleReturnbilledItems[i].price,
+    //         // 'iPermanentCustomerID': iPermanentCustomerID,
+    //         'dcToalSalePriceInBaseUnit': null,
+    //         'dcToalSalePriceInSecUnit':
+    //             SaleReturnbilledItems[i].price * SaleReturnbilledItems[i].Qty,
+    //         // 'dcPurchaseValuePricePerBaseUnit': dcPurchaseValuePricePerBaseUnit,
+    //         // 'dcPurchaseValuePerSecUnit': dcPurchaseValuePerSecUnit,
+    //         // 'dcProfitValuePricePerBaeUnit': dcProfitValuePricePerBaeUnit,
+    //         // 'dcProfitValuePerSecUnit': dcProfitValuePerSecUnit,
+    //         // 'dcTotalProductSaleProfit': dcTotalProductSaleProfit,
+    //         // 'iTaxCodeID': iTaxCodeID,
+    //         // 'dcSaleTax': dcSaleTax,
+    //         'sDiscountInPercentage':
+    //             SaleReturnbilledItems[i].discountPercentage.toString(),
+    //         'dcDiscountInAmount': SaleReturnbilledItems[i].disountNumber,
+    //         // 'dcExtraDiscount': dcExtraDiscount,
+    //         // 'dcTotalDiscountInVal': dcTotalDiscountInVal,
+    //         // 'iExtra_Charges_ID': iExtra_Charges_ID,
+    //         // 'sExtraChargesAmount': sExtraChargesAmount,
+    //         'dSaleDate': dSaleDate,
+    //         // 'sCustomerInvoiceNo': sCustomerInvoiceNo,
 
-    SaleReturnbilledItems = [];
-    emit(FormAddedState());
+    //         // 'sSaleType': sSaleType,
+    //         // 'sClaim': sClaim,
+    //         // 'bStatus': bStatus,
+    //         'sSyncStatus': "0",
+    //         'sEntrySource': "mobile",
+    //         'sAction': "add",
+    //         'dtCreatedDate': dtCreatedDate,
+    //         // 'iAddedBy': iAddedBy,
+    //         // 'dtUpdatedDate': dtUpdatedDate,
+    //         // 'iUpdatedBy': iUpdatedBy,
+    //         // 'dtDeletedDate': dtDeletedDate,
+    //         // 'iDeletedBy': iDeletedBy,
+    //       },
+    //     );
+    //   }
+    // }
+
+    // SaleReturnbilledItems = [];
+    // emit(FormAddedState());
   }
 
   FutureOr<void> saleAdddingLoadingEvent(

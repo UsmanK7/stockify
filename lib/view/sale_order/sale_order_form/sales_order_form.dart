@@ -94,7 +94,7 @@ class _SalesOrderFormState extends State<SalesOrderForm> {
       Placemark place = placemarks[0];
       SalesmanLocation location = SalesmanLocation(
         iTableID: 1,
-        sTableName: 'example_table',
+        sTableName: 'sale_order',
         sLongitude: position.longitude.toString(),
         sLatitude: position.latitude.toString(),
         sLocation:

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Color appBlue = Color(0xff1789fc);
-Color appBgWhite = Color(0xffF1F1F1);
-Color appborder = Color(0xffefefef);
-Color apptextColor = Color(0xff91919F);
-Color appsubtitletextColor = Color(0xff767E8C);
-Color appsearchBoxColor = Color(0xffD9D9D9);
+Color appBlue = const Color(0xff1789fc);
+Color appBgWhite = const Color(0xffF1F1F1);
+Color appborder = const Color(0xffefefef);
+Color apptextColor = const Color(0xff91919F);
+Color appsubtitletextColor = const Color(0xff767E8C);
+Color appsearchBoxColor = const Color(0xffD9D9D9);
 const baseUrl = 'https://adbb-39-44-67-62.ngrok-free.app';
 const loginUrl = '$baseUrl/stockfiy/api/auth/login';
 const addSaleOrderUrl = '$baseUrl/stockfiy/api/realdata/storesaleorder';
@@ -41,14 +41,14 @@ String formatTime(TimeOfDay time) {
 DateTime getFirstDateOfLastMonth() {
   DateTime now = DateTime.now();
   DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1);
-  DateTime lastMonth = firstDayOfCurrentMonth.subtract(Duration(days: 1));
+  DateTime lastMonth = firstDayOfCurrentMonth.subtract(const Duration(days: 1));
   return DateTime(lastMonth.year, lastMonth.month, 1);
 }
 
 DateTime getLastDateOfLastMonth() {
   DateTime now = DateTime.now();
   DateTime firstDayOfCurrentMonth = DateTime(now.year, now.month, 1);
-  return firstDayOfCurrentMonth.subtract(Duration(days: 1));
+  return firstDayOfCurrentMonth.subtract(const Duration(days: 1));
 }
 
 DateTime getFirstDateOfThisMonth() {
@@ -59,11 +59,12 @@ DateTime getFirstDateOfThisMonth() {
 DateTime getLastDateOfThisMonth() {
   DateTime now = DateTime.now();
   DateTime firstDayOfNextMonth = DateTime(now.year, now.month + 1, 1);
-  return firstDayOfNextMonth.subtract(Duration(days: 1));
+  return firstDayOfNextMonth.subtract(const Duration(days: 1));
 }
 
 DateTime getFirstDateOfThisWeek() {
   DateTime now = DateTime.now();
+
   int currentWeekday = now.weekday;
   // Subtract days to get the previous Sunday (first day of the week)
   DateTime firstDayOfThisWeek =
@@ -106,8 +107,7 @@ DateTime getLastDateOfLastSixMonthsIncludingCurrent() {
 
 String truncateAfterChars(String text, int maxLength) {
   if (text.length > maxLength) {
-    return text.substring(0, maxLength) +
-        '...'; // Adding '...' to indicate truncation
+    return '${text.substring(0, maxLength)}...'; // Adding '...' to indicate truncation
   }
   return text;
 }

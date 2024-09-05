@@ -24,7 +24,7 @@ import 'package:okra_distributer/view/sale/sale_list/UI/sale_list.dart';
 import 'package:okra_distributer/view/sale_list/UI/sale_list_table.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_form/sales_order_form.dart';
 import 'package:okra_distributer/view/sale_order/sale_order_list/UI/sale_order_list.dart';
-import 'package:okra_distributer/view/sale_return/sale_return_form/sales_return_form.dart';
+// import 'package:okra_distributer/view/sale_return/sale_return_form/sales_return_form.dart';
 import 'package:okra_distributer/view/unknown/unknown.dart';
 
 import 'package:sqflite/sqflite.dart';
@@ -55,8 +55,8 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
   ];
   String? selectedValue;
   DateTime _selectedDate = DateTime.now();
-  TextEditingController _firstdateController = TextEditingController();
-  TextEditingController _lastdateController = TextEditingController();
+  final TextEditingController _firstdateController = TextEditingController();
+  final TextEditingController _lastdateController = TextEditingController();
 
   Future<DateTime> _firstselectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -90,13 +90,13 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _box = GetStorage();
-    if (_box.read('token') != null) {
-      print(_box.read('token'));
+    final box = GetStorage();
+    if (box.read('token') != null) {
+      print(box.read('token'));
     }
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const AppText(
             title: "Home Screen",
             color: Colors.white,
@@ -110,7 +110,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 // color: Colors.blue,
                 height: 180,
                 child: BlocBuilder<DashBloc, DashState>(
@@ -316,7 +316,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                                 builder: (context) =>
                                     SalesForm(database: widget.database!)));
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   QuickLinkCard(
@@ -326,7 +326,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SaleList()));
+                                builder: (context) => const SaleList()));
                       }),
                 ],
               ),
@@ -343,9 +343,9 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PaymentRecovery()));
+                                builder: (context) => const PaymentRecovery()));
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   QuickLinkCard(
@@ -355,7 +355,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CustomerScreen()));
+                                builder: (context) => const CustomerScreen()));
                       }),
                 ],
               ),
@@ -374,7 +374,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                                 builder: (context) =>
                                     SalesForm(database: widget.database!)));
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   QuickLinkCard(
@@ -384,7 +384,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SaleList()));
+                                builder: (context) => const SaleList()));
                       }),
                 ],
               ),
@@ -403,7 +403,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                                 builder: (context) =>
                                     SalesForm(database: widget.database!)));
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   QuickLinkCard(
@@ -413,7 +413,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SaleList()));
+                                builder: (context) => const SaleList()));
                       }),
                 ],
               ),
@@ -429,9 +429,10 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DailyExpenseScreen()));
+                                builder: (context) =>
+                                    const DailyExpenseScreen()));
                       }),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   QuickLinkCard(
@@ -441,12 +442,13 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DailyExpenseList()));
+                                builder: (context) =>
+                                    const DailyExpenseList()));
                       }),
                 ],
               ),
 
-              Row(
+              const Row(
                 children: [
                   AppText(
                       title: "Sale Information",
@@ -478,7 +480,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SaleListTable()));
+                            builder: (context) => const SaleListTable()));
                   },
                   child: const Text("Table")),
               ElevatedButton(
@@ -546,7 +548,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
               titleBorderRadius: BorderRadius.circular(10),
               expandedTitleBackgroundColor: Colors.transparent,
               collapsedTitleBackgroundColor: Colors.transparent,
-              titleChild: Row(
+              titleChild: const Row(
                 children: [
                   Image(width: 25, image: AssetImage("assets/images/sale.png")),
                   SizedBox(
@@ -630,7 +632,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                 titleBorderRadius: BorderRadius.circular(10),
                 expandedTitleBackgroundColor: Colors.transparent,
                 collapsedTitleBackgroundColor: Colors.transparent,
-                titleChild: Row(
+                titleChild: const Row(
                   children: [
                     Image(
                         width: 20,
@@ -728,7 +730,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                 titleBorderRadius: BorderRadius.circular(10),
                 expandedTitleBackgroundColor: Colors.transparent,
                 collapsedTitleBackgroundColor: Colors.transparent,
-                titleChild: Row(
+                titleChild: const Row(
                   children: [
                     Image(
                         width: 20,
@@ -813,7 +815,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                 titleBorderRadius: BorderRadius.circular(10),
                 expandedTitleBackgroundColor: Colors.transparent,
                 collapsedTitleBackgroundColor: Colors.transparent,
-                titleChild: Row(
+                titleChild: const Row(
                   children: [
                     Image(
                         width: 20,
@@ -839,7 +841,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PaymentRecovery()));
+                                builder: (context) => const PaymentRecovery()));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -871,7 +873,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CustomerScreen()));
+                                builder: (context) => const CustomerScreen()));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -902,7 +904,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Loginscreen()));
+                                builder: (context) => const Loginscreen()));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -965,7 +967,7 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
                 titleBorderRadius: BorderRadius.circular(10),
                 expandedTitleBackgroundColor: Colors.transparent,
                 collapsedTitleBackgroundColor: Colors.transparent,
-                titleChild: Row(
+                titleChild: const Row(
                   children: [
                     Image(
                         width: 20,
@@ -1002,12 +1004,12 @@ class _FirstHomeScreenState extends State<FirstHomeScreen> {
 
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SaleReturnForm(
-                                      database: widget.database!,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => SaleReturnForm(
+                        //               database: widget.database!,
+                        //             )));
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

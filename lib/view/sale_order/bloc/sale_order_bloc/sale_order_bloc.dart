@@ -15,7 +15,6 @@ class SaleOrderBloc extends Bloc<SaleOrderEvent, SaleOrderState> {
     on<SaleInitalEvent>(saleInitalEvent);
     on<SaleDropdownSelectEvent>(saleDropdownSelectEvent);
     on<SaleUnitSelectedEvent>(saleUnitSelectedEvent);
-
     on<BonusQuantityChangeEvent>(bonusQuantityChangeEvent);
     on<RefreshEvent>(refreshEvent);
     on<AddSaleInvoice>(addSaleInvoice);
